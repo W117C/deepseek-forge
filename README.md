@@ -2,6 +2,7 @@
 
 DeepSeek Harness Agent Bundle Marketplace — 本地安装闭环原型。
 
+> 🌐 **官网/落地页（DeepSeek Forge）：https://deepseek-forge.vercel.app** —— React+Vite 独立站点，见 [landing/](landing/)，推送 main 自动部署
 > 线上展示（只读 Marketplace）：**https://agenthub-w117-c.vercel.app** —— Vercel 自动部署（Git 集成，推送 main 即上线；数据来自仓库内 manifest 快照，见 [web/](web/)）。
 > 仓库：https://github.com/W117C/deepseek-agenthub ｜ CI：GitHub Actions 全量 e2e 门槛 ｜ 发布：GitHub Releases（v0.1.0）
 >
