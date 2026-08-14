@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang=zh>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content=width=device-width,initial-scale=1>
+<title>AgentHub Marketplace</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;background:#0b0d12;color:#e8eaf0;margin:0;padding:2rem;max-width:64rem;margin-inline:auto}
+a{color:#7ab8ff;text-decoration:none}
+code{background:#161a22;padding:.15rem .4rem;border-radius:4px;font-size:.78rem;word-break:break-all}
+.box{background:#12161f;border:1px solid #232936;border-radius:10px;padding:1rem;margin:1rem 0}
+.trust{color:#7ee2a0}.blocked{color:#ff7b7b}.community{color:#e2c07e}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #2a2f3a;padding:.5rem;text-align:left}
+.small{color:#9aa3b2;font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr));gap:.8rem;margin-bottom:1.5rem}
+.card{background:#12161f;border:1px solid #232936;border-radius:10px;padding:.9rem;cursor:pointer}
+.card:hover{border-color:#3a4a5e}
+.cat{font-size:.7rem;color:#9aa3b2;text-transform:uppercase;letter-spacing:.05em}
+.meta{margin:.4rem 0;font-size:.8rem;color:#9aa3b2}
+input{padding:.5rem;width:min(24rem,80vw);background:#161a22;color:#e8eaf0;border:1px solid #2a2f3a;border-radius:6px}
+.badge{display:inline-block;font-size:.7rem;border:1px solid #2b6cf0;color:#7ab8ff;border-radius:99px;padding:.1rem .5rem;margin-left:.4rem}
+h1{font-size:1.5rem}h2{font-size:1.15rem;margin-top:1.6rem}
+#detail{display:none}
+</style>
+</head>
+<body>
+<h1>🧩 AgentHub Marketplace</h1>
+<p>把 DeepSeek Harness 变成专业 Agent。选一个职业领域，装一个 Bundle。
+<span class=badge>只读展示模式</span></p>
+<p class=small>本页为 Vercel 只读展示（数据来自仓库内 manifest 快照）；可安装的 Registry 服务见
+<a href=https://github.com/W117C/agenthub>github.com/W117C/agenthub</a>。</p>
+
+<input id=q placeholder=搜索（finance / academic / 金融 / 学术 …）>
+<div id=hint class=small style=margin-top:.5rem></div>
+
+<div id=home>
+  <h2>领域 Agent</h2>
+  <div id=cards class=grid></div>
+  <h2>安装方式</h2>
+  <div class=box>
+    <p><code>git clone https://github.com/W117C/agenthub</code></p>
+    <p><code>node cli/agenthub.mjs install ./bundles/finance-analyst --yes</code></p>
+    <p><code>dsh --profile finance</code> ← 现在它是 Finance Agent</p>
+    <p class=small>零依赖 CLI；安装前强制安全扫描 + 快照回滚；远端安装验 ed25519 签名 + sha256 哈希。</p>
+  </div>
+</div>
+
+<div id=detail>
+  <p class=small><a href=# onclick=showHome();return false>← 返回 Marketplace</a></p>
+  <h1 id=d-name></h1>
+  <div class=box id=d-body></div>
+</div>
+
+<script>
+const esc = (s) => String(s ?? '').split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');
+let DB = { agents: [] };
+
+function showHome() { document.getElementById('home').style.display='block'; document.getElementById('detail').style.display='none'; history.replaceState(null,'','#'); }
+function showDetail(id) {
+  const a = DB.agents.find(x => x.id === id); if (!a) return;
+  document.getElementById('home').style.display='none';
+  document.getElementById('detail').style.display='block';
+  document.getElementById('d-name').textContent = a.name;
+  const c = a.components;
+  document.getElementById('d-body').innerHTML =
+    '<p>' + esc(a.description) + '</p>' +
+    '<p class=small>发布者 ' + esc(a.publisher) + ' · 版本 ' + esc(a.version) + ' · <span class=trust>' + esc(a.trust) + '</span></p>' +
+    '<div class=box><b>安装</b><br><code>' + esc(a.install) + '</code></div>' +
+    '<div class=box><b>包含</b><p class=small>Bundles：' + esc((c.bundles||[]).join('、')||'—') +
+    '<br>Presets：' + esc((c.presets||[]).join('、')||'—') +
+    '<br>Skills：' + esc((c.skills||[]).join('、')||'—') + '</p></div>' +
+    '<div class=box><b>兼容性</b><p class=small>DSH ' + esc(a.compatibility?.dsh?.min ?? '—') + '+ · Node ' + esc(a.compatibility?.node ?? '—') +
+    '<br>平台：' + esc((a.platform||[]).join('、')) +
+    '<br>网络权限：' + esc((a.permissions?.network||[]).join('、')||'无') + ' · 环境变量：' + esc((a.permissions?.env||[]).join('、')||'无') + '</p></div>';
+  history.replaceState(null,'','#agents/'+id);
+}
+
+function render() {
+  const catGroups = {};
+  for (const a of DB.agents) (catGroups[a.category] ??= []).push(a);
+  const html = Object.entries(catGroups).map(([cat, list]) =>
+    '<h2>' + esc(cat) + '</h2><div class=grid>' + list.map((a) =>
+      '<div class=card onclick=showDetail(' + JSON.stringify(a.id) + ')>' +
+      '<div class=cat>' + esc(cat) + '</div><b>' + esc(a.name) + '</b>' +
+      '<p class=meta>' + esc(a.description.slice(0,80)) + (a.description.length>80?'…':'') + '</p>' +
+      '<div class=meta><span class=trust>' + esc(a.trust) + '</span> · v' + esc(a.version) + ' · ' + esc(a.publisher) + '</div>' +
+      '<code>agenthub install ' + esc(a.id) + '</code></div>').join('') + '</div>'
+  ).join('');
+  document.getElementById('cards').innerHTML = html;
+}
+
+fetch('snapshot.json').then(r => r.json()).then(db => {
+  DB = db;
+  render();
+  const hash = location.hash;
+  if (hash.startsWith('#agents/')) showDetail(decodeURIComponent(hash.slice(8)));
+}).catch(e => {
+  document.getElementById('cards').innerHTML = '<div class=box>快照加载失败：' + esc(e.message) + '</div>';
+});
+
+document.getElementById('q').addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  const hits = DB.agents.filter(a => JSON.stringify([a.id,a.name,a.category,a.description,a.publisher]).toLowerCase().includes(q));
+  document.getElementById('hint').textContent = q ? '命中 ' + hits.length + ' 项：' + hits.map(x => x.name).join('、') : '';
+  const catGroups = {};
+  for (const a of (q ? hits : DB.agents)) (catGroups[a.category] ??= []).push(a);
+  const html = Object.entries(catGroups).map(([cat, list]) =>
+    '<h2>' + esc(cat) + '</h2><div class=grid>' + list.map((a) =>
+      '<div class=card onclick=showDetail(' + JSON.stringify(a.id) + ')>' +
+      '<div class=cat>' + esc(cat) + '</div><b>' + esc(a.name) + '</b>' +
+      '<p class=meta>' + esc(a.description.slice(0,80)) + (a.description.length>80?'…':'') + '</p>' +
+      '<div class=meta><span class=trust>' + esc(a.trust) + '</span> · v' + esc(a.version) + ' · ' + esc(a.publisher) + '</div>' +
+      '<code>agenthub install ' + esc(a.id) + '</code></div>').join('') + '</div>'
+  ).join('');
+  document.getElementById('cards').innerHTML = html;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "agents": [
+    {
+      "id": "academic-researcher",
+      "name": "Academic Researcher",
+      "category": "学术 Academic",
+      "version": "0.1.0",
+      "description": "把 DeepSeek Harness 变成学术研究 Agent：文献检索与综述、论文分析、引文核验。",
+      "publisher": "AgentHub",
+      "trust": "official",
+      "compatibility": {
+        "dsh": {
+          "min": "0.1.0-rc.6",
+          "tested": [
+            "0.1.0-rc.6"
+          ]
+        },
+        "node": ">=22"
+      },
+      "platform": [
+        "darwin",
+        "linux"
+      ],
+      "components": {
+        "bundles": [
+          "@agenthub/research-core"
+        ],
+        "presets": [
+          "academic-researcher"
+        ],
+        "skills": [
+          "literature-review",
+          "paper-analysis"
+        ]
+      },
+      "profile": {
+        "name": "research"
+      },
+      "permissions": {
+        "network": [
+          "localhost:3112"
+        ],
+        "env": []
+      },
+      "install": "agenthub install academic-researcher --registry <Registry 地址> --yes"
+    },
+    {
+      "id": "finance-analyst",
+      "name": "Finance Analyst",
+      "category": "金融 Finance",
+      "version": "0.1.0",
+      "description": "把 DeepSeek Harness 变成金融研究与决策支持 Agent。",
+      "publisher": "AgentHub",
+      "trust": "official",
+      "compatibility": {
+        "dsh": {
+          "min": "0.1.0-rc.6",
+          "tested": [
+            "0.1.0-rc.6"
+          ]
+        },
+        "node": ">=22"
+      },
+      "platform": [
+        "darwin",
+        "linux"
+      ],
+      "components": {
+        "bundles": [
+          "@agenthub/finance-core"
+        ],
+        "presets": [
+          "finance-analyst"
+        ],
+        "skills": [
+          "financial-analysis",
+          "company-research"
+        ]
+      },
+      "profile": {
+        "name": "finance"
+      },
+      "permissions": {
+        "network": [
+          "localhost:3111"
+        ],
+        "env": []
+      },
+      "install": "agenthub install finance-analyst --registry <Registry 地址> --yes"
+    }
+  ]
+}
