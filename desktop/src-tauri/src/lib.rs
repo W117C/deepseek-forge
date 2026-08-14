@@ -184,12 +184,20 @@ fn install_package(app: AppHandle, id: String) -> Result<serde_json::Value, Stri
             ],
         );
     }
-    // 有 artifact：走 Rust 安装管线（此处留给后续 STEP：调用 install_from_registry 语义）
-    Err(serde_json::to_string(&serde_json::json!({
-        "code": "NOT_IMPLEMENTED",
-        "human": "该包带有制品，安装管线在后续 STEP 接入",
-    }))
-    .unwrap_or_default())
+    // 有 artifact：走与 CLI 相同的 install-from-registry 完整管线
+    // （哈希→验签→解包→快照→安装→健康检查→状态登记 profile，失败自动回滚）
+    let reg_root = registry().root().to_string_lossy().to_string();
+    run_forge_streaming(
+        &app,
+        &[
+            "install-from-registry".to_string(),
+            id.clone(),
+            "--registry".to_string(),
+            reg_root,
+            "--home".to_string(),
+            home.to_string_lossy().to_string(),
+        ],
+    )
 }
 
 /// 通用 forge-core 调用：stdout JSON / stderr 错误信封。
@@ -457,6 +465,22 @@ fn package_rollback(id: String) -> Result<serde_json::Value, String> {
 }
 
 /// Phase 7: observe the DeepSeek Harness runtime (status/sessions/processes).
+/// Run/Manage：真实启动 Harness profile（后台分离，返回 pid + 日志文件）。
+/// 只有带 profile 的已安装包可运行（artifact 安装管线写入 profile 字段）。
+#[tauri::command]
+fn runtime_run(profile: String) -> Result<serde_json::Value, String> {
+    let bin = forge_core::dsh::locate_dsh()
+        .ok_or_else(|| "dsh 未找到：请安装 DeepSeek Harness CLI".to_string())?;
+    let (pid, log_file) = forge_core::runtime::run_harness_captured(
+        &bin.to_string_lossy(),
+        &profile,
+        None,
+        &forge_core::dsh::dsh_home(None),
+    )
+    .map_err(to_ipc_error)?;
+    Ok(serde_json::json!({ "pid": pid, "logFile": log_file }))
+}
+
 #[tauri::command]
 fn runtime_status_cmd() -> Result<forge_core::runtime::RuntimeStatus, String> {
     runtime_status(None).map_err(to_ipc_error)
@@ -490,6 +514,7 @@ pub fn run() {
             composer_resolve,
             runtime_stop,
             runtime_restart,
+            runtime_run,
             logs_list,
             install_package,
             bundle_create,

@@ -2,8 +2,15 @@
 // 被其他插件依赖声明或组合 Bundle 引用的插件，卸载前会被拦截并列出使用方。
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, LoaderCircle, Power, TriangleAlert, Unplug } from "lucide-react";
-import { dependentsList, packageRollback, setPluginEnabled, stateList } from "../ipc";
+import { Box, LoaderCircle, Power, RefreshCw, TriangleAlert, Unplug } from "lucide-react";
+import {
+  dependentsList,
+  packageRollback,
+  setPluginEnabled,
+  stateList,
+  updateApply,
+  updateCheck,
+} from "../ipc";
 import type { DependentRef, InstalledAgent } from "../ipc";
 import { useI18n } from "../i18n";
 
@@ -14,9 +21,20 @@ export default function Plugins() {
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "enabled" | "disabled">("all");
+  const [outdated, setOutdated] = useState<Record<string, string>>({});
+  const [updateBusy, setUpdateBusy] = useState<string | null>(null);
 
   function load() {
     setErr(null);
+    updateCheck()
+      .then((entries) => {
+        const map: Record<string, string> = {};
+        for (const e of entries) {
+          if (e.outdated) map[e.id] = e.latest;
+        }
+        setOutdated(map);
+      })
+      .catch(() => setOutdated({}));
     stateList()
       .then((s) => {
         const list = s.agents ?? {};
@@ -50,6 +68,19 @@ export default function Plugins() {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(null);
+    }
+  }
+
+  async function update(id: string) {
+    setUpdateBusy(id);
+    setErr(null);
+    try {
+      await updateApply(id);
+      load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUpdateBusy(null);
     }
   }
 
@@ -161,6 +192,21 @@ export default function Plugins() {
                   {a.enabled === false && " · " + t("plugins.disabledNote")}
                 </div>
               </div>
+              {outdated[id] && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => void update(id)}
+                  disabled={updateBusy !== null}
+                  aria-label={t("updates.update") + " " + id}
+                >
+                  {updateBusy === id ? (
+                    <LoaderCircle size={14} className="spin" />
+                  ) : (
+                    <RefreshCw size={14} />
+                  )}
+                  {t("updates.update")} v{outdated[id]}
+                </button>
+              )}
               <button
                 className="btn btn-ghost"
                 onClick={() => void toggleEnabled(id, a.enabled === false)}

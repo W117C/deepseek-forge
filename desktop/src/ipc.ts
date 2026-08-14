@@ -316,3 +316,9 @@ export function runtimeStop(pid: number): Promise<{ ok: boolean; pid: number }> 
 export function runtimeRestart(command: string): Promise<{ pid: number | null }> {
   return call<{ pid: number | null }>("runtime_restart", { command });
 }
+
+export function runtimeRun(
+  profile: string
+): Promise<{ pid: number; logFile: string }> {
+  return call<{ pid: number; logFile: string }>("runtime_run", { profile });
+}

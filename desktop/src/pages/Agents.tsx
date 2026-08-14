@@ -1,8 +1,8 @@
 // Phase 8: My Agents —— 读取共享 DSH 状态库（与 CLI 同一 state.json），
 // 支持经 Rust Kernel 回滚/卸载。空态诚实。
 import { useCallback, useEffect, useState } from "react";
-import { Bot, LoaderCircle, RotateCcw, TriangleAlert } from "lucide-react";
-import { packageRollback, stateList } from "../ipc";
+import { Bot, LoaderCircle, Play, RotateCcw, TriangleAlert } from "lucide-react";
+import { packageRollback, runtimeRun, stateList } from "../ipc";
 import { useI18n } from "../i18n";
 import type { InstalledAgent } from "../ipc";
 
@@ -15,6 +15,8 @@ export default function Agents() {
   const { t } = useI18n();
   const [state, setState] = useState<State>({ status: "loading" });
   const [busy, setBusy] = useState<string | null>(null);
+  const [runBusy, setRunBusy] = useState<string | null>(null);
+  const [runResult, setRunResult] = useState<Record<string, { pid: number; logFile: string }>>({});
   const [actionErr, setActionErr] = useState<string | null>(null);
 
   const load = useCallback(() => {
@@ -27,6 +29,19 @@ export default function Agents() {
   }, []);
 
   useEffect(load, [load]);
+
+  async function run(id: string, profile: string) {
+    setRunBusy(id);
+    setActionErr(null);
+    try {
+      const res = await runtimeRun(profile);
+      setRunResult((prev) => ({ ...prev, [id]: res }));
+    } catch (err) {
+      setActionErr(err instanceof Error ? err.message : String(err));
+    } finally {
+      setRunBusy(null);
+    }
+  }
 
   async function rollback(id: string) {
     setBusy(id);
@@ -96,6 +111,17 @@ export default function Agents() {
                   {a.kind === "plugin" ? " · plugin" : ""}
                 </div>
               </div>
+              {a.profile && a.kind !== "plugin" && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => void run(id, String(a.profile))}
+                  disabled={runBusy === id}
+                  aria-label={t("ag.run") + " " + id}
+                >
+                  {runBusy === id ? <LoaderCircle size={14} className="spin" /> : <Play size={14} />}
+                  {runBusy === id ? t("ag.running") : t("ag.run")}
+                </button>
+              )}
               <button
                 className="btn btn-ghost"
                 onClick={() => void rollback(id)}
@@ -105,6 +131,11 @@ export default function Agents() {
                 {busy === id ? <LoaderCircle size={14} className="spin" /> : <RotateCcw size={14} />}
                 {t("ag.rollback")}
               </button>
+              {runResult[id] && (
+                <span className="field-hint" style={{ display: "block" }}>
+                  {t("ag.runOk", { pid: runResult[id].pid })}
+                </span>
+              )}
             </div>
           ))}
         </div>

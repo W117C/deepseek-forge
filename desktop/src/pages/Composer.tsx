@@ -8,6 +8,7 @@ import {
   bundleList,
   bundleUninstall,
   composerResolve,
+  dependentsList,
   registryList,
 } from "../ipc";
 import type { RegistrySummary, ResolveReport } from "../ipc";
@@ -61,6 +62,35 @@ export default function Composer() {
   }
 
   async function uninstallBundle(id: string) {
+    const bundle = bundles.find((b) => b.id === id);
+    const comps: string[] = Array.isArray(bundle?.components) ? bundle.components : [];
+    // 组件级 used-by：卸载前逐一检查反向依赖（排除本组合自身）。
+    const conflicts: string[] = [];
+    for (const cid of comps) {
+      try {
+        const d = await dependentsList(cid);
+        const others = (d.dependents ?? []).filter(
+          (r) => !(r.kind === "bundle" && r.id === id)
+        );
+        if (others.length > 0) {
+          conflicts.push(
+            cid + " → " + others.map((r) => r.kind + " " + r.id).join(", ")
+          );
+        }
+      } catch {
+        /* 依赖查询失败不阻断主流程 */
+      }
+    }
+    if (conflicts.length > 0) {
+      window.alert(
+        t("co.uninstallBlockedBy") +
+          "\n\n" +
+          t("co.uninstallBlockedBody") +
+          "\n" +
+          conflicts.map((c) => "• " + c).join("\n")
+      );
+      return;
+    }
     if (!window.confirm(t("co.confirmUninstall", { id }))) return;
     setBundleBusy("uninstall:" + id);
     setBundleErr(null);
