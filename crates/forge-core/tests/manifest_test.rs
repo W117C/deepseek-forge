@@ -1,6 +1,5 @@
 use std::path::{Path, PathBuf};
 
-use forge_core::errors::ForgeError;
 use forge_core::manifest::{load_legacy_agent_dir, parse_package_json};
 use forge_core::model::{Package, PackageType};
 

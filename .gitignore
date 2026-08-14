@@ -13,6 +13,10 @@ keys.json
 # e2e 隔离环境产物
 .e2e-home/
 .e2e-pnpm-home/
+.e2e-parity-old/
+.e2e-parity-new/
+.e2e-parity-evil/
+.e2e-parity-oldlib/
 
 # 打包产物
 *.tgz

@@ -40,6 +40,8 @@ pub struct ArtifactMeta {
     pub sha256: Option<String>,
     pub signature: Option<String>,
     pub filename: String,
+    #[serde(default)]
+    pub url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]

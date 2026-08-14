@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e:
-    name: 全量 e2e（14 套 / 203 项）
+    name: 全量 e2e（18+parity 套，含 Rust 引擎委托桥）
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -24,6 +24,9 @@ jobs:
 
       - name: 安装 pnpm
         run: npm install -g pnpm
+
+      - name: 构建 forge-core（Node 委托桥的 Rust 引擎）
+        run: cargo build --release --manifest-path crates/forge-core/Cargo.toml
 
       - name: 版本自检
         run: |

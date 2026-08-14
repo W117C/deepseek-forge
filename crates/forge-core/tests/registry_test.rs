@@ -1,6 +1,5 @@
 use std::path::Path;
 
-use forge_core::errors::ForgeError;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 
 fn write(path: impl AsRef<Path>, content: &str) {

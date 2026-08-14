@@ -1,11 +1,22 @@
 //! DeepSeek Forge core: unified package model, manifest, registry, errors, and events.
 
+pub mod dsh;
 pub mod errors;
 pub mod events;
+pub mod installer;
 pub mod manifest;
 pub mod model;
 pub mod registry;
+pub mod security;
+pub mod signing;
+pub mod snapshot;
+pub mod state;
 
+pub use dsh::{
+    agenthub_store, dsh_home, has_pnpm, init_profile, locate_dsh, preset_dir, profile_dir,
+    read_manifest, run_dsh, skills_dir, write_manifest, PROFILE_PATCH_TEMPLATE,
+    PROFILE_PNPM_WORKSPACE,
+};
 pub use errors::{ErrorEnvelope, ForgeError};
 pub use events::{EventBus, ForgeEvent};
 pub use manifest::{
@@ -22,3 +33,7 @@ pub use registry::{
     ArtifactMeta, LocalRegistry, PackageSummary, PackageVersion, RegistryMetadata,
     RegistryProvider, SecurityMeta,
 };
+pub use security::{scan_agent_dir, scan_text, scan_text_report, ScanReport, SecurityFinding};
+pub use signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload, Keypair};
+pub use snapshot::{restore_snapshot, snapshot, SnapshotInfo};
+pub use state::{load_state, save_state};

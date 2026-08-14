@@ -73,6 +73,35 @@ pub fn load_legacy_agent_dir(dir: &Path) -> Result<Package, ForgeError> {
     normalize_legacy_agent(&text)
 }
 
+/// Strict variant matching Node's loadAgentManifest: additionally requires
+/// 'components' and validates the legacy 'runtime' field when present.
+pub fn load_legacy_agent_dir_strict(dir: &Path) -> Result<Package, ForgeError> {
+    let manifest = dir.join("agenthub.yaml");
+    let text = std::fs::read_to_string(&manifest).map_err(|e| {
+        if e.kind() == std::io::ErrorKind::NotFound {
+            ForgeError::InvalidManifest(format!("manifest not found: {}", manifest.display()))
+        } else {
+            ForgeError::Io(e)
+        }
+    })?;
+    let root: serde_yaml::Value = serde_yaml::from_str(&text)?;
+    for key in ["id", "name", "version", "components"] {
+        if root.get(key).is_none() {
+            return Err(ForgeError::InvalidManifest(format!(
+                "manifest missing required field: {key}"
+            )));
+        }
+    }
+    if let Some(runtime) = root.get("runtime").and_then(|r| r.as_str()) {
+        if runtime != "deepseek-harness" {
+            return Err(ForgeError::InvalidManifest(format!(
+                "unsupported runtime: {runtime}"
+            )));
+        }
+    }
+    normalize_legacy_agent(&text)
+}
+
 /// Normalize a legacy 'agenthub.dev/agent/v1' YAML manifest into a 'forge.package.v1' model.
 pub fn normalize_legacy_agent(yaml_text: &str) -> Result<Package, ForgeError> {
     let root: serde_yaml::Value = serde_yaml::from_str(yaml_text)?;
