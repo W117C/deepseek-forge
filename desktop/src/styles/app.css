@@ -1,0 +1,295 @@
+/* ============================================================
+   DeepSeek Forge Desktop — shell-specific styles.
+   Reuses tokens.css / globals.css from @forge; only the Tauri app
+   shell layout and dashboard chrome live here.
+   ============================================================ */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+  padding: var(--s5) var(--s4);
+  border-right: 1px solid var(--border);
+  background: var(--background-2);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 var(--s2);
+  margin-bottom: var(--s2);
+}
+.sidebar-brand svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.sidebar-brand-name {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.sidebar-brand-name em {
+  font-style: normal;
+  color: var(--accent);
+}
+.sidebar-brand-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sidebar-group-title {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  padding: var(--s3) var(--s2) var(--s1);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--r-m);
+  font-size: 13.5px;
+  color: var(--foreground-2);
+  border: 1px solid transparent;
+}
+.sidebar-link svg {
+  flex-shrink: 0;
+}
+.sidebar-link:hover {
+  background: var(--surface);
+  color: var(--foreground);
+}
+.sidebar-link.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--foreground);
+}
+.sidebar-link.is-active svg {
+  color: var(--accent);
+}
+.sidebar-phase {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ---- Main ---- */
+.app-main {
+  min-width: 0;
+}
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--s6) var(--s6) var(--s8);
+}
+.page-header {
+  margin-bottom: var(--s6);
+}
+.page-heading {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.page-sub {
+  margin-top: 6px;
+  color: var(--foreground-2);
+  font-size: 14px;
+}
+
+/* ---- Dashboard ---- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s4);
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stat-card-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+}
+.stat-card-head svg {
+  color: var(--accent);
+}
+.stat-card-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.stat-card-value {
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.stat-card-detail {
+  font-size: 12.5px;
+  color: var(--foreground-2);
+  line-height: 1.5;
+}
+
+.dashboard-section {
+  margin-top: var(--s6);
+}
+.dashboard-section-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  margin-bottom: var(--s3);
+}
+
+.registry-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.registry-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.registry-k {
+  flex-shrink: 0;
+  width: 72px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.registry-v {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--foreground);
+  font-size: 13px;
+  word-break: break-all;
+}
+.registry-v.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.registry-v.ok {
+  color: var(--success);
+}
+.registry-v.warn {
+  color: var(--danger);
+}
+.registry-error {
+  border-left: 2px solid var(--warning);
+  background: var(--warning-soft);
+  color: var(--foreground-2);
+  font-size: 12.5px;
+  padding: 10px 14px;
+  border-radius: 0 var(--r-m) var(--r-m) 0;
+  line-height: 1.55;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s4);
+  margin-top: var(--s6);
+}
+.empty-card {
+  align-items: flex-start;
+}
+.empty-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.empty-card-head svg {
+  color: var(--muted);
+}
+.empty-card-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.empty-card-body {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- Loading / error / empty ---- */
+.dashboard-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: var(--s8);
+  color: var(--muted);
+}
+.spin {
+  animation: forge-spin 0.9s linear infinite;
+}
+@keyframes forge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-state svg.err-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+.placeholder-state {
+  margin-top: var(--s5);
+}
+
+@media (max-width: 900px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
