@@ -21,6 +21,7 @@ export default function Marketplace() {
   const [installing, setInstalling] = useState<InstallState | null>(null);
   const [onlyInstalled, setOnlyInstalled] = useState(false);
   const [licFilter, setLicFilter] = useState("all");
+  const [featured, setFeatured] = useState(false);
 
   function load() {
     setErr(null);
@@ -66,12 +67,15 @@ export default function Marketplace() {
     if (licFilter !== "all") {
       list = list.filter((p) => (p.license ?? "") === licFilter);
     }
+    if (featured) {
+      list = list.filter((p) => p.publisher === "agenthub");
+    }
     const sorted = [...list];
     if (sort === "popular") sorted.sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
     else if (sort === "recent") sorted.sort((a, b) => a.id.localeCompare(b.id));
     else sorted.sort((a, b) => a.name.localeCompare(b.name));
     return sorted;
-  }, [packages, query, cat, sort, onlyInstalled, installed, licFilter]);
+  }, [packages, query, cat, sort, onlyInstalled, installed, licFilter, featured]);
 
   const licenses = useMemo(() => {
     const set = new Set<string>();
@@ -121,6 +125,12 @@ export default function Marketplace() {
           onClick={() => setOnlyInstalled((v) => !v)}
         >
           {onlyInstalled ? t("mp.onlyInstalled") : t("mp.allPackages")}
+        </button>
+        <button
+          className={"btn " + (featured ? "btn-primary" : "btn-ghost")}
+          onClick={() => setFeatured((v) => !v)}
+        >
+          {t("mp.featured")}
         </button>
         {cats.map((c) => (
           <button

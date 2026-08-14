@@ -39,6 +39,9 @@ pub struct PackageSummary {
     pub category: Option<String>,
     #[serde(default)]
     pub license: Option<String>,
+    /// 发布者 id（官方发布 = "agenthub"，用于 Featured 过滤）
+    #[serde(default)]
+    pub publisher: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -162,6 +165,7 @@ impl RegistryProvider for LocalRegistry {
                 stars: package.extra.get("stars").and_then(|s| s.as_u64()),
                 category: Some(package.category.clone()).filter(|c| !c.is_empty()),
                 license: Some(package.license.spdx.clone()),
+                publisher: Some(package.publisher.id.clone()),
             });
         }
         summaries.sort_by(|a, b| a.id.cmp(&b.id));

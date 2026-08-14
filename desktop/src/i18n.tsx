@@ -195,6 +195,7 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "mp.allPackages": { zh: "全部插件", en: "All packages" },
   "mp.scanned": { zh: "已扫描", en: "Scanned" },
   "mp.filterLicense": { zh: "全部许可", en: "All licenses" },
+  "mp.featured": { zh: "官方精选", en: "Featured" },
   "sy.githubSources": { zh: "GitHub 来源", en: "GitHub sources" },
   "sy.cacheRepos": { zh: "本地源码缓存", en: "Local source cache" },
   "sy.licenses": { zh: "许可分布", en: "License distribution" },

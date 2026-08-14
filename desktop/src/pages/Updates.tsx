@@ -2,7 +2,7 @@
 // plugin/imported → 重新收录新版本；artifact 包 → install-from-registry 管线，失败自动回滚）。
 import { useEffect, useState } from "react";
 import { LoaderCircle, RefreshCw, TriangleAlert } from "lucide-react";
-import { updateApply, updateCheck } from "../ipc";
+import { packageRollback, updateApply, updateCheck } from "../ipc";
 import type { UpdateEntry } from "../ipc";
 import { useI18n } from "../i18n";
 
@@ -40,6 +40,21 @@ export default function Updates() {
       load();
     } catch (err) {
       setRowError((prev) => ({ ...prev, [id]: err instanceof Error ? err.message : String(err) }));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function rollbackToSnapshot(id: string) {
+    setBusy("rollback:" + id);
+    try {
+      await packageRollback(id);
+      load();
+    } catch (err) {
+      setRowError((prev) => ({
+        ...prev,
+        [id]: err instanceof Error ? err.message : String(err),
+      }));
     } finally {
       setBusy(null);
     }
@@ -133,9 +148,23 @@ export default function Updates() {
             </div>
           ))}
           {Object.entries(rowError).map(([id, msg]) => (
-            <p key={id} className="field-hint" style={{ color: "var(--danger, #ff6b6b)" }}>
-              {id}: {msg}
-            </p>
+            <div key={id} className="registry-row">
+              <p className="field-hint" style={{ color: "var(--danger, #ff6b6b)" }}>
+                {id}: {msg}
+              </p>
+              <button
+                className="btn btn-ghost"
+                onClick={() => void rollbackToSnapshot(id)}
+                disabled={busy !== null}
+              >
+                {busy === "rollback:" + id ? (
+                  <LoaderCircle size={14} className="spin" />
+                ) : (
+                  <RefreshCw size={14} />
+                )}
+                {t("ag.rollback")}
+              </button>
+            </div>
           ))}
           <p className="field-hint" style={{ marginTop: 10 }}>
             更新 = 校验 → 快照 → 安装 → 健康检查；失败自动回滚到旧版本。

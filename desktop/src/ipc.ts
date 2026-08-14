@@ -32,6 +32,7 @@ export interface RegistrySummary {
   stars?: number | null;
   category?: string | null;
   license?: string | null;
+  publisher?: string | null;
 }
 
 export function installPackage(id: string): Promise<Record<string, unknown>> {
