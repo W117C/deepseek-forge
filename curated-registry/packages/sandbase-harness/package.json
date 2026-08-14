@@ -1,0 +1,95 @@
+{
+  "schema": "forge.package.v1",
+  "id": "sandbase-harness",
+  "name": "sandbase-harness",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Open-source CMA-compatible agent runtime. Run multi-agent systems locally with any model (Ollama/vLLM/Claude/GPT), MCP tools, scenario templates, and a beautiful dashboard. One command start. Built for enterprise teams.",
+  "category": "Agent 与自动化",
+  "tags": [
+    "dsh-plugin",
+    "dsh-plugin-verify",
+    "dsh-plugins"
+  ],
+  "publisher": {
+    "id": "sandbaseai",
+    "name": "sandbaseai"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/sandbaseai/sandbase-harness",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/sandbaseai/sandbase-harness",
+    "author": "sandbaseai",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/sandbaseai/sandbase-harness",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "sandbase-harness",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 564,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T03:28:43Z",
+    "topics": [
+      "dsh-plugin",
+      "dsh-plugin-verify",
+      "dsh-plugins"
+    ],
+    "fullName": "sandbaseai/sandbase-harness"
+  }
+}

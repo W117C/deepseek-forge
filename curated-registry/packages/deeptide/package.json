@@ -1,0 +1,101 @@
+{
+  "schema": "forge.package.v1",
+  "id": "deeptide",
+  "name": "deeptide",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Built by DeepSeek, for DeepSeek — a Swift-native macOS coding agent",
+  "category": "桌面客户端",
+  "tags": [
+    "coding-agent",
+    "deepseek",
+    "deepseek-harness",
+    "dsh-plugin",
+    "macos",
+    "swift"
+  ],
+  "publisher": {
+    "id": "paean-ai",
+    "name": "paean-ai"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/paean-ai/deeptide",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/paean-ai/deeptide",
+    "author": "paean-ai",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/paean-ai/deeptide",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "deeptide",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 1032,
+    "language": "Rust",
+    "pushedAt": "2026-07-08T09:37:30Z",
+    "topics": [
+      "coding-agent",
+      "deepseek",
+      "deepseek-harness",
+      "dsh-plugin",
+      "macos",
+      "swift"
+    ],
+    "fullName": "paean-ai/deeptide"
+  }
+}

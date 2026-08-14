@@ -1,0 +1,107 @@
+{
+  "schema": "forge.package.v1",
+  "id": "claude-paper",
+  "name": "claude-paper",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "📚 Claude Code plugin that automates research papers study with automatic material generation, code demonstrations, and interactive web viewer.",
+  "category": "研究与知识",
+  "tags": [
+    "academic-tools",
+    "claude-code",
+    "code-generation",
+    "dsh-plugin",
+    "learning-management",
+    "pdf-parser",
+    "research-papers",
+    "vue",
+    "web-viewer"
+  ],
+  "publisher": {
+    "id": "alaliqing",
+    "name": "alaliqing"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/alaliqing/claude-paper",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/alaliqing/claude-paper",
+    "author": "alaliqing",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/alaliqing/claude-paper",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "claude-paper",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 283,
+    "language": "Vue",
+    "pushedAt": "2026-04-03T09:22:22Z",
+    "topics": [
+      "academic-tools",
+      "claude-code",
+      "code-generation",
+      "dsh-plugin",
+      "learning-management",
+      "pdf-parser",
+      "research-papers",
+      "vue",
+      "web-viewer"
+    ],
+    "fullName": "alaliqing/claude-paper"
+  }
+}

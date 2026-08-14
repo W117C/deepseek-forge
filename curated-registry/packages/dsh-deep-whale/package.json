@@ -1,0 +1,93 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-deep-whale",
+  "name": "dsh-deep-whale",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH Web 鲸鱼娘皮肤系列(深海女仆工坊 maid-atelier)——CC BY-NC-SA 4.0",
+  "category": "界面与体验",
+  "tags": [
+    "dsh",
+    "dsh-plugin"
+  ],
+  "publisher": {
+    "id": "Small-tailqwq",
+    "name": "Small-tailqwq"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Small-tailqwq/dsh-deep-whale",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Small-tailqwq/dsh-deep-whale",
+    "author": "Small-tailqwq",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Small-tailqwq/dsh-deep-whale",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-deep-whale",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 211,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-13T20:31:08Z",
+    "topics": [
+      "dsh",
+      "dsh-plugin"
+    ],
+    "fullName": "Small-tailqwq/dsh-deep-whale"
+  }
+}

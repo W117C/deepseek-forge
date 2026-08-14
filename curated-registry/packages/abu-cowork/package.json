@@ -1,0 +1,117 @@
+{
+  "schema": "forge.package.v1",
+  "id": "abu-cowork",
+  "name": "Abu-Cowork",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Open-source alternative to Claude Cowork — a local-first AI agent desktop app · multi-model · self-evolving skills · privacy-first · multi-Harness roadmap · DeepSeek Harness integration in progress",
+  "category": "桌面客户端",
+  "tags": [
+    "ai-agent",
+    "ai-assistant",
+    "automation",
+    "desktop-app",
+    "dsh-plugin",
+    "dsh-plugins",
+    "llm",
+    "local-first",
+    "mcp",
+    "privacy",
+    "productivity",
+    "react",
+    "tauri",
+    "typescript"
+  ],
+  "publisher": {
+    "id": "PM-Shawn",
+    "name": "PM-Shawn"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PM-Shawn/Abu-Cowork",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PM-Shawn/Abu-Cowork",
+    "author": "PM-Shawn",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PM-Shawn/Abu-Cowork",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "abu-cowork",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 308,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T03:17:45Z",
+    "topics": [
+      "ai-agent",
+      "ai-assistant",
+      "automation",
+      "desktop-app",
+      "dsh-plugin",
+      "dsh-plugins",
+      "llm",
+      "local-first",
+      "mcp",
+      "privacy",
+      "productivity",
+      "react",
+      "tauri",
+      "typescript"
+    ],
+    "fullName": "PM-Shawn/Abu-Cowork"
+  }
+}

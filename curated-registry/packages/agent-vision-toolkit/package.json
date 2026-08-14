@@ -1,0 +1,123 @@
+{
+  "schema": "forge.package.v1",
+  "id": "agent-vision-toolkit",
+  "name": "agent-vision-toolkit",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "为纯文本模型\"看图“设计更好的视觉工具箱和技能，支持多图理解，图片问答，前端UI还原、GUI 自动化等，并可选无缝接入多个主流agent，直接识别粘贴图片｜ A vision toolkit and skill designed for text-only llms — image Q&A, long-screenshot OCR, frontend UI restoration, and GUI automation, with optional seamless integration for Codex, Claude Code, Pi, Oh My Pi, and OpenCode",
+  "category": "视觉与图像",
+  "tags": [
+    "agent",
+    "agent-skills",
+    "claude-code",
+    "cli",
+    "codex",
+    "computer-use",
+    "deepseek",
+    "dsh-plugin",
+    "glm",
+    "harness-engineering",
+    "kimi",
+    "llm",
+    "multimodal",
+    "opencode",
+    "text-only-llm",
+    "vision",
+    "vision-language-model"
+  ],
+  "publisher": {
+    "id": "Anionex",
+    "name": "Anionex"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Anionex/agent-vision-toolkit",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Anionex/agent-vision-toolkit",
+    "author": "Anionex",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Anionex/agent-vision-toolkit",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "agent-vision-toolkit",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 650,
+    "language": "Python",
+    "pushedAt": "2026-08-13T18:30:45Z",
+    "topics": [
+      "agent",
+      "agent-skills",
+      "claude-code",
+      "cli",
+      "codex",
+      "computer-use",
+      "deepseek",
+      "dsh-plugin",
+      "glm",
+      "harness-engineering",
+      "kimi",
+      "llm",
+      "multimodal",
+      "opencode",
+      "text-only-llm",
+      "vision",
+      "vision-language-model"
+    ],
+    "fullName": "Anionex/agent-vision-toolkit"
+  }
+}

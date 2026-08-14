@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "openbiliclaw",
+  "name": "OpenBiliClaw",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "本地私有、开源的跨平台 AI 内容发现 Agent：先理解你，再主动从 B站、小红书、抖音、YouTube、X、知乎、Reddit、微博等平台与开放 Web 寻找内容。（支持 deepseek harness 插件） | Local-first open-source cross-platform AI content discovery agent: understands you, then proactively finds content across Bilibili, Xiaohongshu, Douyin, YouTube, X, Zhihu, Reddit, Weibo and the open web.（support deepseek harness plugin）",
+  "category": "Agent 与自动化",
+  "tags": [
+    "ai-agent",
+    "bilibili",
+    "chrome-extension",
+    "content-discovery",
+    "cross-platform",
+    "deepseek-harness",
+    "douyin",
+    "dsh",
+    "dsh-plugin",
+    "llm",
+    "local-first",
+    "personal-ai",
+    "privacy-first",
+    "python",
+    "recommendation-system",
+    "self-hosted",
+    "typescript",
+    "xiaohongshu",
+    "youtube",
+    "zhihu"
+  ],
+  "publisher": {
+    "id": "whiteguo233",
+    "name": "whiteguo233"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/whiteguo233/OpenBiliClaw",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/whiteguo233/OpenBiliClaw",
+    "author": "whiteguo233",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/whiteguo233/OpenBiliClaw",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "openbiliclaw",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 2090,
+    "language": "Python",
+    "pushedAt": "2026-08-14T03:16:46Z",
+    "topics": [
+      "ai-agent",
+      "bilibili",
+      "chrome-extension",
+      "content-discovery",
+      "cross-platform",
+      "deepseek-harness",
+      "douyin",
+      "dsh",
+      "dsh-plugin",
+      "llm",
+      "local-first",
+      "personal-ai",
+      "privacy-first",
+      "python",
+      "recommendation-system",
+      "self-hosted",
+      "typescript",
+      "xiaohongshu",
+      "youtube",
+      "zhihu"
+    ],
+    "fullName": "whiteguo233/OpenBiliClaw"
+  }
+}

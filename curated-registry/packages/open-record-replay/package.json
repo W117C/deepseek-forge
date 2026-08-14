@@ -1,0 +1,99 @@
+{
+  "schema": "forge.package.v1",
+  "id": "open-record-replay",
+  "name": "open-record-replay",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Open-source macOS record-and-replay workflow recorder for computer use agents. Captures mouse, keyboard, and UI events as structured traces so agents can learn, replay, and automate real desktop tasks.",
+  "category": "Agent 与自动化",
+  "tags": [
+    "agent",
+    "codex",
+    "computer-use-agent",
+    "dsh-plugin",
+    "skills"
+  ],
+  "publisher": {
+    "id": "humblebanana",
+    "name": "humblebanana"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/humblebanana/open-record-replay",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/humblebanana/open-record-replay",
+    "author": "humblebanana",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/humblebanana/open-record-replay",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "open-record-replay",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 134,
+    "language": "Swift",
+    "pushedAt": "2026-06-22T10:00:18Z",
+    "topics": [
+      "agent",
+      "codex",
+      "computer-use-agent",
+      "dsh-plugin",
+      "skills"
+    ],
+    "fullName": "humblebanana/open-record-replay"
+  }
+}

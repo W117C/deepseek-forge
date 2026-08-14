@@ -1,0 +1,123 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-vision-toolkit",
+  "name": "dsh-vision-toolkit",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "让纯文本模型更好地做视觉任务的DeepSeek Harness插件：带意图的图片问答、长截图 OCR、UI 还原等｜DeepSeek Harness-native integration for agent-vision-toolkit: image Q&A, long-screenshot OCR, UI restoration, grounding, pixel diff, Artifacts, and Web UI.",
+  "category": "视觉与图像",
+  "tags": [
+    "agent-skills",
+    "agent-vision-toolkit",
+    "computer-vision",
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "gui-automation",
+    "ocr",
+    "plugin",
+    "python",
+    "screenshot-testing",
+    "text-only-llm",
+    "typescript",
+    "ui-restoration",
+    "vision-language-model",
+    "vision-tools"
+  ],
+  "publisher": {
+    "id": "Anionex",
+    "name": "Anionex"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Anionex/dsh-vision-toolkit",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Anionex/dsh-vision-toolkit",
+    "author": "Anionex",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Anionex/dsh-vision-toolkit",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-vision-toolkit",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 224,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-13T18:33:48Z",
+    "topics": [
+      "agent-skills",
+      "agent-vision-toolkit",
+      "computer-vision",
+      "deepseek",
+      "deepseek-harness",
+      "dsh",
+      "dsh-plugin",
+      "gui-automation",
+      "ocr",
+      "plugin",
+      "python",
+      "screenshot-testing",
+      "text-only-llm",
+      "typescript",
+      "ui-restoration",
+      "vision-language-model",
+      "vision-tools"
+    ],
+    "fullName": "Anionex/dsh-vision-toolkit"
+  }
+}

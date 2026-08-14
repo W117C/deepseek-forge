@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "modlens",
+  "name": "modlens",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "The first vision plugin for DeepSeek Harness, and the vision bridge for every text-only coding agent. Paste an image, get structured JSON evidence (OCR, layout, semantics).",
+  "category": "视觉与图像",
+  "tags": [
+    "agent-skills",
+    "agentic-workflow",
+    "claude-code",
+    "claude-skills",
+    "codex",
+    "cordis",
+    "deepseek",
+    "dsh-plugin",
+    "glm",
+    "harness",
+    "harness-engineering",
+    "hermes-agent",
+    "image-to-text",
+    "multimodal",
+    "ocr",
+    "openclaw",
+    "pi-agent",
+    "text-only-llm",
+    "vision",
+    "vision-transformer"
+  ],
+  "publisher": {
+    "id": "liustack",
+    "name": "liustack"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/liustack/modlens",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/liustack/modlens",
+    "author": "liustack",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/liustack/modlens",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "modlens",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 833,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T03:11:56Z",
+    "topics": [
+      "agent-skills",
+      "agentic-workflow",
+      "claude-code",
+      "claude-skills",
+      "codex",
+      "cordis",
+      "deepseek",
+      "dsh-plugin",
+      "glm",
+      "harness",
+      "harness-engineering",
+      "hermes-agent",
+      "image-to-text",
+      "multimodal",
+      "ocr",
+      "openclaw",
+      "pi-agent",
+      "text-only-llm",
+      "vision",
+      "vision-transformer"
+    ],
+    "fullName": "liustack/modlens"
+  }
+}

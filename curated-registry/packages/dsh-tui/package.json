@@ -1,0 +1,107 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-tui",
+  "name": "dsh-TUI",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "解决DSH 官方尚无终端 TUI 痛点的补位之作，献给偏爱cli的各位极客：Claude Code 风格全屏交互终端插件——像素鲸鱼顶栏、实时工作状态行、思考流式展开、双击 Esc 回滚、上下文进度条 + TPS 仪表。npm 一键安装。",
+  "category": "终端与 TUI",
+  "tags": [
+    "claude-code",
+    "coding-agent",
+    "deepseek",
+    "deepseek-harness",
+    "dsh-plugin",
+    "ink",
+    "react",
+    "terminal",
+    "tui"
+  ],
+  "publisher": {
+    "id": "ccch1mneyyy",
+    "name": "ccch1mneyyy"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ccch1mneyyy/dsh-TUI",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ccch1mneyyy/dsh-TUI",
+    "author": "ccch1mneyyy",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ccch1mneyyy/dsh-TUI",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-tui",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 449,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T03:23:59Z",
+    "topics": [
+      "claude-code",
+      "coding-agent",
+      "deepseek",
+      "deepseek-harness",
+      "dsh-plugin",
+      "ink",
+      "react",
+      "terminal",
+      "tui"
+    ],
+    "fullName": "ccch1mneyyy/dsh-TUI"
+  }
+}

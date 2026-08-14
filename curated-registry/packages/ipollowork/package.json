@@ -1,0 +1,119 @@
+{
+  "schema": "forge.package.v1",
+  "id": "ipollowork",
+  "name": "iPolloWork",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "A next-generation, source-available AI workspace with a self-evolving agent runtime for editable code, design, presentations, websites, and video—a Codex alternative that integrates DeepSeek Harness for subagent delegation, combining iPolloWork’s complete AI workbench with DSH’s specialized agents and both plugin ecosystems in one workflow.",
+  "category": "Agent 与自动化",
+  "tags": [
+    "agent-collaboration",
+    "agent-skills",
+    "ai-agents",
+    "ai-work",
+    "claude-code",
+    "codex",
+    "deepseek-harness",
+    "dsh-plugin",
+    "enterprise-agent-workspace",
+    "hermes-agent",
+    "openclaw",
+    "opencode",
+    "opencode-plugin",
+    "self-evolving-ai",
+    "visual-editor"
+  ],
+  "publisher": {
+    "id": "Devin-AXIS",
+    "name": "Devin-AXIS"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Devin-AXIS/iPolloWork",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Devin-AXIS/iPolloWork",
+    "author": "Devin-AXIS",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Devin-AXIS/iPolloWork",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "ipollowork",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 3699,
+    "language": "HTML",
+    "pushedAt": "2026-08-13T20:15:08Z",
+    "topics": [
+      "agent-collaboration",
+      "agent-skills",
+      "ai-agents",
+      "ai-work",
+      "claude-code",
+      "codex",
+      "deepseek-harness",
+      "dsh-plugin",
+      "enterprise-agent-workspace",
+      "hermes-agent",
+      "openclaw",
+      "opencode",
+      "opencode-plugin",
+      "self-evolving-ai",
+      "visual-editor"
+    ],
+    "fullName": "Devin-AXIS/iPolloWork"
+  }
+}

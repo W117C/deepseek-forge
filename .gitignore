@@ -24,3 +24,4 @@ keys.json
 # Vercel 本地状态与本地环境变量（vercel CLI 自动追加）
 .vercel
 .env*
+.deepseek-forge-registry/

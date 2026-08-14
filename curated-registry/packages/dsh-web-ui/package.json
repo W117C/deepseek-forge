@@ -1,0 +1,97 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-web-ui",
+  "name": "dsh-web-ui",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Plugin and skin collection for DeepSeek Harness (DSH) Web UI - task board, git graph, right-side panel, remote mobile UI, pet, live token stats, and skin center.",
+  "category": "界面与体验",
+  "tags": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "web-ui"
+  ],
+  "publisher": {
+    "id": "zhu1090093659",
+    "name": "zhu1090093659"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/zhu1090093659/dsh-web-ui",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/zhu1090093659/dsh-web-ui",
+    "author": "zhu1090093659",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/zhu1090093659/dsh-web-ui",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-web-ui",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 866,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T03:25:11Z",
+    "topics": [
+      "deepseek-harness",
+      "dsh",
+      "dsh-plugin",
+      "web-ui"
+    ],
+    "fullName": "zhu1090093659/dsh-web-ui"
+  }
+}
