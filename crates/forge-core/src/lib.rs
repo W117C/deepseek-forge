@@ -1,5 +1,6 @@
 //! DeepSeek Forge core: unified package model, manifest, registry, errors, and events.
 
+pub mod adapter;
 pub mod dsh;
 pub mod errors;
 pub mod events;
@@ -13,6 +14,7 @@ pub mod signing;
 pub mod snapshot;
 pub mod state;
 
+pub use adapter::{generate, propose, AdapterProposal};
 pub use dsh::{
     agenthub_store, dsh_home, has_pnpm, init_profile, locate_dsh, preset_dir, profile_dir,
     read_manifest, run_dsh, skills_dir, write_manifest, PROFILE_PATCH_TEMPLATE,

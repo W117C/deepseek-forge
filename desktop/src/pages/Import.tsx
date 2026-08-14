@@ -2,8 +2,8 @@
 // 本阶段 Local-first：URL 需已在 ~/.deepseek-forge/cache/repos/ 克隆；分析不执行第三方代码。
 import { useState } from "react";
 import { Github, LoaderCircle, ScanSearch, TriangleAlert } from "lucide-react";
-import { importAnalyze } from "../ipc";
-import type { RepositoryAnalysis } from "../ipc";
+import { adapterPropose, importAnalyze } from "../ipc";
+import type { AdapterProposal, RepositoryAnalysis } from "../ipc";
 
 type State =
   | { status: "idle" }
@@ -25,6 +25,24 @@ const TYPE_LABEL: Record<string, string> = {
 export default function Import() {
   const [source, setSource] = useState("");
   const [state, setState] = useState<State>({ status: "idle" });
+  const [proposal, setProposal] = useState<AdapterProposal | null>(null);
+  const [proposalErr, setProposalErr] = useState<string | null>(null);
+  const [proposing, setProposing] = useState(false);
+
+  async function proposeAdapter() {
+    const s = source.trim();
+    if (!s) return;
+    setProposing(true);
+    setProposalErr(null);
+    try {
+      setProposal(await adapterPropose(s));
+    } catch (err) {
+      setProposal(null);
+      setProposalErr(err instanceof Error ? err.message : String(err));
+    } finally {
+      setProposing(false);
+    }
+  }
 
   async function run() {
     const s = source.trim();
@@ -126,9 +144,34 @@ export default function Import() {
             </>
           )}
 
-          <p className="field-hint" style={{ marginTop: 16 }}>
-            Adapter 生成（manifest/adapter/wrapper 提案 + 人工确认）将在 Phase 5 提供。
-          </p>
+          <div style={{ marginTop: 16, display: "flex", gap: 10, alignItems: "center" }}>
+            <button className="btn btn-primary" onClick={() => void proposeAdapter()} disabled={proposing}>
+              {proposing ? <LoaderCircle size={15} className="spin" /> : null}
+              Create Adapter Proposal
+            </button>
+            <span className="field-hint">规则型生成器（非 AI），生成后必须人工审阅。</span>
+          </div>
+
+          {proposalErr && (
+            <div className="field-error" style={{ marginTop: 10 }}>{proposalErr}</div>
+          )}
+
+          {proposal && (
+            <div className="card" style={{ marginTop: 12 }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
+                <span className="badge badge-community">{proposal.generator === "rules" ? "rules (非 AI)" : proposal.generator}</span>
+                {proposal.requiresHumanReview && (
+                  <span className="badge badge-blocked">需人工审阅（高风险/危险命令）</span>
+                )}
+              </div>
+              <pre className="mono" style={{ fontSize: 11, maxHeight: 320, overflow: "auto", background: "var(--bg-soft)", padding: 10, borderRadius: 6 }}>
+                {JSON.stringify(proposal.manifest, null, 2)}
+              </pre>
+              <p className="field-hint">
+                落地为文件：forge-core adapter generate &lt;源&gt; --out &lt;目录&gt;（骨架 install/configure/healthcheck 待人工补充后才会被使用）。
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

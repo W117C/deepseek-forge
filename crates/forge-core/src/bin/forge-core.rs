@@ -8,6 +8,7 @@ use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::exit;
 
+use forge_core::adapter::{generate, propose};
 use forge_core::dsh::{agenthub_store, dsh_home, locate_dsh};
 use forge_core::errors::{ErrorEnvelope, ForgeError};
 use forge_core::import::analyze_source;
@@ -129,6 +130,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "catalog-plugin" => run_catalog_plugin(&args[1..]),
         "install-from-registry" => run_install_from_registry(&args[1..]),
         "import" => run_import(&args[1..]),
+        "adapter" => run_adapter(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -726,6 +728,32 @@ fn run_import(args: &[String]) -> Result<(), ForgeError> {
     print_json(&analysis)
 }
 
+fn run_adapter(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("adapter requires a subcommand (propose|generate)".to_string())
+    })?;
+    let source = args.get(1).ok_or_else(|| {
+        ForgeError::InvalidManifest(
+            "adapter requires a source (directory or github URL)".to_string(),
+        )
+    })?;
+    let analysis = analyze_source(source)?;
+    match sub.as_str() {
+        "propose" => print_json(&propose(&analysis)?),
+        "generate" => {
+            let f = Flags::parse(&args[2..]);
+            let out = f.get("out").map(PathBuf::from).ok_or_else(|| {
+                ForgeError::InvalidManifest("adapter generate requires --out DIR".to_string())
+            })?;
+            let dir = generate(&analysis, &out)?;
+            print_json(&serde_json::json!({ "ok": true, "packageDir": dir }))
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
+            "unknown adapter subcommand '{sub}'"
+        ))),
+    }
+}
+
 fn print_usage() {
     eprintln!(
         r#"forge-core - DeepSeek Forge core (read-only)
@@ -747,6 +775,8 @@ USAGE:
   forge-core catalog-plugin NAME --source SRC --home DIR [--bin PATH] [--profile NAME]
   forge-core registry import AGENT-DIR [--registry PATH]
   forge-core install-from-registry ID --registry PATH --home DIR [--version V] [--profile NAME] [--trust LEVEL] [--bin PATH] [--smoke]
-  forge-core import analyze DIR-OR-GITHUB-URL"#
+  forge-core import analyze DIR-OR-GITHUB-URL
+  forge-core adapter propose DIR-OR-GITHUB-URL
+  forge-core adapter generate DIR-OR-GITHUB-URL --out DIR"#
     );
 }

@@ -127,3 +127,16 @@ export interface RepositoryAnalysis {
 export function importAnalyze(source: string): Promise<RepositoryAnalysis> {
   return call<RepositoryAnalysis>("import_analyze", { source });
 }
+
+/** Mirror of forge_core::adapter::AdapterProposal. */
+export interface AdapterProposal {
+  packageType: string;
+  risk: string;
+  generator: string;
+  requiresHumanReview: boolean;
+  manifest: Record<string, unknown>;
+}
+
+export function adapterPropose(source: string): Promise<AdapterProposal> {
+  return call<AdapterProposal>("adapter_propose", { source });
+}

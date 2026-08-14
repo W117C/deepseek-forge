@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 
 use forge_core::errors::{ErrorEnvelope, ForgeError};
 use forge_core::events::EventBus;
+use forge_core::adapter::propose;
 use forge_core::import::analyze_source;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 use serde::Serialize;
@@ -126,6 +127,13 @@ fn import_analyze(source: String) -> Result<forge_core::import::RepositoryAnalys
     analyze_source(&source).map_err(to_ipc_error)
 }
 
+/// Phase 5: rule-based adapter proposal (human gate; never executes anything).
+#[tauri::command]
+fn adapter_propose(source: String) -> Result<forge_core::adapter::AdapterProposal, String> {
+    let analysis = analyze_source(&source).map_err(to_ipc_error)?;
+    propose(&analysis).map_err(to_ipc_error)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let bus = EventBus::new();
@@ -138,7 +146,8 @@ pub fn run() {
             registry_info,
             registry_versions,
             registry_get_version,
-            import_analyze
+            import_analyze,
+            adapter_propose
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
