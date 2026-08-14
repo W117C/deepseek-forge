@@ -19,7 +19,8 @@ pub mod state;
 pub mod updater;
 
 pub use adapter::{
-    configured_ai_provider, generate, propose, provider_from_env, AdapterProposal, AiProvider,
+    configured_ai_provider, generate, propose, propose_with_provider, provider_from_env,
+    refine_with_ai, AdapterProposal, AiProvider, AiRefineRequest, AiRefineResponse,
 };
 pub use composer::{
     resolve_graph, validate_components, ComponentSpec, DependencySpec, ResolveReport,

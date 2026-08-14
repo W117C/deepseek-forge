@@ -74,11 +74,105 @@ fn slugify(s: &str) -> String {
 }
 
 /// Build a forge.package.v1 manifest proposal from a repository analysis.
+/// AI refinement payload/response shapes (provider contract).
+#[derive(Serialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct AiRefineRequest {
+    pub mode: String, // "forge-adapter-proposal"
+    pub package_type: String,
+    pub repo_name: String,
+    pub language: Option<String>,
+    pub license: Option<String>,
+    pub entry_point: Option<String>,
+    pub dependencies_count: usize,
+    pub security_risk: String,
+}
+
+#[derive(serde::Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct AiRefineResponse {
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub category: Option<String>,
+}
+
+/// Call the configured AI provider to refine the proposal. Any transport or
+/// protocol failure returns Ok(None) so the caller falls back to rules mode
+/// and says so explicitly — never silently half-applies AI output.
+pub fn refine_with_ai(
+    provider: &AiProvider,
+    analysis: &RepositoryAnalysis,
+) -> Result<Option<AiRefineResponse>, ForgeError> {
+    let req = AiRefineRequest {
+        mode: "forge-adapter-proposal".to_string(),
+        package_type: analysis.package_type.clone(),
+        repo_name: analysis
+            .repo
+            .clone()
+            .unwrap_or_else(|| analysis.source.clone()),
+        language: analysis.language.clone(),
+        license: analysis.license.clone(),
+        entry_point: analysis.entry_point.clone(),
+        dependencies_count: analysis.dependencies.len(),
+        security_risk: analysis.security_risk.clone(),
+    };
+    let request = match minreq::post(&provider.endpoint)
+        .with_header("Authorization", format!("Bearer {}", provider.api_key))
+        .with_json(&req)
+    {
+        Ok(r) => r,
+        Err(_) => return Ok(None),
+    };
+    let resp = match request.send() {
+        Ok(r) => r,
+        Err(_) => return Ok(None),
+    };
+    match resp.json::<AiRefineResponse>() {
+        Ok(v) => Ok(Some(v)),
+        Err(_) => Ok(None),
+    }
+}
+
 /// Build a forge.package.v1 manifest proposal from a repository analysis.
-/// With no AI provider configured this runs in deterministic "rules" mode and
-/// says so explicitly — it never pretends to be AI-generated.
+/// With no AI provider configured (or provider unreachable) this runs in
+/// deterministic "rules" mode and says so explicitly.
 pub fn propose(analysis: &RepositoryAnalysis) -> Result<AdapterProposal, ForgeError> {
-    propose_with_mode(analysis, configured_ai_provider().is_some())
+    propose_with_provider(analysis, configured_ai_provider().as_ref())
+}
+
+/// Injectable provider variant (tests can pass an unreachable/local fixture).
+pub fn propose_with_provider(
+    analysis: &RepositoryAnalysis,
+    provider: Option<&AiProvider>,
+) -> Result<AdapterProposal, ForgeError> {
+    let mut proposal = propose_with_mode(analysis, false)?;
+    if let Some(provider) = provider {
+        if let Ok(Some(refine)) = refine_with_ai(provider, analysis) {
+            proposal.generator = "ai".to_string();
+            if let Some(desc) = refine.description {
+                if !desc.trim().is_empty() {
+                    proposal
+                        .manifest
+                        .as_object_mut()
+                        .map(|o| o.insert("description".to_string(), serde_json::json!(desc)));
+                }
+            }
+            if let Some(cat) = refine.category {
+                if !cat.trim().is_empty() {
+                    proposal
+                        .manifest
+                        .as_object_mut()
+                        .map(|o| o.insert("category".to_string(), serde_json::json!(cat)));
+                }
+            }
+            return Ok(proposal);
+        }
+        // AI 不可达/协议不符：回退 rules 并强制人工审阅，明示
+        proposal.generator = "rules".to_string();
+        proposal.requires_human_review = true;
+    }
+    Ok(proposal)
 }
 
 fn propose_with_mode(
