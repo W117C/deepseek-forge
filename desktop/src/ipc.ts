@@ -155,3 +155,24 @@ export interface RuntimeStatus {
 export function runtimeStatus(): Promise<RuntimeStatus> {
   return call<RuntimeStatus>("runtime_status_cmd");
 }
+
+/** Installed state (shared DSH store): { agents: Record<string, InstalledAgent> }. */
+export interface InstalledAgent {
+  version?: string;
+  profile?: string;
+  installedAt?: string;
+  trust?: string;
+  score?: number;
+  kind?: string;
+  permissions?: { network?: string[]; env?: string[] };
+  presetIds?: string[];
+  skillNames?: string[];
+}
+
+export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }> {
+  return call<{ agents: Record<string, InstalledAgent> }>("state_list");
+}
+
+export function packageRollback(id: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("package_rollback", { id });
+}

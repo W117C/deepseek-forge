@@ -11,8 +11,10 @@ use forge_core::errors::{ErrorEnvelope, ForgeError};
 use forge_core::events::EventBus;
 use forge_core::adapter::propose;
 use forge_core::import::analyze_source;
+use forge_core::installer::rollback;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 use forge_core::runtime::runtime_status;
+use forge_core::state::load_state;
 use serde::Serialize;
 
 /// Shared state managed by Tauri. The bus is wired now for later
@@ -128,6 +130,18 @@ fn import_analyze(source: String) -> Result<forge_core::import::RepositoryAnalys
     analyze_source(&source).map_err(to_ipc_error)
 }
 
+/// Phase 8: installed agents from the shared DSH state store.
+#[tauri::command]
+fn state_list() -> Result<serde_json::Value, String> {
+    Ok(load_state(&forge_core::dsh::dsh_home(None)))
+}
+
+/// Phase 8: rollback/uninstall an installed package via the Rust kernel.
+#[tauri::command]
+fn package_rollback(id: String) -> Result<serde_json::Value, String> {
+    rollback(&forge_core::dsh::dsh_home(None), &id).map_err(to_ipc_error)
+}
+
 /// Phase 7: observe the DeepSeek Harness runtime (status/sessions/processes).
 #[tauri::command]
 fn runtime_status_cmd() -> Result<forge_core::runtime::RuntimeStatus, String> {
@@ -155,7 +169,9 @@ pub fn run() {
             registry_get_version,
             import_analyze,
             adapter_propose,
-            runtime_status_cmd
+            runtime_status_cmd,
+            state_list,
+            package_rollback
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

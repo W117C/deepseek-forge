@@ -19,7 +19,7 @@ use forge_core::installer::{
 use forge_core::manifest::{
     load_legacy_agent_dir, load_legacy_agent_dir_strict, load_package_file,
 };
-use forge_core::registry::{LocalRegistry, RegistryProvider};
+use forge_core::registry::{LocalRegistry, PackageSummary, RegistryProvider};
 use forge_core::runtime::runtime_status;
 use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
@@ -135,6 +135,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "adapter" => run_adapter(&args[1..]),
         "composer" => run_composer(&args[1..]),
         "runtime" => run_runtime(&args[1..]),
+        "search" => run_search(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -793,6 +794,28 @@ fn run_runtime(args: &[String]) -> Result<(), ForgeError> {
     print_json(&status)
 }
 
+fn run_search(args: &[String]) -> Result<(), ForgeError> {
+    let f = Flags::parse(args);
+    let query = f
+        .positional
+        .first()
+        .cloned()
+        .unwrap_or_default()
+        .to_lowercase();
+    let (registry, _) = parse_registry(&args[1..]);
+    let packages = LocalRegistry::open(registry).list_packages()?;
+    let hits: Vec<&PackageSummary> = packages
+        .iter()
+        .filter(|p| {
+            query.is_empty()
+                || p.id.to_lowercase().contains(&query)
+                || p.name.to_lowercase().contains(&query)
+                || p.description.to_lowercase().contains(&query)
+        })
+        .collect();
+    print_json(&hits)
+}
+
 fn print_usage() {
     eprintln!(
         r#"forge-core - DeepSeek Forge core (read-only)
@@ -818,6 +841,7 @@ USAGE:
   forge-core adapter propose DIR-OR-GITHUB-URL
   forge-core adapter generate DIR-OR-GITHUB-URL --out DIR
   forge-core composer resolve (stdin: 组件 JSON 数组)
-  forge-core runtime status [--home DIR]"#
+  forge-core runtime status [--home DIR]
+  forge-core search QUERY [--registry PATH]"#
     );
 }

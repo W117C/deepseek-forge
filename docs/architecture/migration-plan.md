@@ -174,3 +174,32 @@ Model/Context 等展示字段以真实来源为准（dsh 版本、会话文件�
 | 桌面打包平台问题 | macOS 优先；Windows/Linux 排期后移，不影响 CLI/核心 |
 | GitHub 限流/不可用 | 本地缓存 + fixture 测试；Import 属按需操作非后台依赖 |
 | 阶段间回归 | 每阶段 Gate 全量 e2e；commit 可独立 revert |
+
+---
+
+## 14. 实施进度（Phase 0-8 实际执行记录）
+
+| Phase | 状态 | Commit |
+| --- | --- | --- |
+| 0 Audit | ✅ | 3a74750（docs/architecture 三文档） |
+| 1 Forge Core | ✅ | 977cec6 feat(core): unify package model（模型/manifest/LocalRegistry/errors/events/schema/CI） |
+| 2 Desktop Shell | ✅ | 6f07733 feat(desktop): add tauri shell（Tauri 2 + typed IPC + Dashboard + 10s 真机冒烟） |
+| 3 Package Management | ✅ | efe9d67 feat(installer): rust install engine with node parity bridge（十步管线/快照/回滚全部迁 Rust；Node 三模块变薄代理；parity 33/33；19 套 e2e ALL PASS） |
+| 4 GitHub Import | ✅ | 52477dd + e6c11fe（Local-first 分析器：license/依赖/入口/能力/危险命令 → 类型判定；桌面 Import 页） |
+| 5 Adapter Generator | ✅ | e37f431（规则型生成器，明示非 AI；无许可证拒生成；人工门禁） |
+| 6 Composer | ✅ 核心 | 4380cc1（依赖图/版本冲突/循环/缺失检测 + 拓扑序；图形化 Composer UI 留待后续） |
+| 7 Runtime | ✅ 观察器 | 80a34bd（harness/会话库/进程表；Sessions/Processes 页；进程 stop/restart 留待后续） |
+| 8 Polish | ✅ 部分 | 本阶段（CLI search、My Agents 页+回滚、Security/Sources/Updates/Settings/Logs 诚实页） |
+
+### 决策点落地记录
+
+- **D1（forge-core 二进制分发）**：开发/CI 用仓库内构建产物（release→debug→FORGE_CORE_BIN→PATH，lib/forge-core-bin.mjs）；npm 跨平台打包方案留待发布阶段。
+- **D2（状态迁移）**：不做强迁移。CLI/桌面共用 DSH_HOME/.agenthub/state.json（零破坏）；~/.deepseek-forge 仅存 Local Registry/cache。
+- **D3（AI Adapter 供应商）**：当前规则型生成器（generator=rules 明示）；AI 提案接口留待接入模型供应商。
+- **D4（license 检测）**：自研关键词 + SPDX 归一 + package.json license 字段；无许可证 → LICENSE_MISSING 阻断。
+- **D5（桌面 UI 组件来源）**：@forge 路径别名复用 forge tokens/globals.css，未抽独立 ui 包。
+
+### 已知剩余（诚实清单）
+
+- Composer 图形化 UI（核心解析已就绪）；Runtime 进程 stop/restart 控制；日志落盘与聚合（四类日志）；Git Registry（网络 clone 接入）；桌面更新检查（对比本地 registry 版本）；AI 型 Adapter 提案；D1 的 npm 二进制分发；官方 bundle 的 LICENSE 文件（core package.json 已声明 MIT，根目录无 LICENSE 文件）。
+

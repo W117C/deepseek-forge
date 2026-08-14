@@ -4,8 +4,16 @@ import Sidebar from "./layout/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Import from "./pages/Import";
 import Placeholder from "./pages/Placeholder";
+import Agents from "./pages/Agents";
 import Processes from "./pages/Processes";
 import Sessions from "./pages/Sessions";
+import {
+  LogsPage,
+  SecurityPage,
+  SettingsPage,
+  SourcesPage,
+  UpdatesPage,
+} from "./pages/SystemPages";
 
 export default function App() {
   useEffect(() => {
@@ -23,10 +31,7 @@ export default function App() {
             element={<Placeholder title="Marketplace" phase="Phase 4" />}
           />
           <Route path="/import" element={<Import />} />
-          <Route
-            path="/agents"
-            element={<Placeholder title="My Agents" phase="Phase 6" />}
-          />
+          <Route path="/agents" element={<Agents />} />
           <Route
             path="/skills"
             element={<Placeholder title="My Skills" phase="Phase 6" />}
@@ -41,26 +46,11 @@ export default function App() {
           />
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/processes" element={<Processes />} />
-          <Route
-            path="/logs"
-            element={<Placeholder title="Logs" phase="Phase 7" />}
-          />
-          <Route
-            path="/security"
-            element={<Placeholder title="Security" phase="Phase 8" />}
-          />
-          <Route
-            path="/sources"
-            element={<Placeholder title="Sources" phase="Phase 8" />}
-          />
-          <Route
-            path="/updates"
-            element={<Placeholder title="Updates" phase="Phase 8" />}
-          />
-          <Route
-            path="/settings"
-            element={<Placeholder title="Settings" phase="Phase 8" />}
-          />
+          <Route path="/logs" element={<LogsPage />} />
+          <Route path="/security" element={<SecurityPage />} />
+          <Route path="/sources" element={<SourcesPage />} />
+          <Route path="/updates" element={<UpdatesPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

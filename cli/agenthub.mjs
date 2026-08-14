@@ -12,6 +12,7 @@ import { loadState } from '../lib/state.mjs';
 import { runHealth } from '../lib/health.mjs';
 import { keygen, signPayload, sha256hex, canonicalPayload } from '../lib/signing.mjs';
 import { fetchAgent } from '../lib/registry-client.mjs';
+import { runForgeCoreJson } from '../lib/forge-core-bin.mjs';
 import { createRegistry } from '../lib/registry-server.mjs';
 import { createAgent, composeAgent } from '../lib/scaffold.mjs';
 
@@ -262,6 +263,22 @@ async function main() {
     if (!target) { console.log(USAGE); process.exit(2); }
     const s = scanAgentDir(resolve(target), { trust: f.trust || 'community' });
     print(s);
+    return;
+  }
+
+  if (cmd === 'search') {
+    const q = f._[0];
+    if (!q) { console.log('用法: agenthub search <关键词> [--registry <url|路径>]'); process.exit(2); }
+    if (f.registry && !/^https?:\/\//.test(f.registry)) {
+      // 本地目录 Registry → 走 Rust 引擎
+      print(runForgeCoreJson(['search', q, '--registry', f.registry]));
+    } else if (f.registry) {
+      const res = await fetch(f.registry.replace(/\/$/, '') + '/v1/search?q=' + encodeURIComponent(q));
+      print(await res.json());
+    } else {
+      console.error('需要 --registry <url|本地路径>（桌面阶段 Local-first：本地目录经 forge-core search）');
+      process.exit(2);
+    }
     return;
   }
 
