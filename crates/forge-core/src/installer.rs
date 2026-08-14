@@ -13,6 +13,7 @@ use crate::dsh::{
     write_manifest,
 };
 use crate::errors::ForgeError;
+use crate::logutil::append_security_log;
 use crate::manifest::load_legacy_agent_dir_strict;
 use crate::model::Package;
 use crate::security::{scan_agent_dir, ScanReport};
@@ -462,12 +463,14 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
         Err(e) => return Err(InstallFailure::new(&e, steps, None)),
     };
     if scan.verdict == "block" {
+        let _ = append_security_log(&agent_id, scan.score, &scan.verdict, scan.findings.len());
         let e = ForgeError::SecurityBlocked(format!(
             "安全扫描阻断：{} 个高危发现。用 --trust official 仅限官方包；第三方高危包拒绝安装。",
             scan.high
         ));
         return Err(InstallFailure::new(&e, steps, None));
     }
+    let _ = append_security_log(&agent_id, scan.score, &scan.verdict, scan.findings.len());
 
     // 3. snapshot
     steps.push("snapshot".to_string());

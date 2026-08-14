@@ -16,7 +16,7 @@ use forge_core::import::analyze_source;
 use forge_core::installer::{
     install, install_catalog_plugin, rollback, InstallFailure, InstallRequest,
 };
-use forge_core::logutil::{append_install_log, list_install_logs};
+use forge_core::logutil::{append_install_log, list_logs};
 use forge_core::manifest::{
     load_legacy_agent_dir, load_legacy_agent_dir_strict, load_package_file,
 };
@@ -847,7 +847,7 @@ fn run_logs(args: &[String]) -> Result<(), ForgeError> {
             "unknown logs subcommand '{sub}'"
         )));
     }
-    print_json(&list_install_logs())
+    print_json(&list_logs())
 }
 
 fn run_search(args: &[String]) -> Result<(), ForgeError> {

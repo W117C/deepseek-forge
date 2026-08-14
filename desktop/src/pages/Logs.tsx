@@ -45,7 +45,7 @@ export default function Logs() {
     <div className="page">
       <header className="page-header">
         <h1 className="page-heading">Logs</h1>
-        <p className="page-sub">Install logs (harness/security 日志聚合在后续接入).</p>
+        <p className="page-sub">Install and security-scan logs (append-only JSONL).</p>
       </header>
       {state.entries.length === 0 ? (
         <div className="card empty-card">
@@ -61,7 +61,10 @@ export default function Logs() {
             <div key={i} className="registry-row">
               <span className="registry-k mono">{e.ts}</span>
               <span className="registry-v">
-                {e.id} v{e.version} — {e.ok ? "ok" : "failed" + (e.code ? " (" + e.code + ")" : "")}
+                <span className="badge badge-community">{e.kind}</span>{" "}
+                {e.id}{e.kind === "install" ? " v" + e.version : " verdict " + e.version} —{" "}
+                {e.ok ? "ok" : "failed"}
+                {e.code ? " · " + (e.kind === "security" ? "score " + e.code : e.code) : ""}
               </span>
             </div>
           ))}
