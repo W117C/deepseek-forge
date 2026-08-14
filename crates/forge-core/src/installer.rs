@@ -664,9 +664,6 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
             "permissions": { "network": manifest.permissions.network, "env": manifest.permissions.env },
             "trust": trust,
             "score": scan.score,
-            // 审核工作流：官方发布直接通过；社区发布待审核（桌面端批准/拒绝）。
-            "reviewStatus": if trust == "official" { "approved" } else { "pending" },
-            "reviewedAt": null,
         });
         save_state(&req.home, &state)?;
 
