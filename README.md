@@ -3,7 +3,7 @@
 DeepSeek Harness Agent Bundle Marketplace — 本地安装闭环原型。
 
 > 线上展示（只读 Marketplace）：**https://agenthub-w117-c.vercel.app** —— Vercel 自动部署（Git 集成，推送 main 即上线；数据来自仓库内 manifest 快照，见 [web/](web/)）。
-> 仓库：https://github.com/W117C/agenthub ｜ CI：GitHub Actions 全量 e2e 门槛 ｜ 发布：GitHub Releases（v0.1.0）
+> 仓库：https://github.com/W117C/deepseek-agenthub ｜ CI：GitHub Actions 全量 e2e 门槛 ｜ 发布：GitHub Releases（v0.1.0）
 >
 > 状态：**M1–M4 验证通过（203/203）**——14 套 e2e：本地闭环 27 + 共存 20 + Registry/安全 25 + pnpm 路径 9 + 生命周期 21 + Web 24 + 开发者 14 + 鉴权 14 + 交互 5 + 组合 13 + 备份恢复 7 + 服务端组合 11 + 组合发布 9 + **模型层冒烟 4**。
 > 见 [docs/m1-verification.md](docs/m1-verification.md)、[docs/m2-verification.md](docs/m2-verification.md)、[docs/m3-verification.md](docs/m3-verification.md)、[docs/registry-production.md](docs/registry-production.md)、[docs/deployment.md](docs/deployment.md)、[docs/agent-builder-design.md](docs/agent-builder-design.md)。

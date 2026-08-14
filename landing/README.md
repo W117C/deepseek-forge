@@ -43,5 +43,5 @@ Deploy as its own Vercel project (framework: **Vite**, root directory: **landing
 the existing root `vercel.json` still routes the read-only marketplace in `web/`.
 
 The GitHub / Documentation buttons point at the real repository:
-`https://github.com/W117C/agenthub` (update in `src/config.ts` if the repo moves).
+`https://github.com/W117C/deepseek-agenthub` (update in `src/config.ts` if the repo moves).
 

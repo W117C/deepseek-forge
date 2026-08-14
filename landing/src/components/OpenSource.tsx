@@ -86,7 +86,7 @@ export default function OpenSource() {
                   <i />
                 </span>
                 <span className="title">
-                  <b>W117C/agenthub</b> — repository
+                  <b>W117C/deepseek-agenthub</b> — repository
                 </span>
               </div>
               <div className="code-body">
