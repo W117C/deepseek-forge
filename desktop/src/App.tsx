@@ -4,6 +4,8 @@ import Sidebar from "./layout/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Import from "./pages/Import";
 import Placeholder from "./pages/Placeholder";
+import Processes from "./pages/Processes";
+import Sessions from "./pages/Sessions";
 
 export default function App() {
   useEffect(() => {
@@ -37,14 +39,8 @@ export default function App() {
             path="/bundles"
             element={<Placeholder title="Bundles" phase="Phase 6" />}
           />
-          <Route
-            path="/sessions"
-            element={<Placeholder title="Sessions" phase="Phase 7" />}
-          />
-          <Route
-            path="/processes"
-            element={<Placeholder title="Processes" phase="Phase 7" />}
-          />
+          <Route path="/sessions" element={<Sessions />} />
+          <Route path="/processes" element={<Processes />} />
           <Route
             path="/logs"
             element={<Placeholder title="Logs" phase="Phase 7" />}

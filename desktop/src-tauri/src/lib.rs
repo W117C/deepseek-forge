@@ -12,6 +12,7 @@ use forge_core::events::EventBus;
 use forge_core::adapter::propose;
 use forge_core::import::analyze_source;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
+use forge_core::runtime::runtime_status;
 use serde::Serialize;
 
 /// Shared state managed by Tauri. The bus is wired now for later
@@ -127,6 +128,12 @@ fn import_analyze(source: String) -> Result<forge_core::import::RepositoryAnalys
     analyze_source(&source).map_err(to_ipc_error)
 }
 
+/// Phase 7: observe the DeepSeek Harness runtime (status/sessions/processes).
+#[tauri::command]
+fn runtime_status_cmd() -> Result<forge_core::runtime::RuntimeStatus, String> {
+    runtime_status(None).map_err(to_ipc_error)
+}
+
 /// Phase 5: rule-based adapter proposal (human gate; never executes anything).
 #[tauri::command]
 fn adapter_propose(source: String) -> Result<forge_core::adapter::AdapterProposal, String> {
@@ -147,7 +154,8 @@ pub fn run() {
             registry_versions,
             registry_get_version,
             import_analyze,
-            adapter_propose
+            adapter_propose,
+            runtime_status_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

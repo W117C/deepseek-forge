@@ -20,6 +20,7 @@ use forge_core::manifest::{
     load_legacy_agent_dir, load_legacy_agent_dir_strict, load_package_file,
 };
 use forge_core::registry::{LocalRegistry, RegistryProvider};
+use forge_core::runtime::runtime_status;
 use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
 use forge_core::snapshot::iso_utc_colon;
@@ -133,6 +134,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "import" => run_import(&args[1..]),
         "adapter" => run_adapter(&args[1..]),
         "composer" => run_composer(&args[1..]),
+        "runtime" => run_runtime(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -776,6 +778,21 @@ fn run_composer(args: &[String]) -> Result<(), ForgeError> {
     print_json(&resolve_graph(&components)?)
 }
 
+fn run_runtime(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("runtime requires a subcommand (status)".to_string())
+    })?;
+    if sub != "status" {
+        return Err(ForgeError::InvalidManifest(format!(
+            "unknown runtime subcommand '{sub}'"
+        )));
+    }
+    let f = Flags::parse(&args[1..]);
+    let home = f.get("home").map(PathBuf::from);
+    let status = runtime_status(home.as_deref())?;
+    print_json(&status)
+}
+
 fn print_usage() {
     eprintln!(
         r#"forge-core - DeepSeek Forge core (read-only)
@@ -800,6 +817,7 @@ USAGE:
   forge-core import analyze DIR-OR-GITHUB-URL
   forge-core adapter propose DIR-OR-GITHUB-URL
   forge-core adapter generate DIR-OR-GITHUB-URL --out DIR
-  forge-core composer resolve (stdin: 组件 JSON 数组)"#
+  forge-core composer resolve (stdin: 组件 JSON 数组)
+  forge-core runtime status [--home DIR]"#
     );
 }

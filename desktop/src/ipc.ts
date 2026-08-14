@@ -140,3 +140,18 @@ export interface AdapterProposal {
 export function adapterPropose(source: string): Promise<AdapterProposal> {
   return call<AdapterProposal>("adapter_propose", { source });
 }
+
+/** Mirror of forge_core::runtime::RuntimeStatus. */
+export interface RuntimeStatus {
+  harnessDetected: boolean;
+  harnessBin: string | null;
+  harnessVersion: string | null;
+  sessionsDir: string;
+  sessionCount: number;
+  sessions: { id: string; sizeBytes: number; modifiedAt: string }[];
+  processes: { pid: number; command: string }[];
+}
+
+export function runtimeStatus(): Promise<RuntimeStatus> {
+  return call<RuntimeStatus>("runtime_status_cmd");
+}

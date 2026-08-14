@@ -10,6 +10,7 @@ pub mod installer;
 pub mod manifest;
 pub mod model;
 pub mod registry;
+pub mod runtime;
 pub mod security;
 pub mod signing;
 pub mod snapshot;
@@ -40,6 +41,10 @@ pub use model::{
 pub use registry::{
     ArtifactMeta, LocalRegistry, PackageSummary, PackageVersion, RegistryMetadata,
     RegistryProvider, SecurityMeta,
+};
+pub use runtime::{
+    list_processes, list_sessions, parse_ps_line, runtime_status, ProcessSummary, RuntimeStatus,
+    SessionSummary,
 };
 pub use security::{scan_agent_dir, scan_text, scan_text_report, ScanReport, SecurityFinding};
 pub use signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload, Keypair};
