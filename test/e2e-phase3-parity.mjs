@@ -1,5 +1,6 @@
 // e2e-phase3-parity —— Rust 安装引擎 vs 旧 Node 实现（git HEAD 版本）逐项 parity。
-// 对照组：git show HEAD:lib/*.mjs 提取到临时目录（旧实现保留在 git 历史中）。
+// 对照组：git show 6f07733:lib/*.mjs 提取到临时目录。
+// 6f07733 = 委托桥提交（efe9d67）的父提交，即最后一个含原 Node 实现的 commit。
 // 结论：18 套既有 e2e 现经 lib/installer.mjs 委托桥驱动 Rust 引擎，断言不变仍全绿。
 import { execSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -25,7 +26,7 @@ rmSync(OLD_LIB, { recursive: true, force: true });
 mkdirSync(OLD_LIB, { recursive: true });
 const OLD_FILES = ['installer.mjs', 'signing.mjs', 'security.mjs', 'dsh.mjs', 'state.mjs', 'health.mjs', 'manifest.mjs', 'yamllite.mjs'];
 for (const f of OLD_FILES) {
-  writeFileSync(join(OLD_LIB, f), execSync(`git show HEAD:lib/${f}`, { encoding: 'utf8' }));
+  writeFileSync(join(OLD_LIB, f), execSync(`git show 6f07733:lib/${f}`, { encoding: 'utf8' }));
 }
 const oldInstaller = await import(pathToFileURL(join(OLD_LIB, 'installer.mjs')).href);
 
