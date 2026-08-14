@@ -37,6 +37,16 @@ After：desktop/（Tauri 2 壳，typed IPC）→ crates/forge-core（Rust Kernel
 
 见 migration-plan.md §14：Composer 图形 UI、Runtime 进程控制、日志聚合、Git Registry 网络接入、更新检查、AI Adapter 提案、D1 npm 二进制分发、官方 bundle 根 LICENSE 文件，均为后续增量。
 
+## 6b. 剩余增量（用户授权后续轮次，已全部完成）
+
+- ① 官方 bundle 根 LICENSE（仓库 MIT）→ 官方包导入不再 license_missing（commit 9a64544）
+- ② GitHub 导入网络闭环：URL 未缓存时 git clone --depth 1 → 缓存 → 分析（实测 octocat/Hello-World）
+- ③ 更新检查：check_updates（installed vs 本地 Registry，semver）+ bin update check + 桌面 Updates 页真数据
+- ④ Composer UI：左组件/右组合 + composer_resolve（Rust 拓扑序 + 冲突/缺失提前发现）
+- ⑤ 进程控制：runtime stop（kill -TERM）/restart（分离重启）由 Core 执行 + Processes 页按钮
+- ⑥ 安装日志：~/.deepseek-forge/logs/install/<id>.jsonl + logs list + Logs 页真数据
+- 全部 6 项 commit：9a64544、52ecb5d；测试 47/47；冒烟全过
+
 ## 7. 复现
 
 ```

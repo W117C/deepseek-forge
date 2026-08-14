@@ -203,3 +203,13 @@ Model/Context 等展示字段以真实来源为准（dsh 版本、会话文件�
 
 - Composer 图形化 UI（核心解析已就绪）；Runtime 进程 stop/restart 控制；日志落盘与聚合（四类日志）；Git Registry（网络 clone 接入）；桌面更新检查（对比本地 registry 版本）；AI 型 Adapter 提案；D1 的 npm 二进制分发；官方 bundle 的 LICENSE 文件（core package.json 已声明 MIT，根目录无 LICENSE 文件）。
 
+### 剩余增量（已全部完成，用户授权）
+
+| 项 | 状态 | Commit |
+| --- | --- | --- |
+| ① 官方 bundle LICENSE | ✅ | 9a64544 |
+| ② GitHub clone 网络闭环 | ✅ | 9a64544 |
+| ③ 更新检查 | ✅ | 9a64544 |
+| ④ Composer 图形 UI + resolve | ✅ | 52ecb5d |
+| ⑤ 进程 stop/restart（Core 执行） | ✅ | 52ecb5d |
+| ⑥ 安装日志落盘 + Logs 页 | ✅ | 52ecb5d |
