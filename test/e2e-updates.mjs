@@ -180,6 +180,21 @@ const b3 = runForgeCore(['bundle', 'install', 'dbg', '--registry', REG, '--home'
 let bin3 = {};
 try { bin3 = JSON.parse(b3.stdout); } catch { bin3 = {}; }
 check('启用后 bundle install 全量成功', b3.status === 0 && bin3.ok === true, JSON.stringify(bin3));
+check(
+  'stderr 输出真实 install-progress 事件（组件级 + 阶段级）',
+  /"event":"install-progress"/.test(b3.stderr || '') &&
+    /"phase":"component"/.test(b3.stderr || '') &&
+    /"phase":"installed"/.test(b3.stderr || ''),
+  (b3.stderr || '').split('\n').filter((l) => l.includes('install-progress')).length + ' 条进度'
+);
+const stp = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
+check(
+  '收录登记真实权限来自扫描（network/filesystem/env 数组）',
+  Array.isArray(stp.agents['fixture-plugin']?.permissions?.network) &&
+    Array.isArray(stp.agents['fixture-plugin']?.permissions?.filesystem) &&
+    Array.isArray(stp.agents['fixture-plugin']?.permissions?.env),
+  JSON.stringify(stp.agents['fixture-plugin']?.permissions)
+);
 
 const b4 = runForgeCore(['bundle', 'uninstall', 'dbg', '--registry', REG, '--home', TEST_HOME]);
 let bun4 = {};

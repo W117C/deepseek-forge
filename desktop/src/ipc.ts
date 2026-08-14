@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 /**
  * IPC-safe error shape returned by the Rust commands as a JSON string
@@ -184,7 +185,7 @@ export interface InstalledAgent {
   trust?: string;
   score?: number;
   kind?: string;
-  permissions?: { network?: string[]; env?: string[] };
+  permissions?: { network?: string[]; filesystem?: string[]; env?: string[] };
   presetIds?: string[];
   skillNames?: string[];
   imported?: boolean;
@@ -213,6 +214,22 @@ export interface SourcesStats {
 
 export function sourcesStats(): Promise<SourcesStats> {
   return call<SourcesStats>("sources_stats");
+}
+
+/** install-progress 事件：forge-core 逐阶段推送（stderr NDJSON → Tauri event）。 */
+export interface InstallProgressEvent {
+  event: "install-progress";
+  id: string;
+  phase: string;
+  step: number;
+  total: number;
+  meta?: Record<string, unknown>;
+}
+
+export function onInstallProgress(
+  cb: (e: InstallProgressEvent) => void
+): Promise<() => void> {
+  return listen("install-progress", (ev) => cb(ev.payload as InstallProgressEvent));
 }
 
 export function setPluginEnabled(

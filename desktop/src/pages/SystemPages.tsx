@@ -44,6 +44,14 @@ export function SecurityPage() {
               <span className="registry-k mono">{id}</span>
               <span className="registry-v">
                 {t("sy.trust")} <b>{a.trust ?? "?"}</b> · {t("sy.score")} <b>{a.score ?? "—"}</b>/100
+                {a.permissions && (
+                  <span className="field-hint" style={{ display: "block" }}>
+                    {t("sy.permissions")}：{t("pd.network")}{" "}
+                    {(a.permissions.network ?? []).length} · {t("pd.filesystem")}{" "}
+                    {(a.permissions.filesystem ?? []).length} · {t("pd.env")}{" "}
+                    {(a.permissions.env ?? []).length}
+                  </span>
+                )}
               </span>
             </div>
           ))}

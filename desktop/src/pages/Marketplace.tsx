@@ -6,6 +6,7 @@ import { Box, Github, LoaderCircle, ShieldCheck, Star, TriangleAlert } from "luc
 import { installPackage, registryList, stateList } from "../ipc";
 import type { RegistrySummary } from "../ipc";
 import { useI18n } from "../i18n";
+import InstallProgress from "../components/InstallProgress";
 
 type InstallState = { id: string; status: "busy" | "ok" | "error"; message?: string; steps?: string[] };
 
@@ -213,6 +214,9 @@ export default function Marketplace() {
                 )}
               </div>
 
+              {installing?.id === p.id && installing.status === "busy" && (
+                <InstallProgress targetId={p.id} />
+              )}
               {installing?.id === p.id && installing.status === "ok" && (
                 <div className="field-hint" style={{ marginTop: 8 }}>
                   {t("mp.imported")} ✓ — {(installing.steps ?? []).join(" → ")}

@@ -11,6 +11,7 @@ import {
 } from "../ipc";
 import type { DependentRef } from "../ipc";
 import { useI18n } from "../i18n";
+import InstallProgress from "../components/InstallProgress";
 
 type Pkg = Record<string, any>;
 
@@ -29,6 +30,7 @@ export default function PackageDetail() {
   const { t, locale } = useI18n();
   const [pkg, setPkg] = useState<Pkg | null>(null);
   const [installed, setInstalled] = useState(false);
+  const [installedPerms, setInstalledPerms] = useState<{ network?: string[]; filesystem?: string[]; env?: string[] } | null>(null);
   const [deps, setDeps] = useState<DependentRef[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -42,6 +44,8 @@ export default function PackageDetail() {
         setPkg(p);
         setInstalled(id in (s.agents ?? {}));
         setDeps(d?.dependents ?? []);
+        const entry = (s.agents ?? {})[id] as { permissions?: { network?: string[]; filesystem?: string[]; env?: string[] } } | undefined;
+        setInstalledPerms(entry?.permissions ?? null);
       })
       .catch((e: unknown) => setErr(e instanceof Error ? e.message : String(e)));
   }
@@ -145,6 +149,7 @@ export default function PackageDetail() {
             {busy ? t("mp.installing") : t("mp.install")}
           </button>
         )}
+        {busy && id && <InstallProgress targetId={id} />}
         {result && (
           <span className="field-hint">
             {t("pd.importedResult")} {((result.steps as string[]) ?? []).join(" → ")}
@@ -202,6 +207,45 @@ export default function PackageDetail() {
                 {capLabel(c)}
               </span>
             ))
+          )}
+        </div>
+      </section>
+
+      <section className="dashboard-section">
+        <h2 className="dashboard-section-title">{t("pd.permissions")}</h2>
+        <div className="card">
+          {!installedPerms ? (
+            <p className="sub">{t("pd.permissionsNone")}</p>
+          ) : (
+            <>
+              <div className="registry-row">
+                <span className="registry-k">{t("pd.network")}</span>
+                <span className="registry-v mono">
+                  {(installedPerms.network ?? []).length > 0
+                    ? installedPerms.network?.slice(0, 8).join(", ")
+                    : t("sy.none")}
+                </span>
+              </div>
+              <div className="registry-row">
+                <span className="registry-k">{t("pd.filesystem")}</span>
+                <span className="registry-v mono">
+                  {(installedPerms.filesystem ?? []).length > 0
+                    ? installedPerms.filesystem?.slice(0, 8).join(", ")
+                    : t("sy.none")}
+                </span>
+              </div>
+              <div className="registry-row">
+                <span className="registry-k">{t("pd.env")}</span>
+                <span className="registry-v mono">
+                  {(installedPerms.env ?? []).length > 0
+                    ? installedPerms.env?.slice(0, 8).join(", ")
+                    : t("sy.none")}
+                </span>
+              </div>
+              <p className="field-hint" style={{ marginTop: 8 }}>
+                {t("pd.permissionsNote")}
+              </p>
+            </>
           )}
         </div>
       </section>

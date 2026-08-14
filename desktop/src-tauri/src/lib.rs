@@ -20,6 +20,7 @@ use forge_core::runtime::{restart_process, runtime_status, stop_process};
 use forge_core::state::load_state;
 use forge_core::updater::check_updates;
 use serde::Serialize;
+use tauri::{AppHandle, Emitter};
 
 /// Shared state managed by Tauri. The bus is wired now for later
 /// install/runtime events; no event commands exist in this phase.
@@ -162,38 +163,26 @@ fn logs_list() -> Result<Vec<forge_core::logutil::LogEntry>, String> {
 /// STEP 6: 真实安装 —— 有 artifact 走 install-from-registry；GitHub 源走收录式
 /// 安装（克隆→扫描→状态登记，经 Core）。状态/结果全部由 Core 返回。
 #[tauri::command]
-fn install_package(id: String) -> Result<serde_json::Value, String> {
+fn install_package(app: AppHandle, id: String) -> Result<serde_json::Value, String> {
     let reg = registry();
     let pkg = reg.get_package(&id).map_err(to_ipc_error)?;
     let home = forge_core::dsh::dsh_home(None);
     let has_artifact = !pkg.artifact.filename.is_empty() || pkg.artifact.sha256.is_some();
     if pkg.source.r#type == SourceType::Github && !has_artifact {
         // 收录式安装：经 forge-core 二进制（与 CLI 同路径）
-        let bin = crate::published_or_dev_bin().ok_or_else(|| {
-            "forge-core 二进制不可用：请先构建或设置 FORGE_CORE_BIN".to_string()
-        })?;
-        let out = std::process::Command::new(bin)
-            .args([
-                "package",
-                "import-github",
-                &id,
-                "--registry",
-                &registry().root().to_string_lossy(),
-                "--home",
-                &home.to_string_lossy(),
-            ])
-            .output()
-            .map_err(|e| e.to_string())?;
-        if !out.status.success() {
-            let raw = String::from_utf8_lossy(&out.stderr);
-            let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
-                serde_json::json!({ "code": "INSTALL_FAILED", "human": raw.trim() })
-            });
-            return Err(serde_json::to_string(&env).unwrap_or_default());
-        }
-        let v: serde_json::Value =
-            serde_json::from_slice(&out.stdout).map_err(|e| e.to_string())?;
-        return Ok(v);
+        let reg_root = registry().root().to_string_lossy().to_string();
+        return run_forge_streaming(
+            &app,
+            &[
+                "package".to_string(),
+                "import-github".to_string(),
+                id.clone(),
+                "--registry".to_string(),
+                reg_root,
+                "--home".to_string(),
+                home.to_string_lossy().to_string(),
+            ],
+        );
     }
     // 有 artifact：走 Rust 安装管线（此处留给后续 STEP：调用 install_from_registry 语义）
     Err(serde_json::to_string(&serde_json::json!({
@@ -219,6 +208,49 @@ fn run_forge(args: &[String]) -> Result<serde_json::Value, String> {
         return Err(serde_json::to_string(&env).unwrap_or_default());
     }
     serde_json::from_slice(&out.stdout).map_err(|e| e.to_string())
+}
+
+/// 流式执行 forge-core：stderr 逐行读取，install-progress 事件实时推给前端；
+/// stdout 仍为单一结果 JSON；失败时用 stderr 中的错误信封（兼容原有语义）。
+fn run_forge_streaming(app: &AppHandle, args: &[String]) -> Result<serde_json::Value, String> {
+    use std::io::{BufRead, BufReader};
+    let bin = published_or_dev_bin()
+        .ok_or_else(|| "forge-core 二进制不可用：请先构建或设置 FORGE_CORE_BIN".to_string())?;
+    let mut child = std::process::Command::new(bin)
+        .args(args)
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .map_err(|e| e.to_string())?;
+    let stderr = child
+        .stderr
+        .take()
+        .ok_or_else(|| "无法捕获子进程 stderr".to_string())?;
+    let mut last_err: Option<serde_json::Value> = None;
+    for line in BufReader::new(stderr).lines() {
+        let line = line.unwrap_or_default();
+        if line.trim().is_empty() {
+            continue;
+        }
+        if let Ok(v) = serde_json::from_str::<serde_json::Value>(&line) {
+            if v.get("event").and_then(|e| e.as_str()) == Some("install-progress") {
+                let _ = app.emit("install-progress", &v);
+            } else if v.get("code").is_some() {
+                last_err = Some(v);
+            }
+        }
+    }
+    let output = child.wait_with_output().map_err(|e| e.to_string())?;
+    if !output.status.success() {
+        let raw = String::from_utf8_lossy(&output.stderr);
+        let env = last_err.clone().unwrap_or_else(|| {
+            serde_json::from_str(&raw).unwrap_or_else(|_| {
+                serde_json::json!({ "code": "FAILED", "human": raw.trim() })
+            })
+        });
+        return Err(serde_json::to_string(&env).unwrap_or_default());
+    }
+    serde_json::from_slice(&output.stdout).map_err(|e| e.to_string())
 }
 
 fn home_arg() -> String {
@@ -254,45 +286,54 @@ fn bundle_list() -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
-fn bundle_install(id: String) -> Result<serde_json::Value, String> {
+fn bundle_install(app: AppHandle, id: String) -> Result<serde_json::Value, String> {
     let reg = registry().root().to_string_lossy().to_string();
-    run_forge(&[
-        "bundle".to_string(),
-        "install".to_string(),
-        id,
-        "--registry".to_string(),
-        reg,
-        "--home".to_string(),
-        home_arg(),
-    ])
+    run_forge_streaming(
+        &app,
+        &[
+            "bundle".to_string(),
+            "install".to_string(),
+            id,
+            "--registry".to_string(),
+            reg,
+            "--home".to_string(),
+            home_arg(),
+        ],
+    )
 }
 
 #[tauri::command]
-fn bundle_uninstall(id: String) -> Result<serde_json::Value, String> {
+fn bundle_uninstall(app: AppHandle, id: String) -> Result<serde_json::Value, String> {
     let reg = registry().root().to_string_lossy().to_string();
-    run_forge(&[
-        "bundle".to_string(),
-        "uninstall".to_string(),
-        id,
-        "--registry".to_string(),
-        reg,
-        "--home".to_string(),
-        home_arg(),
-    ])
+    run_forge_streaming(
+        &app,
+        &[
+            "bundle".to_string(),
+            "uninstall".to_string(),
+            id,
+            "--registry".to_string(),
+            reg,
+            "--home".to_string(),
+            home_arg(),
+        ],
+    )
 }
 
 #[tauri::command]
-fn update_apply(id: String) -> Result<serde_json::Value, String> {
+fn update_apply(app: AppHandle, id: String) -> Result<serde_json::Value, String> {
     let reg = registry().root().to_string_lossy().to_string();
-    run_forge(&[
-        "update".to_string(),
-        "apply".to_string(),
-        id,
-        "--registry".to_string(),
-        reg,
-        "--home".to_string(),
-        home_arg(),
-    ])
+    run_forge_streaming(
+        &app,
+        &[
+            "update".to_string(),
+            "apply".to_string(),
+            id,
+            "--registry".to_string(),
+            reg,
+            "--home".to_string(),
+            home_arg(),
+        ],
+    )
 }
 
 #[tauri::command]

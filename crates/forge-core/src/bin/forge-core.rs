@@ -263,6 +263,28 @@ fn run_package(args: &[String]) -> Result<(), ForgeError> {
     }
 }
 
+/// 安装进度事件（NDJSON → stderr，stdout 保持单一结果 JSON，向后兼容 CLI/e2e）。
+/// 桌面端逐行读取并把每个阶段实时推给 UI（真实阶段：每行都在对应真实工作完成后打印）。
+fn progress_line(
+    id: &str,
+    phase: &str,
+    step: usize,
+    total: usize,
+    meta: Option<serde_json::Value>,
+) {
+    let mut v = serde_json::json!({
+        "event": "install-progress",
+        "id": id,
+        "phase": phase,
+        "step": step,
+        "total": total,
+    });
+    if let Some(m) = meta {
+        v["meta"] = m;
+    }
+    eprintln!("{v}");
+}
+
 /// 收录式安装：GitHub 源包 → 浅克隆到缓存 → 安全扫描 → 登记安装状态 → 写安装日志。
 /// 真实落盘（缓存源码 + state.json + 日志）；未适配的 upstream 不会伪装成已装进 Harness。
 fn package_import_github(
@@ -291,7 +313,22 @@ fn package_import_github(
         "scanning".to_string(),
         "registering".to_string(),
     ];
+    progress_line(id, "resolving", 1, 5, None);
     let analysis = analyze_source(&repo_url)?;
+    progress_line(
+        id,
+        "cloning",
+        2,
+        5,
+        Some(serde_json::json!({ "source": analysis.source })),
+    );
+    progress_line(
+        id,
+        "scanning",
+        3,
+        5,
+        Some(serde_json::json!({ "verdict": analysis.scan.verdict, "score": analysis.scan.score })),
+    );
     if analysis.license_missing {
         let _ = append_install_log(id, &pkg.version, false, &steps, Some("LICENSE_MISSING"));
         return Err(ForgeError::LicenseMissing(format!(
@@ -323,10 +360,23 @@ fn package_import_github(
         "license": analysis.license,
         "dependencies": deps,
         "enabled": true,
-        "permissions": { "network": [], "env": [] },
+        // 真实权限来自本次安全扫描（空数组 = 扫描未发现该类别引用）
+        "permissions": {
+            "network": analysis.network_usage,
+            "filesystem": analysis.filesystem_usage,
+            "env": analysis.env_vars,
+        },
     });
     save_state(home, &state)?;
+    progress_line(id, "registering", 4, 5, None);
     let _ = append_install_log(id, &pkg.version, true, &steps, None);
+    progress_line(
+        id,
+        "installed",
+        5,
+        5,
+        Some(serde_json::json!({ "version": pkg.version })),
+    );
     Ok(serde_json::json!({
         "id": id,
         "version": pkg.version,
@@ -1115,6 +1165,13 @@ fn run_bundle(args: &[String]) -> Result<(), ForgeError> {
             let mut results = Vec::new();
             let installed_state = load_state(&home);
             for (i, cid) in comps.iter().enumerate() {
+                progress_line(
+                    id,
+                    "component",
+                    i + 1,
+                    comps.len(),
+                    Some(serde_json::json!({ "component": cid })),
+                );
                 let disabled = installed_state
                     .get("agents")
                     .and_then(|a| a.get(cid))
