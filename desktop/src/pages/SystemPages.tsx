@@ -44,6 +44,25 @@ export function SecurityPage() {
               <span className="registry-k mono">{id}</span>
               <span className="registry-v">
                 {t("sy.trust")} <b>{a.trust ?? "?"}</b> · {t("sy.score")} <b>{a.score ?? "—"}</b>/100
+                {a.reviewStatus && (
+                  <span
+                    className={
+                      "badge " +
+                      (a.reviewStatus === "rejected"
+                        ? "badge-blocked"
+                        : a.reviewStatus === "approved"
+                          ? "badge-verified"
+                          : "badge-community")
+                    }
+                    style={{ marginLeft: 6 }}
+                  >
+                    {a.reviewStatus === "rejected"
+                      ? t("plugins.rejected")
+                      : a.reviewStatus === "approved"
+                        ? t("plugins.approved")
+                        : t("plugins.pending")}
+                  </span>
+                )}
                 {a.permissions && (
                   <span className="field-hint" style={{ display: "block" }}>
                     {t("sy.permissions")}：{t("pd.network")}{" "}

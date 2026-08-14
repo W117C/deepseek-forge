@@ -7,6 +7,7 @@ import {
   dependentsList,
   packageRollback,
   setPluginEnabled,
+  setPluginReview,
   stateList,
   updateApply,
   updateCheck,
@@ -63,6 +64,19 @@ export default function Plugins() {
     setErr(null);
     try {
       await setPluginEnabled(id, enabled);
+      load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function review(id: string, status: "approved" | "rejected") {
+    setBusy("review:" + id);
+    setErr(null);
+    try {
+      await setPluginReview(id, status);
       load();
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
@@ -189,8 +203,49 @@ export default function Plugins() {
                   <span className={"badge " + (a.enabled === false ? "badge-community" : "badge-verified")}>
                     {a.enabled === false ? t("plugins.disabled") : t("plugins.enabled")}
                   </span>
+                  <span
+                    className={
+                      "badge " +
+                      (a.reviewStatus === "rejected"
+                        ? "badge-blocked"
+                        : a.reviewStatus === "approved"
+                          ? "badge-verified"
+                          : "badge-community")
+                    }
+                    style={{ marginLeft: 6 }}
+                  >
+                    {a.reviewStatus === "rejected"
+                      ? t("plugins.rejected")
+                      : a.reviewStatus === "approved"
+                        ? t("plugins.approved")
+                        : t("plugins.pending")}
+                  </span>
                   {a.enabled === false && " · " + t("plugins.disabledNote")}
                 </div>
+                {a.imported && (
+                  <div style={{ marginTop: 4, display: "flex", gap: 6, alignItems: "center" }}>
+                    {(a.reviewStatus ?? "pending") !== "approved" && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => void review(id, "approved")}
+                        disabled={busy !== null}
+                      >
+                        {busy === "review:" + id ? <LoaderCircle size={14} className="spin" /> : null}
+                        {t("plugins.approve")}
+                      </button>
+                    )}
+                    {(a.reviewStatus ?? "pending") !== "rejected" && (
+                      <button
+                        className="btn btn-ghost"
+                        onClick={() => void review(id, "rejected")}
+                        disabled={busy !== null}
+                      >
+                        {t("plugins.reject")}
+                      </button>
+                    )}
+                    <span className="field-hint">{t("plugins.reviewNote")}</span>
+                  </div>
+                )}
               </div>
               {outdated[id] && (
                 <button

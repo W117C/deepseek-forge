@@ -360,6 +360,8 @@ fn package_import_github(
         "license": analysis.license,
         "dependencies": deps,
         "enabled": true,
+        "reviewStatus": "pending",
+        "reviewedAt": null,
         // 真实权限来自本次安全扫描（空数组 = 扫描未发现该类别引用）
         "permissions": {
             "network": analysis.network_usage,
@@ -547,6 +549,40 @@ fn run_state(args: &[String]) -> Result<(), ForgeError> {
                 "id": id,
                 "enabled": flag,
                 "note": "已写入共享状态库；Forge 的组合安装/更新将拒绝使用被禁用的插件（Harness 侧运行策略随 Runtime 接入）。"
+            }));
+        }
+        "set-review" => {
+            // 审核工作流：pending → approved / rejected（真实写入共享状态库）。
+            // Forge 的组合安装 / 更新拒绝使用未批准（pending/rejected）的组件。
+            let id = f.positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest("state set-review requires a package id".to_string())
+            })?;
+            let status = f.get("status").unwrap_or("");
+            if !["pending", "approved", "rejected"].contains(&status) {
+                return Err(ForgeError::InvalidManifest(
+                    "state set-review requires --status pending|approved|rejected".to_string(),
+                ));
+            }
+            let mut state = load_state(&home);
+            let rec = state
+                .get("agents")
+                .and_then(|a| a.get(id))
+                .cloned()
+                .ok_or_else(|| ForgeError::PackageNotFound(format!("未安装：{id}")))?;
+            let kind = rec.get("kind").and_then(|k| k.as_str()).unwrap_or("agent");
+            if kind == "agent" && status == "pending" {
+                return Err(ForgeError::InvalidManifest(
+                    "官方/管线安装的 Agent 由发布者信任决定审核状态，不支持手动退回 pending。"
+                        .to_string(),
+                ));
+            }
+            state["agents"][id]["reviewStatus"] = serde_json::json!(status);
+            state["agents"][id]["reviewedAt"] = serde_json::json!(iso_utc_colon());
+            save_state(&home, &state)?;
+            return print_json(&serde_json::json!({
+                "id": id,
+                "reviewStatus": status,
+                "note": format!("审核状态已更新为 {status}；组合安装与更新将按此状态放行或拒绝。")
             }));
         }
         _ => Err(ForgeError::InvalidManifest(format!(
@@ -1413,6 +1449,28 @@ fn run_bundle(args: &[String]) -> Result<(), ForgeError> {
                     .and_then(|r| r.get("enabled"))
                     .and_then(|v| v.as_bool())
                     == Some(false);
+                let rec_opt = installed_state.get("agents").and_then(|a| a.get(cid));
+                let review = rec_opt
+                    .and_then(|r| r.get("reviewStatus"))
+                    .and_then(|v| v.as_str())
+                    .unwrap_or(if rec_opt.is_some() {
+                        "pending"
+                    } else {
+                        "approved"
+                    });
+                if review != "approved" {
+                    print_json(&serde_json::json!({
+                        "bundle": id,
+                        "ok": false,
+                        "failedAt": i,
+                        "component": cid,
+                        "results": results,
+                        "note": format!(
+                            "安装中止：组件 {cid} 审核状态为 {review}（批准：forge-core state set-review {cid} --status approved）"
+                        )
+                    }))?;
+                    return Ok(());
+                }
                 if disabled {
                     print_json(&serde_json::json!({
                         "bundle": id,
@@ -1583,6 +1641,24 @@ fn run_update(args: &[String]) -> Result<(), ForgeError> {
                 return Err(ForgeError::InvalidManifest(format!(
                     "插件 {id} 已被禁用：请先启用（forge-core state set-enabled {id} --enabled true）"
                 )));
+            }
+            let review =
+                rec.get("reviewStatus")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or(if kind == "plugin" {
+                        "pending"
+                    } else {
+                        "approved"
+                    });
+            if review != "approved" {
+                let msg = if review == "rejected" {
+                    format!("插件 {id} 已被拒绝：更新被阻止。")
+                } else {
+                    format!(
+                        "插件 {id} 待审核：请先批准（forge-core state set-review {id} --status approved）"
+                    )
+                };
+                return Err(ForgeError::InvalidManifest(msg));
             }
             if !forge_core::updater::semver_lt(&installed, &pkg.version) {
                 return print_json(&serde_json::json!({

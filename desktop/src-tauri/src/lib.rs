@@ -426,6 +426,19 @@ fn sources_stats() -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
+fn state_set_review(id: String, status: String) -> Result<serde_json::Value, String> {
+    run_forge(&[
+        "state".to_string(),
+        "set-review".to_string(),
+        id,
+        "--status".to_string(),
+        status,
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
+#[tauri::command]
 fn state_set_enabled(id: String, enabled: bool) -> Result<serde_json::Value, String> {
     run_forge(&[
         "state".to_string(),
@@ -549,6 +562,7 @@ pub fn run() {
             update_apply,
             dependents_list,
             state_set_enabled,
+            state_set_review,
             sources_stats,
             composer_generate
         ])

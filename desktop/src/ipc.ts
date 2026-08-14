@@ -194,6 +194,8 @@ export interface InstalledAgent {
   scanVerdict?: string;
   license?: string;
   enabled?: boolean;
+  reviewStatus?: "pending" | "approved" | "rejected";
+  reviewedAt?: string | null;
 }
 
 export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }> {
@@ -231,6 +233,16 @@ export function onInstallProgress(
   cb: (e: InstallProgressEvent) => void
 ): Promise<() => void> {
   return listen("install-progress", (ev) => cb(ev.payload as InstallProgressEvent));
+}
+
+export function setPluginReview(
+  id: string,
+  status: "pending" | "approved" | "rejected"
+): Promise<{ id: string; reviewStatus: string; note?: string }> {
+  return call<{ id: string; reviewStatus: string; note?: string }>("state_set_review", {
+    id,
+    status,
+  });
 }
 
 export function setPluginEnabled(

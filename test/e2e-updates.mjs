@@ -80,6 +80,7 @@ writeFileSync(
         kind: 'plugin',
         imported: true,
         version: '0.1.0',
+        reviewStatus: 'pending',
         source: financeDir,
         license: 'MIT',
         dependencies: {},
@@ -125,6 +126,16 @@ check(
   JSON.stringify(dep2)
 );
 
+// 3.5 审核工作流：pending 拒绝更新 → 批准 → 放行
+const a0 = runForgeCore(['update', 'apply', 'fixture-plugin', '--registry', REG, '--home', TEST_HOME]);
+check('待审核插件 update apply 被拒绝', a0.status !== 0 && /待审核/.test(a0.stderr || ''), (a0.stderr || '').trim().slice(0, 140));
+const r0 = runForgeCore(['state', 'set-review', 'fixture-plugin', '--status', 'approved', '--home', TEST_HOME]);
+let rv0 = {};
+try { rv0 = JSON.parse(r0.stdout); } catch { rv0 = {}; }
+check('set-review approved 写入', r0.status === 0 && rv0.reviewStatus === 'approved', JSON.stringify(rv0));
+const st0 = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
+check('state.json reviewStatus=approved', st0.agents['fixture-plugin'].reviewStatus === 'approved');
+
 // 4. update apply：plugin/imported → 重新收录 → 状态升级到 0.2.0
 const a1 = runForgeCore(['update', 'apply', 'fixture-plugin', '--registry', REG, '--home', TEST_HOME]);
 let applied = {};
@@ -137,6 +148,10 @@ check(
 const st = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
 check('state.json 版本已更新为 0.2.0', st.agents['fixture-plugin'].version === '0.2.0');
 check('重新收录保留 dependencies 登记', st.agents['fixture-plugin'].dependencies !== undefined);
+// 更新 = 新版本收录 → 审核状态回到 pending（新版本需重新审核，诚实语义）
+check('更新后 reviewStatus 回到 pending', st.agents['fixture-plugin'].reviewStatus === 'pending');
+const r3 = runForgeCore(['state', 'set-review', 'fixture-plugin', '--status', 'approved', '--home', TEST_HOME]);
+check('更新后重新批准', r3.status === 0);
 
 // 5. 再次 apply → 已是最新
 const a2 = runForgeCore(['update', 'apply', 'fixture-plugin', '--registry', REG, '--home', TEST_HOME]);
@@ -154,6 +169,16 @@ let entries2 = [];
 try { entries2 = JSON.parse(c2.stdout); } catch { entries2 = []; }
 const pl2 = entries2.find(function (e) { return e.id === 'fixture-plugin'; });
 check('复查 check：fixture-plugin 已最新', !!pl2 && pl2.outdated === false);
+
+// 7.5 拒绝（rejected）：更新被阻止 → 恢复 approved 供后续流程
+const r1 = runForgeCore(['state', 'set-review', 'fixture-plugin', '--status', 'rejected', '--home', TEST_HOME]);
+let rv1 = {};
+try { rv1 = JSON.parse(r1.stdout); } catch { rv1 = {}; }
+check('set-review rejected 写入', r1.status === 0 && rv1.reviewStatus === 'rejected');
+const a5 = runForgeCore(['update', 'apply', 'fixture-plugin', '--registry', REG, '--home', TEST_HOME]);
+check('已拒绝插件 update apply 被阻止', a5.status !== 0 && /已被拒绝/.test(a5.stderr || ''), (a5.stderr || '').trim().slice(0, 140));
+const r2 = runForgeCore(['state', 'set-review', 'fixture-plugin', '--status', 'approved', '--home', TEST_HOME]);
+check('恢复 approved', r2.status === 0);
 
 // 8. 禁用/启用：真实状态写入 + Forge 组合安装/更新拒绝使用被禁用插件
 const s1 = runForgeCore(['state', 'set-enabled', 'fixture-plugin', '--enabled', 'false', '--home', TEST_HOME]);
