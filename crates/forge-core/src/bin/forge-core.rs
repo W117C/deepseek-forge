@@ -1075,7 +1075,7 @@ fn run_bundle(args: &[String]) -> Result<(), ForgeError> {
                             "failedAt": i,
                             "results": results,
                             "note": format!("安装中止：第 {} 个组件失败", i + 1)
-                        }));
+                        }))?;
                         return Ok(());
                     }
                 }
