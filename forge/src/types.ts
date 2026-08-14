@@ -63,6 +63,8 @@ export interface PackageMeta {
   updatedAt: string;
   growth: number; // weekly install growth, percent
   longDescription: string[];
+  versions?: VersionInfo[]; // v0.3：真实 Registry 版本列表（映射层填充）
+  publisherProfile?: { name?: string; slug?: string; verified?: boolean } | null;
 }
 
 export interface Agent extends PackageMeta {

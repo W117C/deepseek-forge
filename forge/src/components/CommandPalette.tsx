@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Github, Moon, Search, Sun } from "lucide-react";
 import { useApp } from "../context/app";
 import { highlightMatches, routeFor, searchPackages } from "../lib/registry";
-import { typeLabels } from "../data/mock";
+import { typeLabels } from "../lib/site";
 import { useBodyLock, useKey } from "../lib/hooks";
 import type { AnyPackage, PackageType } from "../types";
 

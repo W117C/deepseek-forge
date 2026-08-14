@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LayoutGrid, List, SlidersHorizontal, X } from "lucide-react";
 import type { Filters, PackageType, SortKey, TrustLevel } from "../types";
-import { categories, sortOptions } from "../data/mock";
+import { categories, sortOptions } from "../lib/site";
 
 export const DEFAULT_FILTERS: Filters = {
   types: [],

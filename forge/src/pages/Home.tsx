@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Github, Puzzle, Wrench } from "lucide-react";
-import { agents, bundles, categories, cliCommands, plugins, popularSearches, skills, trendingRows } from "../data/mock";
+import { useApp } from "../context/app";
+import { categories, cliCommands, popularSearches } from "../lib/site";
 import { SearchBar } from "../components/SearchBar";
 import { HeroArchitecture } from "../components/HeroArchitecture";
 import { AgentCard } from "../components/cards/AgentCard";
@@ -13,9 +14,12 @@ import { formatDownloads, routeFor } from "../lib/registry";
 import type { Agent } from "../types";
 
 export function Home() {
-  const trendAgents = trendingRows
-    .map((r) => ({ agent: agents.find((a) => a.id === r.agentId) as Agent, growth: r.growth }))
-    .filter((x) => x.agent);
+  const { allPackages, loading, error, registryUrl } = useApp();
+  const agents = allPackages.filter((p) => p.type === "agent") as Agent[];
+  const bundles = allPackages.filter((p) => p.type === "bundle");
+  const plugins = allPackages.filter((p) => p.type === "plugin");
+  const skills = allPackages.filter((p) => p.type === "skill");
+  const trendAgents = [...agents].sort((a, b) => b.downloads - a.downloads).slice(0, 5);
 
   return (
     <main>
@@ -49,6 +53,18 @@ export function Home() {
         </div>
       </section>
 
+      {/* ================= Registry 状态 ================= */}
+      {error && (
+        <section className="section">
+          <div className="forge-container">
+            <div className="wiz-card" style={{ textAlign: "center" }}>
+              <p className="sub">无法连接 Registry（{registryUrl || "同源 /v1"}）。</p>
+              <p className="field-hint">启动 Registry 后访问：node cli/agenthub.mjs registry ./.reg，或通过 <code className="mono">?registry=https://…</code> 指定地址。</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ================= Featured Agents ================= */}
       <section className="section">
         <div className="forge-container">
@@ -61,7 +77,8 @@ export function Home() {
             <Link to="/agents" className="section-head-link">All Agents <ArrowRight size={14} /></Link>
           </div>
           <div className="grid-cards">
-            {agents.map((a) => <AgentCard key={a.id} agent={a} />)}
+            {loading ? <p className="sub">Loading from Registry…</p> : agents.slice(0, 4).map((a) => <AgentCard key={a.id} agent={a} />)}
+            {!loading && agents.length === 0 && !error && <p className="sub">暂无 Agent——用 CLI 发布第一个：<code className="mono">node cli/agenthub.mjs publish ./your-agent --registry {registryUrl}</code></p>}
           </div>
         </div>
       </section>
@@ -72,12 +89,12 @@ export function Home() {
           <div className="section-head">
             <div>
               <span className="eyebrow">Movement</span>
-              <h2 className="section-title">Trending</h2>
-              <p className="sub">Rising quickly across the marketplace.</p>
+              <h2 className="section-title">Most installed</h2>
+              <p className="sub">Real install counts from the registry.</p>
             </div>
           </div>
           <div className="trend-list">
-            {trendAgents.map(({ agent, growth }, i) => (
+            {trendAgents.map((agent, i) => (
               <Link to={routeFor(agent)} key={agent.id} className="trend-row">
                 <span className="trend-rank">{String(i + 1).padStart(2, "0")}</span>
                 <span className="pkg-icon pkg-icon--agent" style={{ width: 32, height: 32 }}>
@@ -85,8 +102,8 @@ export function Home() {
                 </span>
                 <span className="trend-name">{agent.name}</span>
                 <span className="trend-type">Agent</span>
-                <span className="trend-growth"><ArrowUpRight size={13} /> +{growth}%</span>
-                <span className="meta">{formatDownloads(agent.downloads)} installs</span>
+                <span className="trend-growth"><ArrowUpRight size={13} /> {formatDownloads(agent.downloads)} installs</span>
+                <span className="meta">{agent.version}</span>
               </Link>
             ))}
           </div>
@@ -105,7 +122,8 @@ export function Home() {
             <Link to="/bundles" className="section-head-link">All Bundles <ArrowRight size={14} /></Link>
           </div>
           <div className="grid-cards grid-cards--2">
-            {bundles.map((b) => <BundleCard key={b.id} bundle={b} />)}
+            {!loading && bundles.length === 0 && !error && <p className="sub">暂无 Bundle。</p>}
+            {bundles.slice(0, 2).map((b) => <BundleCard key={b.id} bundle={b} />)}
           </div>
         </div>
       </section>
@@ -139,7 +157,8 @@ export function Home() {
             <Link to="/plugins" className="section-head-link">All Plugins <ArrowRight size={14} /></Link>
           </div>
           <div className="grid-cards grid-cards--4">
-            {plugins.map((p) => <PluginCard key={p.id} plugin={p} />)}
+            {!loading && plugins.length === 0 && !error && <p className="sub">暂无 Plugin。</p>}
+            {plugins.slice(0, 4).map((p) => <PluginCard key={p.id} plugin={p} />)}
           </div>
         </div>
       </section>
@@ -156,7 +175,8 @@ export function Home() {
             <Link to="/skills" className="section-head-link">All Skills <ArrowRight size={14} /></Link>
           </div>
           <div className="grid-cards grid-cards--4">
-            {skills.map((s) => <SkillCard key={s.id} skill={s} />)}
+            {!loading && skills.length === 0 && !error && <p className="sub">暂无 Skill。</p>}
+            {skills.slice(0, 4).map((s) => <SkillCard key={s.id} skill={s} />)}
           </div>
         </div>
       </section>
@@ -188,7 +208,7 @@ export function Home() {
                 <div key={c.cmd} className="term-line">
                   <span className="term-prompt">$</span>
                   <span className="term-cmd">{c.cmd}</span>
-                  <span className="term-dim">{c.note}</span>
+                  <span className="term-dim">{c.hint}</span>
                 </div>
               ))}
               <span className="term-cursor" aria-hidden="true" />

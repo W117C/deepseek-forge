@@ -11,9 +11,10 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 
 两者均：Vercel 托管、Git 集成（推送 main 自动部署）、GitHub Actions 构建门槛（typecheck + 生产构建）。
 
-> 仓库：https://github.com/W117C/deepseek-forge ｜ CI：GitHub Actions（e2e 203 项 + 前端双构建）｜ 发布：GitHub Releases（[v0.1.0](https://github.com/W117C/deepseek-forge/releases/tag/v0.1.0)）
+> 仓库：https://github.com/W117C/deepseek-forge ｜ CI：GitHub Actions（e2e 245 项 + 前端双构建）｜ 发布：GitHub Releases
 >
-> 状态：**M1–M4 验证通过（203/203）**——14 套 e2e：本地闭环 27 + 共存 20 + Registry/安全 25 + pnpm 路径 9 + 生命周期 21 + Web 24 + 开发者 14 + 鉴权 14 + 交互 5 + 组合 13 + 备份恢复 7 + 服务端组合 11 + 组合发布 9 + **模型层冒烟 4**。
+> 状态：**v0.3.0 REAL MARKETPLACE（18 套 e2e 245/245 全绿）**——mock 依赖清零，Marketplace 前端走真实 Registry API；SQLite 数据层（schema/迁移/事务）+ Package/Version/Artifact 模型 + 统一状态机 + Publisher 模型 + forge/src/api 客户端层全部落地。
+> 见 [docs/v0.3-audit.md](docs/v0.3-audit.md)、[docs/v0.3-phase-a.md](docs/v0.3-phase-a.md)、[docs/v0.3-phase-b.md](docs/v0.3-phase-b.md)、[docs/v0.3-phase-c.md](docs/v0.3-phase-c.md)、[docs/v0.3-phase-d.md](docs/v0.3-phase-d.md)、[docs/release-notes-v0.3.0.md](docs/release-notes-v0.3.0.md)。
 > 复现：`for t in test/e2e*.mjs; do node $t; done`（隔离 DSH_HOME，不触碰真实 ~/.dsh）。
 
 ## 目录结构
@@ -23,7 +24,7 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 - `bundles/` —— 领域 Agent：`finance-analyst`、`academic-researcher`（manifest + bundle + preset + skills）
 - `forge/` —— **Marketplace 前端**（React 18 + TS + Vite，React Router，无后端原型）
 - `landing/` —— **产品落地页**（React 18 + TS + Vite）
-- `test/` —— 14 套隔离 e2e（`test/e2e*.mjs`）
+- `test/` —— 18 套隔离 e2e（`test/e2e*.mjs`，245 项）
 - `docs/` —— 设计/验证/部署文档（含 [npm 发布 runbook](docs/npm-publish-runbook.md)）
 
 ## 快速开始（本地闭环）
@@ -52,6 +53,12 @@ node cli/agenthub.mjs install finance-analyst --registry http://127.0.0.1:PORT -
 ```
 
 远端安装前客户端强制验哈希 + 验 ed25519 签名，任何不匹配即阻断安装（防篡改，见 test/e2e-registry.mjs）。
+
+## Marketplace 前端接通 Registry（v0.3）
+
+- `forge/` 前端已完全切换到真实 Registry API（`forge/src/api/` 13 模块；mock.ts 已删除）。
+- Registry 地址配置优先级：构建时 `VITE_REGISTRY_URL` → 访问时 `?registry=https://…` → 同源 `/v1`。
+- 发布为真实流程：CLI 本地私钥签名 → Registry 验签/扫描/审核 → 上架后出现在市场。
 
 ## 前端开发
 

@@ -359,12 +359,16 @@ async function main() {
     console.log('HTTP ' + res.status + ' ' + text);
     if (res.status === 200) {
       const body = JSON.parse(text);
-      const tokens = loadPublisherTokens(home);
-      tokens[base] = { publisher, token: body.token };
-      mkdirSync(agenthubStore(home), { recursive: true });
-      writeFileSync(publisherTokenFile(home), JSON.stringify(tokens, null, 2) + '\n');
-      chmodSync(publisherTokenFile(home), 0o600);
-      console.log('✓ 令牌已存储：' + publisherTokenFile(home) + '（后续 publish 自动携带）');
+      if (body.token) {
+        const tokens = loadPublisherTokens(home);
+        tokens[base] = { publisher, token: body.token };
+        mkdirSync(agenthubStore(home), { recursive: true });
+        writeFileSync(publisherTokenFile(home), JSON.stringify(tokens, null, 2) + '\n');
+        chmodSync(publisherTokenFile(home), 0o600);
+        console.log('✓ 令牌已存储：' + publisherTokenFile(home) + '（后续 publish 自动携带）');
+      } else {
+        console.log('（该发布者已注册，保留既有令牌）');
+      }
     }
     return;
   }

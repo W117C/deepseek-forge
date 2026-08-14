@@ -1,7 +1,7 @@
 {
   "name": "deepseek-forge-marketplace",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "DeepSeek Forge — an independent community marketplace for DeepSeek Harness. Discover what your DeepSeek Agent can become.",
   "scripts": {

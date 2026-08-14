@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { useApp } from "../context/app";
 import { formatDownloads, routeFor, searchPackages, typeLabel } from "../lib/registry";
-import { popularSearches } from "../data/mock";
+import { popularSearches } from "../lib/site";
 import { highlightMatches } from "../lib/registry";
 
 export function SearchBar({ initial = "", large = true }: { initial?: string; large?: boolean }) {

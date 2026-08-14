@@ -1,9 +1,9 @@
 {
   "name": "agenthub",
-  "version": "0.2.0",
-  "description": "DeepSeek Harness Agent Bundle Marketplace — CLI installer, registry and marketplace web",
+  "version": "0.3.0",
+  "description": "DeepSeek Forge — Real Agent Marketplace Infrastructure: CLI installer, registry and marketplace web",
   "type": "module",
-  "bin": { "agenthub": "./cli/agenthub.mjs" },
+  "bin": { "agenthub": "./cli/agenthub.mjs", "forge": "./cli/agenthub.mjs" },
   "files": ["cli", "lib", "bundles", "README.md", "LICENSE"],
   "repository": {
     "type": "git",

@@ -83,7 +83,7 @@ export function InstallModal({ pkg, onClose }: { pkg: AnyPackage; onClose: () =>
   // Commit the install only when the user closes the completed modal,
   // so the terminal stays visible through the final "Agent ready." lines.
   const finish = () => {
-    if (phase === "done") install(pkg.id);
+    if (phase === "done") install(pkg.id, pkg.version);
     onClose();
   };
 

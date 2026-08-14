@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { AnyPackage } from "../types";
-import { packages as mockPackages } from "../data/mock";
+import { listPackages, reportInstallation, registryBase } from "../api";
+import { mapApiPackage } from "../lib/registry";
 
 type Theme = "light" | "dark";
 
@@ -10,17 +11,18 @@ interface AppState {
   toggleTheme: () => void;
   installed: string[];
   isInstalled: (id: string) => boolean;
-  install: (id: string) => void;
-  published: AnyPackage[];
-  publishPackage: (pkg: AnyPackage) => void;
+  install: (id: string, version: string) => void;
   allPackages: AnyPackage[];
+  loading: boolean;
+  error: string | null;
+  registryUrl: string;
+  refresh: () => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
 
 const LS_THEME = "forge-theme";
 const LS_INSTALLED = "forge-installed";
-const LS_PUBLISHED = "forge-published";
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -41,13 +43,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return [];
   });
 
-  const [published, setPublished] = useState<AnyPackage[]>(() => {
-    try {
-      const raw = localStorage.getItem(LS_PUBLISHED);
-      if (raw) return JSON.parse(raw) as AnyPackage[];
-    } catch { /* storage unavailable */ }
-    return [];
-  });
+  // v0.3：真实 Marketplace 数据来自 Registry API（不再有 mock）。
+  const [packages, setPackages] = useState<AnyPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    listPackages()
+      .then((list) => setPackages(list.map(mapApiPackage)))
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => { refresh(); }, [refresh]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -58,32 +68,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try { localStorage.setItem(LS_INSTALLED, JSON.stringify(installed)); } catch { /* noop */ }
   }, [installed]);
 
-  useEffect(() => {
-    try { localStorage.setItem(LS_PUBLISHED, JSON.stringify(published)); } catch { /* noop */ }
-  }, [published]);
-
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === "light" ? "dark" : "light"));
   }, []);
 
   const isInstalled = useCallback((id: string) => installed.includes(id), [installed]);
 
-  const install = useCallback((id: string) => {
+  const install = useCallback((id: string, version: string) => {
     setInstalled((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    // 匿名安装上报（幂等；失败不影响本地状态）
+    reportInstallation(id, version, crypto.randomUUID()).catch(() => { /* noop */ });
   }, []);
-
-  const publishPackage = useCallback((pkg: AnyPackage) => {
-    setPublished((prev) => [pkg, ...prev]);
-  }, []);
-
-  const allPackages = useMemo(
-    () => [...published, ...mockPackages],
-    [published]
-  );
 
   const value = useMemo<AppState>(
-    () => ({ theme, toggleTheme, installed, isInstalled, install, published, publishPackage, allPackages }),
-    [theme, toggleTheme, installed, isInstalled, install, published, publishPackage, allPackages]
+    () => ({ theme, toggleTheme, installed, isInstalled, install, allPackages: packages, loading, error, registryUrl: registryBase(), refresh }),
+    [theme, toggleTheme, installed, isInstalled, install, packages, loading, error, refresh]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
