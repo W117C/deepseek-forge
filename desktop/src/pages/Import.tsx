@@ -2,7 +2,7 @@
 // 本阶段 Local-first：URL 需已在 ~/.deepseek-forge/cache/repos/ 克隆；分析不执行第三方代码。
 import { useState } from "react";
 import { Github, LoaderCircle, ScanSearch, TriangleAlert } from "lucide-react";
-import { adapterPropose, importAnalyze } from "../ipc";
+import { adapterGenerate, adapterPropose, importAnalyze } from "../ipc";
 import { useI18n } from "../i18n";
 import type { AdapterProposal, RepositoryAnalysis } from "../ipc";
 
@@ -30,6 +30,8 @@ export default function Import() {
   const [proposal, setProposal] = useState<AdapterProposal | null>(null);
   const [proposalErr, setProposalErr] = useState<string | null>(null);
   const [proposing, setProposing] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [generated, setGenerated] = useState<string | null>(null);
 
   async function proposeAdapter() {
     const s = source.trim();
@@ -43,6 +45,21 @@ export default function Import() {
       setProposalErr(err instanceof Error ? err.message : String(err));
     } finally {
       setProposing(false);
+    }
+  }
+
+  async function generate() {
+    const s = source.trim();
+    if (!s) return;
+    setGenerating(true);
+    setGenerated(null);
+    try {
+      const res = await adapterGenerate(s);
+      setGenerated(res.packageDir ?? "");
+    } catch (err) {
+      setProposalErr(err instanceof Error ? err.message : String(err));
+    } finally {
+      setGenerating(false);
     }
   }
 
@@ -147,8 +164,17 @@ export default function Import() {
               {proposing ? <LoaderCircle size={15} className="spin" /> : null}
               {t("im.createProposal")}
             </button>
+            <button className="btn" onClick={() => void generate()} disabled={generating}>
+              {generating ? <LoaderCircle size={15} className="spin" /> : null}
+              {generating ? t("im.generating") : t("im.generate")}
+            </button>
             <span className="field-hint">{t("im.rulesGen")}</span>
           </div>
+          {generated && (
+            <div className="field-hint" style={{ marginTop: 10, color: "var(--success, #3fb950)" }}>
+              {t("im.generated", { dir: generated })}
+            </div>
+          )}
 
           {proposalErr && (
             <div className="field-error" style={{ marginTop: 10 }}>{proposalErr}</div>

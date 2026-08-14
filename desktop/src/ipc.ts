@@ -159,6 +159,12 @@ export interface AdapterProposal {
   manifest: Record<string, unknown>;
 }
 
+export function adapterGenerate(
+  source: string
+): Promise<{ ok: boolean; packageDir: string }> {
+  return call<{ ok: boolean; packageDir: string }>("adapter_generate", { source });
+}
+
 export function adapterPropose(source: string): Promise<AdapterProposal> {
   return call<AdapterProposal>("adapter_propose", { source });
 }

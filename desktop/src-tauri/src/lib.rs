@@ -290,6 +290,28 @@ fn run_forge_stdin(args: &[String], input: &str) -> Result<serde_json::Value, St
     serde_json::from_slice(&output.stdout).map_err(|e| e.to_string())
 }
 
+/// 标准化：adapter generate —— 生成 Forge 包骨架（install/configure/healthcheck 待人工补充）。
+#[tauri::command]
+fn adapter_generate(source: String) -> Result<serde_json::Value, String> {
+    let slug = source
+        .split('/')
+        .filter(|x| !x.is_empty())
+        .last()
+        .map(|x| x.replace(".git", ""))
+        .unwrap_or_else(|| "adapter".to_string());
+    let out = forge_core::dsh::dsh_home(None)
+        .join(".deepseek-forge")
+        .join("adapters")
+        .join(slug);
+    run_forge(&[
+        "adapter".to_string(),
+        "generate".to_string(),
+        source,
+        "--out".to_string(),
+        out.to_string_lossy().to_string(),
+    ])
+}
+
 #[tauri::command]
 fn agent_config_get(id: String) -> Result<serde_json::Value, String> {
     run_forge(&[
@@ -620,7 +642,8 @@ pub fn run() {
             sources_stats,
             composer_generate,
             agent_config_get,
-            agent_config_set
+            agent_config_set,
+            adapter_generate
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
