@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M16%201.5l12.5%207.2v14.6L16%2030.5l-12.5-7.2V8.7L16%201.5z%22%20stroke%3D%22%234D6BFE%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M16%209v6.2M16%2015.2l3.6%203.6M16%2015.2l-3.6%203.6M16%2015.2l3.6-3.6M16%2015.2l-3.6-3.6%22%20stroke%3D%22%234D6BFE%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2215.2%22%20r%3D%221.4%22%20fill%3D%22%234D6BFE%22%2F%3E%3C%2Fsvg%3E" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="DeepSeek Forge — an independent community marketplace for DeepSeek Harness. Discover community-built Agents, Bundles, Plugins and Skills." />
+    <title>DeepSeek Forge — DeepSeek Harness Marketplace</title>
+    <script>
+      (function () {
+        try {
+          var q = new URLSearchParams(window.location.search).get("theme");
+          var t = q || localStorage.getItem("forge-theme");
+          if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

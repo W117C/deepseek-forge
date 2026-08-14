@@ -1,0 +1,116 @@
+/* ============================================================
+   DeepSeek Forge — Design Tokens
+   Minimal · Technical · Editorial · Developer-first
+   ============================================================ */
+
+:root {
+  /* Color — light */
+  --background: #ffffff;
+  --background-2: #fafafa;
+  --surface: #f5f5f5;
+  --surface-2: #eeeeee;
+  --dark: #0a0a0a;
+
+  --foreground: #111111;
+  --foreground-2: #666666;
+  --muted: #999999;
+
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
+  --border-soft: #f0f0f0;
+
+  --accent: #4d6bfe;
+  --accent-hover: #3b54d4;
+  --accent-soft: rgba(77, 107, 254, 0.07);
+  --accent-border: rgba(77, 107, 254, 0.35);
+
+  --success: #15803d;
+  --success-soft: rgba(21, 128, 61, 0.08);
+  --warning: #b45309;
+  --warning-soft: rgba(180, 83, 9, 0.08);
+  --danger: #b91c1c;
+  --danger-soft: rgba(185, 28, 28, 0.08);
+
+  --overlay: rgba(10, 10, 10, 0.44);
+  --header-bg: rgba(255, 255, 255, 0.78);
+  --code-bg: #0a0a0a;
+  --code-fg: #e6e6e6;
+  --code-dim: #8b8b8b;
+  --code-ok: #4ade80;
+  --code-accent: #7c96ff;
+
+  /* Typography */
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Layout */
+  --content-w: 1200px;
+  --page-w: 1440px;
+  --header-h: 64px;
+  --pad-x: 32px;
+
+  /* Spacing scale */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+  --s9: 96px;
+  --s10: 128px;
+
+  /* Radius — restrained */
+  --r-s: 4px;
+  --r-m: 6px;
+  --r-l: 8px;
+
+  /* Shadows — minimal */
+  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.04);
+  --shadow-md: 0 4px 16px rgba(10, 10, 10, 0.07);
+  --shadow-lg: 0 16px 48px rgba(10, 10, 10, 0.12);
+
+  /* Motion */
+  --t-fast: 150ms;
+  --t-med: 250ms;
+  --t-slow: 400ms;
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+[data-theme="dark"] {
+  --background: #08090a;
+  --background-2: #0b0d0f;
+  --surface: #0e1013;
+  --surface-2: #14171b;
+  --dark: #f5f5f5;
+
+  --foreground: #f5f5f5;
+  --foreground-2: #a3a6ab;
+  --muted: #6e7278;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-soft: rgba(255, 255, 255, 0.05);
+
+  --accent: #6b86ff;
+  --accent-hover: #8aa0ff;
+  --accent-soft: rgba(107, 134, 255, 0.1);
+  --accent-border: rgba(107, 134, 255, 0.45);
+
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.1);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.1);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.1);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+  --header-bg: rgba(8, 9, 10, 0.78);
+  --code-bg: #050607;
+  --code-fg: #e6e6e6;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
