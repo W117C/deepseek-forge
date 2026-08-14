@@ -93,7 +93,7 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), ForgeError> {
             if m.is_dir() {
                 return copy_dir(&target, dst);
             }
-            return fs::copy(&target, dst).map_err(ForgeError::Io);
+            return fs::copy(&target, dst).map_err(ForgeError::Io).map(|_| ());
         }
     }
     if meta.is_dir() {

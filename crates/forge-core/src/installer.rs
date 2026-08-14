@@ -106,7 +106,7 @@ fn link_or_copy(target: &Path, dst: &Path) -> Result<(), ForgeError> {
         if meta.is_dir() {
             copy_dir(target, dst)
         } else {
-            fs::copy(target, dst).map_err(ForgeError::Io)
+            fs::copy(target, dst).map_err(ForgeError::Io).map(|_| ())
         }
     }
 }

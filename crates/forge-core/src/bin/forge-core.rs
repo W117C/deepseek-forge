@@ -306,9 +306,7 @@ fn package_import_github(
         .map(|d| {
             (
                 d.package.clone(),
-                serde_json::Value::String(
-                    d.version.clone().unwrap_or_else(|| "any".to_string()),
-                ),
+                serde_json::Value::String(d.version.clone().unwrap_or_else(|| "any".to_string())),
             )
         })
         .collect();
@@ -378,9 +376,12 @@ fn run_sign(args: &[String]) -> Result<(), ForgeError> {
                 ),
             )
             .map_err(ForgeError::Io)?;
-            use std::os::unix::fs::PermissionsExt;
-            fs::set_permissions(&keys_path, fs::Permissions::from_mode(0o600))
-                .map_err(ForgeError::Io)?;
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                fs::set_permissions(&keys_path, fs::Permissions::from_mode(0o600))
+                    .map_err(ForgeError::Io)?;
+            }
             print_json(&kp)
         }
         "sha256" => {
@@ -1189,9 +1190,10 @@ fn run_update(args: &[String]) -> Result<(), ForgeError> {
         ForgeError::InvalidManifest("update requires a subcommand (check|apply)".to_string())
     })?;
     let f = Flags::parse(&args[1..]);
-    let registry = f.get("registry").map(PathBuf::from).ok_or_else(|| {
-        ForgeError::InvalidManifest(format!("update {sub} requires --registry"))
-    })?;
+    let registry = f
+        .get("registry")
+        .map(PathBuf::from)
+        .ok_or_else(|| ForgeError::InvalidManifest(format!("update {sub} requires --registry")))?;
     let home = f
         .get("home")
         .map(PathBuf::from)
@@ -1219,7 +1221,10 @@ fn run_update(args: &[String]) -> Result<(), ForgeError> {
                 .and_then(|k| k.as_str())
                 .unwrap_or("agent")
                 .to_string();
-            let imported = rec.get("imported").and_then(|v| v.as_bool()).unwrap_or(false);
+            let imported = rec
+                .get("imported")
+                .and_then(|v| v.as_bool())
+                .unwrap_or(false);
             let installed = rec
                 .get("version")
                 .and_then(|v| v.as_str())
@@ -1261,9 +1266,9 @@ fn run_update(args: &[String]) -> Result<(), ForgeError> {
                 .map_err(ForgeError::Io)?;
             if !out.status.success() {
                 let raw = String::from_utf8_lossy(&out.stderr);
-                let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
-                    serde_json::json!({ "code": "UPDATE_FAILED", "human": raw.trim() })
-                });
+                let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(
+                    |_| serde_json::json!({ "code": "UPDATE_FAILED", "human": raw.trim() }),
+                );
                 return Err(ForgeError::RuntimeFailed(
                     env.get("human")
                         .and_then(|h| h.as_str())
