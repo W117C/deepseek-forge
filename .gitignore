@@ -25,3 +25,5 @@ keys.json
 .vercel
 .env*
 .deepseek-forge-registry/
+.e2e-home/
+.e2e-updates-home/
