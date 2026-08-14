@@ -1,0 +1,35 @@
+:root {
+  /* Surfaces */
+  --bg: #08090a;
+  --surface: #0e0f11;
+  --surface-2: #131416;
+  --surface-3: #17181b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --text: #f5f5f5;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+
+  /* Accent — DeepSeek-inspired blue, used sparingly */
+  --accent: #4d6bfe;
+  --accent-bright: #7b93ff;
+  --accent-soft: #9db1ff;
+  --accent-dim: rgba(77, 107, 254, 0.16);
+  --accent-glow: rgba(77, 107, 254, 0.4);
+  --accent-haze: rgba(77, 107, 254, 0.1);
+
+  --ok: #4ade80;
+
+  /* Typography */
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Layout */
+  --header-h: 64px;
+  --container: 1200px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
