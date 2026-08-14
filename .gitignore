@@ -16,3 +16,7 @@ keys.json
 
 # 打包产物
 *.tgz
+
+# Vercel 本地状态与本地环境变量（vercel CLI 自动追加）
+.vercel
+.env*
