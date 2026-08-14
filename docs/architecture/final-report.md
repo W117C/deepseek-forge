@@ -61,3 +61,9 @@ cd desktop && npm install && npm run build && npm run tauri build -- --debug --n
 - ① 安全扫描日志聚合：LogEntry 加 kind=install|security；安装管线（含阻断）落 ~/.deepseek-forge/logs/security/；Logs 页分节（commit 2ae3a6a，实测 verdict=pass score=99）
 - ② Adapter AI 供应商接口：provider_from_env(FORGE_AI_ENDPOINT/FORGE_AI_KEY) 纯函数；无配置回退 rules 且明示，绝不伪造 AI（commit ccc6bc0，测试 49/49）
 - ③ D1 npm 二进制分发：forge-core-bin.mjs 发布模式解析 node_modules/@deepseek-forge/bin/<platform>/；CI 三平台矩阵 + upload-artifact；runbook 更新（commit a5fd287，实测 PUBLISHED_MODE_OK；CI 无法本地执行如实记录）
+
+## 6d. 收尾三项（AI 真实调用 / harness 日志 / forge-bin 骨架）
+
+- ① Adapter AI 真实 HTTP 调用路径：minreq POST FORGE_AI_ENDPOINT（Bearer）；成功采纳 description/category（generator=ai）；协议失败/不可达回退 rules + 强制人工审阅明示；三路径本地 TcpListener fixture 测试（commit fa62270，52/52）
+- ② harness 日志捕获：runtime run 分离启动 + 输出落 logs/harness/<ts>-<profile>.log；logs list 增 harness 类；实测捕获 'dsh web: http://127.0.0.1:4055'（commit 45de014）
+- ③ @deepseek-forge/bin 包骨架：package.json/pack.sh/README，CI 三平台 artifact → pack.sh → npm publish 一步化；未实际 publish（如实记录，commit 45de014）

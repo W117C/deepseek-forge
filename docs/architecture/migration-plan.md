@@ -221,3 +221,11 @@ Model/Context 等展示字段以真实来源为准（dsh 版本、会话文件�
 | ① 安全扫描日志聚合 | ✅ | 2ae3a6a |
 | ② Adapter AI 供应商接口（rules 回退明示） | ✅ | ccc6bc0 |
 | ③ D1 npm 二进制分发路径 + CI 矩阵 | ✅ | a5fd287 |
+
+### 收尾三项（完成）
+
+| 项 | 状态 | Commit |
+| --- | --- | --- |
+| ① AI 真实 HTTP 调用 + 回退 | ✅ | fa62270 |
+| ② harness 日志捕获 | ✅ | 45de014 |
+| ③ forge-bin 包骨架 | ✅ | 45de014 |
