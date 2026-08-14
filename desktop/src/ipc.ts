@@ -291,6 +291,23 @@ export interface ResolveReport {
   missing: string[];
 }
 
+export interface ComposeGenerateResult {
+  agentId: string;
+  profile: string;
+  dir: string;
+  components: string[];
+  profileBundles: string[];
+  result?: { steps?: string[]; health?: { passed: boolean } };
+  note?: string;
+}
+
+export function composeGenerate(
+  name: string,
+  ids: string[]
+): Promise<ComposeGenerateResult> {
+  return call<ComposeGenerateResult>("composer_generate", { name, ids });
+}
+
 export function composerResolve(ids: string[]): Promise<ResolveReport> {
   return call<ResolveReport>("composer_resolve", { ids });
 }

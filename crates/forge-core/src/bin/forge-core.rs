@@ -962,24 +962,259 @@ fn run_adapter(args: &[String]) -> Result<(), ForgeError> {
     }
 }
 
+/// 递归复制一个目录的内容（文件真实拷贝；官方 bundle 不含符号链接，链接保守跳过并记录）。
+fn copy_dir_contents(src: &Path, dst: &Path) -> Result<(), ForgeError> {
+    if !src.exists() {
+        return Ok(());
+    }
+    fs::create_dir_all(dst).map_err(ForgeError::Io)?;
+    for entry in fs::read_dir(src).map_err(ForgeError::Io)? {
+        let entry = entry.map_err(ForgeError::Io)?;
+        let from = entry.path();
+        let to = dst.join(entry.file_name());
+        let meta = fs::symlink_metadata(&from).map_err(ForgeError::Io)?;
+        if meta.is_dir() {
+            copy_dir_contents(&from, &to)?;
+        } else if meta.file_type().is_symlink() {
+            eprintln!("compose generate: 跳过符号链接 {}", from.display());
+        } else {
+            fs::copy(&from, &to).map_err(ForgeError::Io)?;
+        }
+    }
+    Ok(())
+}
+
 fn run_composer(args: &[String]) -> Result<(), ForgeError> {
     let sub = args.first().ok_or_else(|| {
-        ForgeError::InvalidManifest("composer requires a subcommand (resolve)".to_string())
+        ForgeError::InvalidManifest("composer requires a subcommand (resolve|generate)".to_string())
     })?;
-    if sub != "resolve" {
-        return Err(ForgeError::InvalidManifest(format!(
+    let f = Flags::parse(&args[1..]);
+    match sub.as_str() {
+        "resolve" => {
+            // 输入：stdin JSON 数组（ComponentSpec）；输出 ResolveReport
+            let mut buf = String::new();
+            use std::io::Read;
+            std::io::stdin()
+                .read_to_string(&mut buf)
+                .map_err(ForgeError::Io)?;
+            let components: Vec<ComponentSpec> =
+                serde_json::from_str(&buf).map_err(ForgeError::Json)?;
+            validate_components(&components)?;
+            print_json(&resolve_graph(&components)?)
+        }
+        "generate" => {
+            // 真实组合：多个 Agent 组件 → 生成自包含 Agent 目录 → 完整安装管线 → 可运行。
+            // 未适配（无运行 bundle）的收录式插件被诚实拒绝，绝不生成不可运行的空壳。
+            let name = f.get("name").ok_or_else(|| {
+                ForgeError::InvalidManifest("compose generate requires --name".to_string())
+            })?;
+            let ids: Vec<String> = f
+                .get("ids")
+                .map(|s| {
+                    s.split(',')
+                        .map(|x| x.trim().to_string())
+                        .filter(|x| !x.is_empty())
+                        .collect()
+                })
+                .unwrap_or_default();
+            if ids.len() < 2 {
+                return Err(ForgeError::InvalidManifest(
+                    "compose generate 至少需要 2 个组件（--ids a,b）".to_string(),
+                ));
+            }
+            let registry = f
+                .get("registry")
+                .map(PathBuf::from)
+                .unwrap_or_else(default_registry_path);
+            let home = f
+                .get("home")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| dsh_home(None));
+            let reg = LocalRegistry::open(registry.clone());
+            let slug = name
+                .to_lowercase()
+                .chars()
+                .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+                .collect::<String>();
+            let slug = slug.trim_matches('-').to_string();
+            progress_line(&slug, "resolving", 1, 5, None);
+            // 收集组件（只允许带运行 bundle 的 Agent）
+            let mut bundle_specs: Vec<(String, String)> = Vec::new();
+            let mut profile_bundles: Vec<String> = vec![
+                "@deepseek-ai/dsh-base".to_string(),
+                "@deepseek-ai/dsh-web-app".to_string(),
+            ];
+            let mut names: Vec<String> = Vec::new();
+            for id in &ids {
+                let pkg = reg.get_package(id)?;
+                if pkg.r#type != forge_core::model::PackageType::Agent {
+                    return Err(ForgeError::InvalidManifest(format!(
+                        "组件 {id} 类型为 {:?}，不是 Agent；暂无法组合为可运行 Agent",
+                        pkg.r#type
+                    )));
+                }
+                if pkg.runtime.components.bundles.is_empty()
+                    && pkg.runtime.profile.bundles.is_empty()
+                {
+                    return Err(ForgeError::InvalidManifest(format!(
+                        "组件 {id} 尚未适配为可运行 bundle（收录式插件需先经 Adapter 适配，不能伪装成可运行）"
+                    )));
+                }
+                for b in &pkg.runtime.components.bundles {
+                    if !bundle_specs.iter().any(|(p2, _)| p2 == &b.package) {
+                        bundle_specs.push((
+                            b.package.clone(),
+                            b.version.clone().unwrap_or_else(|| "0.1.0".to_string()),
+                        ));
+                    }
+                }
+                for b in &pkg.runtime.profile.bundles {
+                    if !profile_bundles.contains(b) {
+                        profile_bundles.push(b.clone());
+                    }
+                }
+                names.push(pkg.name.clone());
+            }
+            // 生成目录：从 registry 制品解包并拷贝组件 bundle/preset 源码（真实文件）
+            let out = f
+                .get("out")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| home.join(".deepseek-forge").join("generated").join(&slug));
+            remove_any(&out)?;
+            fs::create_dir_all(out.join("bundle")).map_err(ForgeError::Io)?;
+            fs::create_dir_all(out.join("preset")).map_err(ForgeError::Io)?;
+            progress_line(
+                &slug,
+                "assembling",
+                2,
+                5,
+                Some(serde_json::json!({ "components": ids })),
+            );
+            for id in &ids {
+                let pkg = reg.get_package(id)?;
+                let pv = reg.get_version(id, &pkg.version)?;
+                let artifact = pv.artifact.clone().ok_or_else(|| {
+                    ForgeError::ArtifactNotFound(format!("{id} 缺少制品，无法组合"))
+                })?;
+                let artifact_path = match &artifact.url {
+                    Some(url) => registry.join(url),
+                    None => registry.join("cache").join(&artifact.filename),
+                };
+                let fetch = out.join(".fetch").join(id);
+                remove_any(&fetch)?;
+                fs::create_dir_all(&fetch).map_err(ForgeError::Io)?;
+                let st = std::process::Command::new("tar")
+                    .args(["-xzf"])
+                    .arg(&artifact_path)
+                    .arg("-C")
+                    .arg(&fetch)
+                    .output()
+                    .map_err(ForgeError::Io)?;
+                if !st.status.success() {
+                    return Err(ForgeError::RuntimeFailed(format!(
+                        "解包失败: {}",
+                        String::from_utf8_lossy(&st.stderr)
+                    )));
+                }
+                copy_dir_contents(&fetch.join("bundle"), &out.join("bundle"))?;
+                copy_dir_contents(&fetch.join("preset"), &out.join("preset"))?;
+            }
+            let _ = remove_any(&out.join(".fetch"));
+            // agenthub.yaml（官方 Agent 结构，字段来自被组合组件的真实 manifest）
+            let bundles_yaml = bundle_specs
+                .iter()
+                .map(|(p2, v)| format!("    - package: {p2:?}\n      version: {v:?}"))
+                .collect::<Vec<_>>()
+                .join("\n");
+            let profile_yaml = profile_bundles
+                .iter()
+                .map(|b| format!("{b:?}"))
+                .collect::<Vec<_>>()
+                .join(", ");
+            let yaml = format!(
+                "schema: agenthub.dev/agent/v1\n
+id: {slug}\n
+name: {name}\n
+category: 组合 Composed\n
+version: 0.1.0\n
+description: 由 DeepSeek Forge 组合生成：{names}。\n
+publisher:\n
+  id: agenthub\n
+  name: AgentHub\n
+runtime: deepseek-harness\n
+compatibility:\n
+  dsh:\n
+    min: \"0.1.0-rc.6\"\n
+    tested: [\"0.1.0-rc.6\"]\n
+  node: \">=22\"\n
+platform: [darwin, linux]\n
+components:\n
+  bundles:\n
+{bundles_yaml}\n
+  presets: []\n
+  skills: []\n
+profile:\n
+  name: {slug}\n
+  bundles: [{profile_yaml}]\n
+  patch: ./profile.patch.yml\n
+permissions:\n
+  network: []\n
+  env: []\n
+secrets: []\n
+health:\n
+  - kind: dump-config\n
+    expect-rows: []\n
+updatePolicy: notify\n
+trust: official\n",
+                names = names.join(" + "),
+            );
+            fs::write(out.join("agenthub.yaml"), yaml).map_err(ForgeError::Io)?;
+            fs::write(out.join("profile.patch.yml"), "[]\n").map_err(ForgeError::Io)?;
+            fs::write(
+                out.join("README.md"),
+                format!(
+                    "# {name}\n\n由 DeepSeek Forge 组合生成（Composed by DeepSeek Forge）。\n\n组件：{ids}\n\nProfile：{slug}（dsh --profile {slug}）\n",
+                    ids = ids.join(", "),
+                ),
+            )
+            .map_err(ForgeError::Io)?;
+            // 完整安装管线（兼容→安全扫描→快照→profile→bundles→presets→merge→state→健康检查）
+            progress_line(&slug, "installing", 3, 5, None);
+            let bin = resolve_bin(f.get("bin"))?;
+            let req = InstallRequest {
+                agent_dir: out.clone(),
+                home: home.clone(),
+                bin,
+                profile_name: slug.clone(),
+                trust: Some("official".to_string()),
+                smoke: f.get("smoke").is_some(),
+            };
+            match install(&req) {
+                Ok(r) => {
+                    progress_line(&slug, "health-check", 4, 5, None);
+                    let _ = append_install_log(&slug, "0.1.0", true, &r.steps, None);
+                    progress_line(&slug, "installed", 5, 5, None);
+                    print_json(&serde_json::json!({
+                        "agentId": slug,
+                        "profile": slug,
+                        "dir": out,
+                        "components": ids,
+                        "profileBundles": profile_bundles,
+                        "result": r,
+                        "note": format!("组合 Agent 已生成并安装；运行：dsh --profile {slug}（或桌面端 My Agents → Run）。"),
+                    }))
+                }
+                Err(fail) => {
+                    let _ =
+                        append_install_log(&slug, "0.1.0", false, &fail.steps, Some(&fail.code));
+                    print_install_failure(&fail)
+                }
+            }
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
             "unknown composer subcommand '{sub}'"
-        )));
+        ))),
     }
-    // 输入：stdin JSON 数组（ComponentSpec）；输出 ResolveReport
-    let mut buf = String::new();
-    use std::io::Read;
-    std::io::stdin()
-        .read_to_string(&mut buf)
-        .map_err(ForgeError::Io)?;
-    let components: Vec<ComponentSpec> = serde_json::from_str(&buf).map_err(ForgeError::Json)?;
-    validate_components(&components)?;
-    print_json(&resolve_graph(&components)?)
 }
 
 fn run_runtime(args: &[String]) -> Result<(), ForgeError> {

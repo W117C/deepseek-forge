@@ -1,16 +1,19 @@
 // Increment ④: Composer —— 左：本地 Registry 可用组件；右：当前组合。
 // Resolve 经 Rust Kernel 输出确定性安装序 + 冲突/缺失（提前发现）。
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { ArrowRight, Boxes, LoaderCircle, TriangleAlert } from "lucide-react";
 import {
   bundleCreate,
   bundleInstall,
   bundleList,
   bundleUninstall,
+  composeGenerate,
   composerResolve,
   dependentsList,
   registryList,
 } from "../ipc";
+import InstallProgress from "../components/InstallProgress";
 import type { RegistrySummary, ResolveReport } from "../ipc";
 import { useI18n } from "../i18n";
 
@@ -25,6 +28,9 @@ export default function Composer() {
   const [bundles, setBundles] = useState<Record<string, any>[]>([]);
   const [bundleBusy, setBundleBusy] = useState<string | null>(null);
   const [bundleErr, setBundleErr] = useState<string | null>(null);
+  const [agentBusy, setAgentBusy] = useState(false);
+  const [agentResult, setAgentResult] = useState<Record<string, unknown> | null>(null);
+  const [agentErr, setAgentErr] = useState<string | null>(null);
 
   function loadBundles() {
     bundleList()
@@ -45,6 +51,21 @@ export default function Composer() {
       setBundleErr(e instanceof Error ? e.message : String(e));
     } finally {
       setBundleBusy(null);
+    }
+  }
+
+  async function generateAgent() {
+    if (!bundleName.trim() || selected.length < 2) return;
+    setAgentBusy(true);
+    setAgentErr(null);
+    setAgentResult(null);
+    try {
+      const res = await composeGenerate(bundleName.trim(), selected);
+      setAgentResult(res as unknown as Record<string, unknown>);
+    } catch (e) {
+      setAgentErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAgentBusy(false);
     }
   }
 
@@ -200,7 +221,36 @@ export default function Composer() {
           {bundleBusy === "create" ? <LoaderCircle size={14} className="spin" /> : null}
           {t("co.createBundle")}
         </button>
+        <button
+          className="btn"
+          onClick={() => void generateAgent()}
+          disabled={agentBusy || selSummary.length < 2}
+        >
+          {agentBusy ? <LoaderCircle size={14} className="spin" /> : <Boxes size={14} />}
+          {agentBusy ? t("co.generating") : t("co.generateAgent")}
+        </button>
       </div>
+      <p className="field-hint" style={{ marginTop: 8 }}>
+        {t("co.agentOnlyHint")}
+      </p>
+      {agentBusy && <InstallProgress targetId={"agent-" + bundleName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")} />}
+      {agentErr && <div className="field-error" style={{ marginTop: 8 }}>{agentErr}</div>}
+      {agentResult && (
+        <div className="card" style={{ marginTop: 10 }}>
+          <div className="field-hint" style={{ color: "var(--success, #3fb950)" }}>
+            {t("co.agentGenerated", {
+              id: String(agentResult.agentId ?? ""),
+              profile: String(agentResult.profile ?? ""),
+            })}
+          </div>
+          <div className="mono" style={{ fontSize: 11.5 }}>
+            {(agentResult.result as { steps?: string[] })?.steps?.join(" → ") ?? ""}
+          </div>
+          <Link to="/agents" className="mono" style={{ marginTop: 6, display: "inline-block" }}>
+            → {t("nav.agents")}
+          </Link>
+        </div>
+      )}
 
       {bundles.length > 0 && (
         <div className="card" style={{ marginTop: 12 }}>

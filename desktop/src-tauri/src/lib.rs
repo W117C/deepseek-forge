@@ -350,6 +350,31 @@ fn dependents_list(id: String) -> Result<serde_json::Value, String> {
 }
 
 /// Sources 页真实统计：本地 Registry 包数 / GitHub 来源数 / 本地源码缓存数。
+/// STEP 14: 组合生成 Agent —— composer generate 全链路（生成目录 → 安装管线 → 可运行）。
+#[tauri::command]
+fn composer_generate(
+    app: AppHandle,
+    name: String,
+    ids: Vec<String>,
+) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    run_forge_streaming(
+        &app,
+        &[
+            "composer".to_string(),
+            "generate".to_string(),
+            "--name".to_string(),
+            name,
+            "--ids".to_string(),
+            ids.join(","),
+            "--registry".to_string(),
+            reg,
+            "--home".to_string(),
+            home_arg(),
+        ],
+    )
+}
+
 #[tauri::command]
 fn sources_stats() -> Result<serde_json::Value, String> {
     let reg = registry();
@@ -524,7 +549,8 @@ pub fn run() {
             update_apply,
             dependents_list,
             state_set_enabled,
-            sources_stats
+            sources_stats,
+            composer_generate
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

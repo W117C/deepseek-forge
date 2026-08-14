@@ -27,3 +27,4 @@ keys.json
 .deepseek-forge-registry/
 .e2e-home/
 .e2e-updates-home/
+.e2e-compose-home/
