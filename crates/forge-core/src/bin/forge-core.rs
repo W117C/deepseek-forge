@@ -25,7 +25,7 @@ use forge_core::runtime::{restart_process, run_harness_captured, runtime_status,
 use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
 use forge_core::snapshot::iso_utc_colon;
-use forge_core::state::load_state;
+use forge_core::state::{load_state, save_state};
 use forge_core::updater::check_updates;
 
 fn main() {
@@ -140,6 +140,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "search" => run_search(&args[1..]),
         "update" => run_update(&args[1..]),
         "logs" => run_logs(&args[1..]),
+        "package" => run_package(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -208,7 +209,7 @@ fn run_package(args: &[String]) -> Result<(), ForgeError> {
         Some(sub) => sub,
         None => {
             return Err(ForgeError::InvalidManifest(
-                "package requires a subcommand (validate|inspect)".to_string(),
+                "package requires a subcommand (validate|inspect|import-github)".to_string(),
             ))
         }
     };
@@ -241,10 +242,85 @@ fn run_package(args: &[String]) -> Result<(), ForgeError> {
             let package = LocalRegistry::open(registry).get_package(id)?;
             print_json(&package)
         }
+        "import-github" => {
+            let f = Flags::parse(&args[1..]);
+            let (registry, positional) = parse_registry(&args[1..]);
+            let id = positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest(
+                    "package import-github requires a package ID".to_string(),
+                )
+            })?;
+            let home = f
+                .get("home")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| dsh_home(None));
+            package_import_github(id, &registry, &home)
+        }
         _ => Err(ForgeError::InvalidManifest(format!(
             "unknown package subcommand '{sub}'"
         ))),
     }
+}
+
+/// 收录式安装：GitHub 源包 → 浅克隆到缓存 → 安全扫描 → 登记安装状态 → 写安装日志。
+/// 真实落盘（缓存源码 + state.json + 日志）；未适配的 upstream 不会伪装成已装进 Harness。
+fn package_import_github(id: &str, registry: &Path, home: &Path) -> Result<(), ForgeError> {
+    use forge_core::import::analyze_source;
+    use forge_core::logutil::append_install_log;
+    use forge_core::snapshot::iso_utc_colon;
+
+    let pkg = LocalRegistry::open(registry.to_path_buf()).get_package(id)?;
+    let repo_url = pkg
+        .source
+        .repository
+        .clone()
+        .ok_or_else(|| ForgeError::InvalidManifest("该包无 GitHub 来源".to_string()))?;
+    if pkg.source.r#type != forge_core::model::SourceType::Github {
+        return Err(ForgeError::InvalidManifest(
+            "import-github 仅支持 source.type=github 的包".to_string(),
+        ));
+    }
+    let steps = vec![
+        "resolving".to_string(),
+        "cloning".to_string(),
+        "scanning".to_string(),
+        "registering".to_string(),
+    ];
+    let analysis = analyze_source(&repo_url)?;
+    if analysis.license_missing {
+        let _ = append_install_log(id, &pkg.version, false, &steps, Some("LICENSE_MISSING"));
+        return Err(ForgeError::LicenseMissing(format!(
+            "{}：该仓库无许可证，按 Principle 5 拒绝收录。",
+            analysis.source
+        )));
+    }
+    // 登记安装状态（真实写入共享状态库）
+    let mut state = load_state(home);
+    state["agents"][id] = serde_json::json!({
+        "kind": "plugin",
+        "source": repo_url,
+        "version": pkg.version,
+        "installedAt": iso_utc_colon(),
+        "trust": "community",
+        "score": analysis.scan.score,
+        "scanVerdict": analysis.scan.verdict,
+        "imported": true,
+        "license": analysis.license,
+        "permissions": { "network": [], "env": [] },
+    });
+    save_state(home, &state)?;
+    let _ = append_install_log(id, &pkg.version, true, &steps, None);
+    print_json(&serde_json::json!({
+        "id": id,
+        "version": pkg.version,
+        "source": analysis.source,
+        "license": analysis.license,
+        "packageType": analysis.package_type,
+        "scan": analysis.scan,
+        "steps": steps,
+        "imported": true,
+        "note": "收录完成：源码已克隆到本地缓存并完成安全扫描；适配为可运行 Forge 包（Adapter）为后续步骤。"
+    }))
 }
 
 fn run_sign(args: &[String]) -> Result<(), ForgeError> {

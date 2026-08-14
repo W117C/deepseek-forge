@@ -4,6 +4,7 @@ import { fileURLToPath, URL } from "node:url";
 
 // Desktop shell reuses the forge design system via the @forge alias.
 export default defineConfig({
+  base: "./",
   plugins: [react()],
   resolve: {
     alias: {

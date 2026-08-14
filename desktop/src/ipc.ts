@@ -28,6 +28,13 @@ export interface RegistrySummary {
   type: string;
   versionLatest: string;
   description: string;
+  stars?: number | null;
+  category?: string | null;
+  license?: string | null;
+}
+
+export function installPackage(id: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("install_package", { id });
 }
 
 /**

@@ -32,6 +32,13 @@ pub struct PackageSummary {
     #[serde(rename = "versionLatest")]
     pub version_latest: String,
     pub description: String,
+    /// 收录条目携带的真实 stars（extra.stars）；官方/本地包为 None
+    #[serde(default)]
+    pub stars: Option<u64>,
+    #[serde(default)]
+    pub category: Option<String>,
+    #[serde(default)]
+    pub license: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -152,6 +159,9 @@ impl RegistryProvider for LocalRegistry {
                 r#type: package.r#type.clone(),
                 version_latest: package.version.clone(),
                 description: package.description.clone(),
+                stars: package.extra.get("stars").and_then(|s| s.as_u64()),
+                category: Some(package.category.clone()).filter(|c| !c.is_empty()),
+                license: Some(package.license.spdx.clone()),
             });
         }
         summaries.sort_by(|a, b| a.id.cmp(&b.id));

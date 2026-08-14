@@ -6,6 +6,7 @@ import Import from "./pages/Import";
 import Placeholder from "./pages/Placeholder";
 import Agents from "./pages/Agents";
 import Composer from "./pages/Composer";
+import Marketplace from "./pages/Marketplace";
 import Processes from "./pages/Processes";
 import Sessions from "./pages/Sessions";
 import Updates from "./pages/Updates";
@@ -27,10 +28,7 @@ export default function App() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route
-            path="/marketplace"
-            element={<Placeholder title="Marketplace" phase="Phase 4" />}
-          />
+          <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/import" element={<Import />} />
           <Route path="/agents" element={<Agents />} />
           <Route

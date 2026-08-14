@@ -13,6 +13,7 @@ use forge_core::adapter::propose;
 use forge_core::composer::{resolve_graph, validate_components, ComponentSpec, DependencySpec};
 use forge_core::import::analyze_source;
 use forge_core::installer::rollback;
+use forge_core::model::SourceType;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 use forge_core::logutil::list_install_logs;
 use forge_core::runtime::{restart_process, runtime_status, stop_process};
@@ -158,6 +159,65 @@ fn logs_list() -> Result<Vec<forge_core::logutil::LogEntry>, String> {
     Ok(list_install_logs())
 }
 
+/// STEP 6: 真实安装 —— 有 artifact 走 install-from-registry；GitHub 源走收录式
+/// 安装（克隆→扫描→状态登记，经 Core）。状态/结果全部由 Core 返回。
+#[tauri::command]
+fn install_package(id: String) -> Result<serde_json::Value, String> {
+    let reg = registry();
+    let pkg = reg.get_package(&id).map_err(to_ipc_error)?;
+    let home = forge_core::dsh::dsh_home(None);
+    let has_artifact = !pkg.artifact.filename.is_empty() || pkg.artifact.sha256.is_some();
+    if pkg.source.r#type == SourceType::Github && !has_artifact {
+        // 收录式安装：经 forge-core 二进制（与 CLI 同路径）
+        let bin = crate::published_or_dev_bin().ok_or_else(|| {
+            "forge-core 二进制不可用：请先构建或设置 FORGE_CORE_BIN".to_string()
+        })?;
+        let out = std::process::Command::new(bin)
+            .args([
+                "package",
+                "import-github",
+                &id,
+                "--registry",
+                &registry().root().to_string_lossy(),
+                "--home",
+                &home.to_string_lossy(),
+            ])
+            .output()
+            .map_err(|e| e.to_string())?;
+        if !out.status.success() {
+            let raw = String::from_utf8_lossy(&out.stderr);
+            let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
+                serde_json::json!({ "code": "INSTALL_FAILED", "human": raw.trim() })
+            });
+            return Err(serde_json::to_string(&env).unwrap_or_default());
+        }
+        let v: serde_json::Value =
+            serde_json::from_slice(&out.stdout).map_err(|e| e.to_string())?;
+        return Ok(v);
+    }
+    // 有 artifact：走 Rust 安装管线（此处留给后续 STEP：调用 install_from_registry 语义）
+    Err(serde_json::to_string(&serde_json::json!({
+        "code": "NOT_IMPLEMENTED",
+        "human": "该包带有制品，安装管线在后续 STEP 接入",
+    }))
+    .unwrap_or_default())
+}
+
+/// 定位 forge-core（开发 target 优先，其次发布布局，最后 PATH）
+fn published_or_dev_bin() -> Option<String> {
+    let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    for profile in ["release", "debug"] {
+        let p = here
+            .join("../../crates/forge-core/target")
+            .join(profile)
+            .join("forge-core");
+        if p.exists() {
+            return Some(p.to_string_lossy().to_string());
+        }
+    }
+    None
+}
+
 /// Increment ④: resolve a composition of registry packages (deps from manifests).
 #[tauri::command]
 fn composer_resolve(ids: Vec<String>) -> Result<forge_core::composer::ResolveReport, String> {
@@ -228,7 +288,8 @@ pub fn run() {
             composer_resolve,
             runtime_stop,
             runtime_restart,
-            logs_list
+            logs_list,
+            install_package
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

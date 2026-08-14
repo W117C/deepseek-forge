@@ -926,6 +926,7 @@ version = "0.4.0"
 dependencies = [
  "base64 0.22.1",
  "ed25519-dalek",
+ "minreq",
  "rand",
  "regex",
  "semver",
@@ -1901,6 +1902,16 @@ checksum = "1fa76a2c86f704bdb222d66965fb3d63269ce38518b83cb0575fca855ebb6316"
 dependencies = [
  "adler2",
  "simd-adler32",
+]
+
+[[package]]
+name = "minreq"
+version = "2.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05015102dad0f7d61691ca347e9d9d9006685a64aefb3d79eecf62665de2153d"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

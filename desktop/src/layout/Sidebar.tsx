@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import { Languages } from "lucide-react";
+import { useI18n } from "../i18n";
 import type { LucideIcon } from "lucide-react";
 import {
   Activity,
@@ -32,36 +34,36 @@ interface NavGroup {
 // Sidebar groups per target-state §24.
 const GROUPS: NavGroup[] = [
   {
-    title: "Discover",
+    title: "discover",
     items: [
-      { to: "/marketplace", label: "Marketplace", icon: Store, phase: "Phase 4" },
-      { to: "/import", label: "GitHub Import", icon: Github, phase: "ready" },
+      { to: "/marketplace", label: "marketplace", icon: Store, phase: "" },
+      { to: "/import", label: "import", icon: Github, phase: "" },
     ],
   },
   {
-    title: "Workspace",
+    title: "workspace",
     items: [
-      { to: "/agents", label: "My Agents", icon: Bot, phase: "Phase 6" },
-      { to: "/skills", label: "My Skills", icon: Sparkles, phase: "Phase 6" },
-      { to: "/plugins", label: "My Plugins", icon: Puzzle, phase: "Phase 3" },
-      { to: "/bundles", label: "Bundles", icon: Package, phase: "Phase 6" },
+      { to: "/agents", label: "agents", icon: Bot, phase: "" },
+      { to: "/skills", label: "skills", icon: Sparkles, phase: "" },
+      { to: "/plugins", label: "plugins", icon: Puzzle, phase: "" },
+      { to: "/bundles", label: "bundles", icon: Package, phase: "" },
     ],
   },
   {
-    title: "Runtime",
+    title: "runtime",
     items: [
-      { to: "/sessions", label: "Sessions", icon: Terminal, phase: "Phase 7" },
-      { to: "/processes", label: "Processes", icon: Activity, phase: "Phase 7" },
-      { to: "/logs", label: "Logs", icon: ScrollText, phase: "Phase 7" },
+      { to: "/sessions", label: "sessions", icon: Terminal, phase: "" },
+      { to: "/processes", label: "processes", icon: Activity, phase: "" },
+      { to: "/logs", label: "logs", icon: ScrollText, phase: "" },
     ],
   },
   {
-    title: "System",
+    title: "system",
     items: [
-      { to: "/security", label: "Security", icon: ShieldCheck, phase: "Phase 8" },
-      { to: "/sources", label: "Sources", icon: Database, phase: "Phase 8" },
-      { to: "/updates", label: "Updates", icon: RefreshCw, phase: "Phase 8" },
-      { to: "/settings", label: "Settings", icon: Settings, phase: "Phase 8" },
+      { to: "/security", label: "security", icon: ShieldCheck, phase: "" },
+      { to: "/sources", label: "sources", icon: Database, phase: "" },
+      { to: "/updates", label: "updates", icon: RefreshCw, phase: "" },
+      { to: "/settings", label: "settings", icon: Settings, phase: "" },
     ],
   },
 ];
@@ -96,6 +98,7 @@ function ForgeMark() {
 }
 
 export default function Sidebar() {
+  const { t, locale, setLocale } = useI18n();
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -111,25 +114,37 @@ export default function Sidebar() {
       <nav className="sidebar-nav" aria-label="Primary">
         <NavLink to="/" end className={linkClass}>
           <LayoutDashboard size={16} />
-          <span>Dashboard</span>
+          <span>{t("nav.dashboard")}</span>
         </NavLink>
 
         {GROUPS.map((group) => (
           <div className="sidebar-group" key={group.title}>
-            <div className="sidebar-group-title">{group.title}</div>
+            <div className="sidebar-group-title">{t("nav." + group.title.toLowerCase())}</div>
             {group.items.map((item) => {
               const Icon = item.icon;
+              const label = t("nav." + item.label.toLowerCase().replace(/ /g, ""));
               return (
                 <NavLink key={item.to} to={item.to} className={linkClass}>
                   <Icon size={16} />
-                  <span>{item.label}</span>
-                  <span className="sidebar-phase">{item.phase}</span>
+                  <span>{label}</span>
                 </NavLink>
               );
             })}
           </div>
         ))}
       </nav>
+
+      <div className="sidebar-footer">
+        <button
+          className="btn btn-ghost"
+          style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}
+          onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
+          aria-label="Switch language"
+        >
+          <Languages size={14} />
+          {locale === "zh" ? "中文" : "English"}
+        </button>
+      </div>
     </aside>
   );
 }

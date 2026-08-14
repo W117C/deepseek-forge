@@ -746,12 +746,26 @@ fn current_node_major() -> u32 {
 }
 
 /// Restore the latest snapshot for an installed agent (Node rollback).
+/// 收录式插件（kind=plugin 且 imported=true）没有快照：卸载 = 移除状态登记。
 pub fn rollback(home: &Path, agent_id: &str) -> Result<Value, ForgeError> {
-    let state = load_state(home);
+    let mut state = load_state(home);
     let rec = state
         .get("agents")
         .and_then(|a| a.get(agent_id))
         .ok_or_else(|| ForgeError::PackageNotFound(format!("未安装：{agent_id}")))?;
+    if rec.get("kind").and_then(|k| k.as_str()) == Some("plugin")
+        && rec.get("imported").and_then(|v| v.as_bool()) == Some(true)
+    {
+        if let Some(agents) = state.get_mut("agents").and_then(|a| a.as_object_mut()) {
+            agents.remove(agent_id);
+        }
+        save_state(home, &state)?;
+        return Ok(json!({
+            "agentId": agent_id,
+            "restored": "import-removed",
+            "state": null
+        }));
+    }
     let ts = rec
         .get("snapshot")
         .and_then(|s| s.get("ts"))
