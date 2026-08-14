@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  e2e:
+    name: 全量 e2e（14 套 / 203 项）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # DSH CLI：e2e 通过 locateDsh() 在 PATH 上找到它
+      # （@latest = 0.1.0-rc.6，与 docs/dsh-integration.md 源码级核实基线一致）
+      - name: 安装 DeepSeek Harness CLI
+        run: npm install -g @deepseek-ai/dsh
+
+      - name: 安装 pnpm
+        run: npm install -g pnpm
+
+      - name: 版本自检
+        run: |
+          node -v
+          dsh --version || true
+          pnpm -v
+
+      - name: 运行全部 e2e 套件
+        run: |
+          FAIL=0
+          for t in test/e2e*.mjs; do
+            echo "=================================================="
+            echo "== RUN $t"
+            echo "=================================================="
+            if ! node "$t"; then
+              echo "::error::$t 失败"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" != 0 ]; then
+            echo "::error::存在失败的 e2e 套件"
+            exit 1
+          fi
+          echo "全部 e2e 套件通过 ✓"
