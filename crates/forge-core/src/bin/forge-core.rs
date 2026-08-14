@@ -716,8 +716,75 @@ fn run_catalog_plugin(args: &[String]) -> Result<(), ForgeError> {
     }
 }
 
+/// 从 LICENSE 文本识别 SPDX（与 Node 侧 curate-ecosystem 一致的模式表）。
+fn spdx_from_text_rust(text: &str) -> Option<&'static str> {
+    const PATTERNS: &[(fn(&str) -> bool, &str)] = &[
+        (
+            |t: &str| t.contains("Mozilla Public License Version 2.0"),
+            "MPL-2.0",
+        ),
+        (
+            |t: &str| {
+                t.contains("Apache License, Version 2.0")
+                    || t.contains(
+                        "Apache License
+Version 2.0",
+                    )
+            },
+            "Apache-2.0",
+        ),
+        (
+            |t: &str| t.contains("GNU AFFERO GENERAL PUBLIC LICENSE"),
+            "AGPL-3.0",
+        ),
+        (
+            |t: &str| t.contains("GNU GENERAL PUBLIC LICENSE"),
+            "GPL-3.0",
+        ),
+        (
+            |t: &str| {
+                t.contains("MIT License")
+                    || t.contains("Permission is hereby granted, free of charge")
+            },
+            "MIT",
+        ),
+        (
+            |t: &str| {
+                t.contains("BSD 3-Clause")
+                    || (t.contains("Redistribution and use in source and binary forms")
+                        && t.contains("Neither the name"))
+            },
+            "BSD-3-Clause",
+        ),
+        (|t: &str| t.contains("ISC License"), "ISC"),
+        (
+            |t: &str| t.contains("The Unlicense") || t.contains("public domain"),
+            "Unlicense",
+        ),
+    ];
+    for (pred, spdx) in PATTERNS {
+        if pred(text) {
+            return Some(spdx);
+        }
+    }
+    None
+}
+
 fn registry_import(agent_dir: &Path, registry: &Path) -> Result<(), ForgeError> {
-    let pkg = load_legacy_agent_dir_strict(agent_dir)?;
+    let mut pkg = load_legacy_agent_dir_strict(agent_dir)?;
+    // 真实 license：manifest 缺省时从 agent 目录的 LICENSE 文件识别（不臆造）
+    if pkg.license.spdx == "NOASSERTION" || pkg.license.spdx.is_empty() {
+        for name in ["LICENSE", "LICENSE.txt", "LICENSE.md", "license", "COPYING"] {
+            let lp = agent_dir.join(name);
+            if let Ok(text) = fs::read_to_string(&lp) {
+                if let Some(spdx) = spdx_from_text_rust(&text) {
+                    pkg.license.spdx = spdx.to_string();
+                    pkg.license.file = Some(name.to_string());
+                    break;
+                }
+            }
+        }
+    }
     fs::create_dir_all(registry.join("cache")).map_err(ForgeError::Io)?;
     let tmp_tgz = registry
         .join("cache")
