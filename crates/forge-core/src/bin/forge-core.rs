@@ -141,6 +141,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "update" => run_update(&args[1..]),
         "dependents" => run_dependents(&args[1..]),
         "logs" => run_logs(&args[1..]),
+        "agent-config" => run_agent_config(&args[1..]),
         "bundle" => run_bundle(&args[1..]),
         _ => {
             print_usage();
@@ -1554,6 +1555,67 @@ fn package_import_github_or_artifact(
             "{}：该包需要制品安装管线（后续 STEP 接入）",
             id
         )))
+    }
+}
+
+/// 配置（Configure）：真实读写已安装 Agent 的 profile cordis.patch.yml（用户覆盖层）。
+/// 只对带 profile 的已安装 Agent 开放；收录式组件（未适配）诚实报错。
+fn run_agent_config(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("agent-config requires a subcommand (get|set)".to_string())
+    })?;
+    let f = Flags::parse(&args[1..]);
+    let id = f.positional.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("agent-config requires an agent id".to_string())
+    })?;
+    let home = f
+        .get("home")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| dsh_home(None));
+    let state = load_state(&home);
+    let rec = state
+        .get("agents")
+        .and_then(|a| a.get(id))
+        .cloned()
+        .ok_or_else(|| ForgeError::PackageNotFound(format!("未安装：{id}")))?;
+    let profile = rec.get("profile").and_then(|v| v.as_str()).ok_or_else(|| {
+        ForgeError::InvalidManifest(format!(
+            "{id} 没有可配置的 profile（收录式组件待 Adapter 适配后开放配置）"
+        ))
+    })?;
+    let patch_path = forge_core::dsh::profile_dir(&home, profile).join("cordis.patch.yml");
+    match sub.as_str() {
+        "get" => {
+            let text = if patch_path.exists() {
+                fs::read_to_string(&patch_path).map_err(ForgeError::Io)?
+            } else {
+                String::new()
+            };
+            print_json(&serde_json::json!({
+                "id": id,
+                "profile": profile,
+                "path": patch_path,
+                "text": text,
+            }))
+        }
+        "set" => {
+            let text = String::from_utf8(read_stdin()?)
+                .map_err(|e| ForgeError::InvalidManifest(format!("配置必须是 UTF-8 文本: {e}")))?;
+            if let Some(parent) = patch_path.parent() {
+                fs::create_dir_all(parent).map_err(ForgeError::Io)?;
+            }
+            fs::write(&patch_path, &text).map_err(ForgeError::Io)?;
+            print_json(&serde_json::json!({
+                "id": id,
+                "profile": profile,
+                "path": patch_path,
+                "saved": true,
+                "note": "配置已写入 profile cordis.patch.yml（用户覆盖层，可自由编辑）；重启 dsh 生效。"
+            }))
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
+            "unknown agent-config subcommand '{sub}'"
+        ))),
     }
 }
 

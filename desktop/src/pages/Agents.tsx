@@ -1,8 +1,8 @@
 // Phase 8: My Agents —— 读取共享 DSH 状态库（与 CLI 同一 state.json），
 // 支持经 Rust Kernel 回滚/卸载。空态诚实。
 import { useCallback, useEffect, useState } from "react";
-import { Bot, LoaderCircle, Play, RotateCcw, TriangleAlert } from "lucide-react";
-import { packageRollback, runtimeRun, stateList } from "../ipc";
+import { Bot, LoaderCircle, Play, RotateCcw, Settings2, TriangleAlert } from "lucide-react";
+import { agentConfigGet, agentConfigSet, packageRollback, runtimeRun, stateList } from "../ipc";
 import { useI18n } from "../i18n";
 import type { InstalledAgent } from "../ipc";
 
@@ -17,6 +17,11 @@ export default function Agents() {
   const [busy, setBusy] = useState<string | null>(null);
   const [runBusy, setRunBusy] = useState<string | null>(null);
   const [runResult, setRunResult] = useState<Record<string, { pid: number; logFile: string }>>({});
+  const [configOpen, setConfigOpen] = useState<string | null>(null);
+  const [configText, setConfigText] = useState("");
+  const [configPath, setConfigPath] = useState("");
+  const [configBusy, setConfigBusy] = useState(false);
+  const [configSaved, setConfigSaved] = useState(false);
   const [actionErr, setActionErr] = useState<string | null>(null);
 
   const load = useCallback(() => {
@@ -40,6 +45,39 @@ export default function Agents() {
       setActionErr(err instanceof Error ? err.message : String(err));
     } finally {
       setRunBusy(null);
+    }
+  }
+
+  async function openConfig(id: string) {
+    if (configOpen === id) {
+      setConfigOpen(null);
+      return;
+    }
+    setConfigOpen(id);
+    setConfigText("");
+    setConfigSaved(false);
+    setActionErr(null);
+    try {
+      const cfg = await agentConfigGet(id);
+      setConfigText(cfg.text);
+      setConfigPath(cfg.path);
+    } catch (err) {
+      setActionErr(err instanceof Error ? err.message : String(err));
+      setConfigOpen(null);
+    }
+  }
+
+  async function saveConfig(id: string) {
+    setConfigBusy(true);
+    setConfigSaved(false);
+    setActionErr(null);
+    try {
+      await agentConfigSet(id, configText);
+      setConfigSaved(true);
+    } catch (err) {
+      setActionErr(err instanceof Error ? err.message : String(err));
+    } finally {
+      setConfigBusy(false);
     }
   }
 
@@ -122,6 +160,16 @@ export default function Agents() {
                   {runBusy === id ? t("ag.running") : t("ag.run")}
                 </button>
               )}
+              {a.profile && (
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => void openConfig(id)}
+                  aria-label={t("ag.configure") + " " + id}
+                >
+                  <Settings2 size={14} />
+                  {t("ag.configure")}
+                </button>
+              )}
               <button
                 className="btn btn-ghost"
                 onClick={() => void rollback(id)}
@@ -135,6 +183,36 @@ export default function Agents() {
                 <span className="field-hint" style={{ display: "block" }}>
                   {t("ag.runOk", { pid: runResult[id].pid })}
                 </span>
+              )}
+              {configOpen === id && (
+                <div className="card" style={{ flexBasis: "100%", marginTop: 8 }}>
+                  <div className="field-hint mono" style={{ marginBottom: 6 }}>
+                    {configPath}
+                  </div>
+                  <textarea
+                    className="input"
+                    style={{ width: "100%", minHeight: 220, fontFamily: "var(--font-mono)" }}
+                    value={configText}
+                    onChange={(e) => setConfigText(e.target.value)}
+                    spellCheck={false}
+                  />
+                  <p className="field-hint" style={{ marginTop: 6 }}>
+                    {t("ag.configHint")} {configSaved ? t("ag.configSaved") : ""}
+                  </p>
+                  <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => void saveConfig(id)}
+                      disabled={configBusy}
+                    >
+                      {configBusy ? <LoaderCircle size={14} className="spin" /> : null}
+                      {t("ag.configSave")}
+                    </button>
+                    <button className="btn btn-ghost" onClick={() => setConfigOpen(null)}>
+                      {t("ag.configCancel")}
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           ))}

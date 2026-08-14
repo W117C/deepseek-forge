@@ -347,6 +347,27 @@ export function runtimeRestart(command: string): Promise<{ pid: number | null }>
   return call<{ pid: number | null }>("runtime_restart", { command });
 }
 
+export interface AgentConfig {
+  id: string;
+  profile: string;
+  path: string;
+  text: string;
+}
+
+export function agentConfigGet(id: string): Promise<AgentConfig> {
+  return call<AgentConfig>("agent_config_get", { id });
+}
+
+export function agentConfigSet(
+  id: string,
+  text: string
+): Promise<{ id: string; saved: boolean; note?: string }> {
+  return call<{ id: string; saved: boolean; note?: string }>("agent_config_set", {
+    id,
+    text,
+  });
+}
+
 export function runtimeRun(
   profile: string
 ): Promise<{ pid: number; logFile: string }> {

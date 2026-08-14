@@ -261,6 +261,60 @@ fn run_forge_streaming(app: &AppHandle, args: &[String]) -> Result<serde_json::V
     serde_json::from_slice(&output.stdout).map_err(|e| e.to_string())
 }
 
+/// 带 stdin 的 forge-core 调用（agent-config set 等需要输入文本的命令）。
+fn run_forge_stdin(args: &[String], input: &str) -> Result<serde_json::Value, String> {
+    use std::io::Write;
+    let bin = published_or_dev_bin()
+        .ok_or_else(|| "forge-core 二进制不可用：请先构建或设置 FORGE_CORE_BIN".to_string())?;
+    let mut child = std::process::Command::new(bin)
+        .args(args)
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .map_err(|e| e.to_string())?;
+    child
+        .stdin
+        .take()
+        .ok_or_else(|| "无法写入子进程 stdin".to_string())?
+        .write_all(input.as_bytes())
+        .map_err(|e| e.to_string())?;
+    let output = child.wait_with_output().map_err(|e| e.to_string())?;
+    if !output.status.success() {
+        let raw = String::from_utf8_lossy(&output.stderr);
+        let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
+            serde_json::json!({ "code": "FAILED", "human": raw.trim() })
+        });
+        return Err(serde_json::to_string(&env).unwrap_or_default());
+    }
+    serde_json::from_slice(&output.stdout).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn agent_config_get(id: String) -> Result<serde_json::Value, String> {
+    run_forge(&[
+        "agent-config".to_string(),
+        "get".to_string(),
+        id,
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
+#[tauri::command]
+fn agent_config_set(id: String, text: String) -> Result<serde_json::Value, String> {
+    run_forge_stdin(
+        &[
+            "agent-config".to_string(),
+            "set".to_string(),
+            id,
+            "--home".to_string(),
+            home_arg(),
+        ],
+        &text,
+    )
+}
+
 fn home_arg() -> String {
     forge_core::dsh::dsh_home(None).to_string_lossy().to_string()
 }
@@ -564,7 +618,9 @@ pub fn run() {
             state_set_enabled,
             state_set_review,
             sources_stats,
-            composer_generate
+            composer_generate,
+            agent_config_get,
+            agent_config_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

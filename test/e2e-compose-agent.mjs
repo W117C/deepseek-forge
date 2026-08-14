@@ -90,6 +90,24 @@ const genDir = join(TEST_HOME, '.deepseek-forge', 'generated', 'research-stack')
 const bdirs = [join(genDir, 'bundle', 'finance-core'), join(genDir, 'bundle', 'research-core')];
 check('生成目录包含两个组件 bundle 源码', bdirs.every((d) => { try { return readdirSync(d).length > 0; } catch { return false; } }));
 
+// 3.5 配置（Configure）：真实读写 profile cordis.patch.yml
+const cfgGet = runForgeCore(['agent-config', 'get', 'research-stack', '--home', TEST_HOME]);
+let cfg = {};
+try { cfg = JSON.parse(cfgGet.stdout); } catch { cfg = {}; }
+check('agent-config get 成功', cfgGet.status === 0 && typeof cfg.text === 'string', JSON.stringify(cfg).slice(0, 120));
+check('get 返回 profile 与真实路径', cfg.profile === 'research-stack' && String(cfg.path || '').includes('profiles'), String(cfg.path));
+const marker = '\n# e2e-config-marker\n';
+const cfgSet = runForgeCore(['agent-config', 'set', 'research-stack', '--home', TEST_HOME], { input: (cfg.text || '') + marker });
+check('agent-config set 成功', cfgSet.status === 0 && /"saved": ?true/.test(cfgSet.stdout), (cfgSet.stderr || '').trim().slice(0, 120));
+const patchFile = join(TEST_HOME, 'profiles', 'research-stack', 'cordis.patch.yml');
+let patchText = '';
+try { patchText = readFileSync(patchFile, 'utf8'); } catch { patchText = ''; }
+check('cordis.patch.yml 真实落盘（含 marker）', patchText.includes('e2e-config-marker'));
+const cfgRestore = runForgeCore(['agent-config', 'set', 'research-stack', '--home', TEST_HOME], { input: cfg.text || '' });
+check('配置可还原', cfgRestore.status === 0);
+const cfgGet2 = runForgeCore(['agent-config', 'get', 'fixture-plugin', '--home', TEST_HOME]);
+check('无 profile 组件配置被诚实拒绝', cfgGet2.status !== 0 && /profile|未安装/.test(cfgGet2.stderr || ''));
+
 // 4. 缺失组件 → 明确报错
 const miss = runForgeCore(['composer', 'generate', '--name', 'X', '--ids', 'finance-analyst,no-such', '--registry', REG, '--home', TEST_HOME]);
 check('缺失组件报错', miss.status !== 0 && /PACKAGE_NOT_FOUND|not found/i.test(miss.stderr || ''));
