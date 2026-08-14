@@ -42,6 +42,15 @@ pub struct PackageSummary {
     /// 发布者 id（官方发布 = "agenthub"，用于 Featured 过滤）
     #[serde(default)]
     pub publisher: Option<String>,
+    /// 最近推送时间（extra.pushedAt，真实数据；用于 Recently Updated 排序）
+    #[serde(default)]
+    pub pushed_at: Option<String>,
+    /// 能力清单（manifest capabilities）
+    #[serde(default)]
+    pub capabilities: Vec<String>,
+    /// GitHub 仓库（source.repository）
+    #[serde(default)]
+    pub repository: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -166,6 +175,13 @@ impl RegistryProvider for LocalRegistry {
                 category: Some(package.category.clone()).filter(|c| !c.is_empty()),
                 license: Some(package.license.spdx.clone()),
                 publisher: Some(package.publisher.id.clone()),
+                pushed_at: package
+                    .extra
+                    .get("pushedAt")
+                    .and_then(|v| v.as_str())
+                    .map(String::from),
+                capabilities: package.capabilities.clone(),
+                repository: package.source.repository.clone(),
             });
         }
         summaries.sort_by(|a, b| a.id.cmp(&b.id));

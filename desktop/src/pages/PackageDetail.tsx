@@ -8,6 +8,8 @@ import {
   packageRollback,
   registryInfo,
   stateList,
+  updateApply,
+  updateCheck,
 } from "../ipc";
 import type { DependentRef } from "../ipc";
 import { useI18n } from "../i18n";
@@ -31,6 +33,9 @@ export default function PackageDetail() {
   const [pkg, setPkg] = useState<Pkg | null>(null);
   const [installed, setInstalled] = useState(false);
   const [installedPerms, setInstalledPerms] = useState<{ network?: string[]; filesystem?: string[]; env?: string[] } | null>(null);
+  const [installPath, setInstallPath] = useState<string | null>(null);
+  const [outdated, setOutdated] = useState<string | null>(null);
+  const [updating, setUpdating] = useState(false);
   const [deps, setDeps] = useState<DependentRef[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -39,13 +44,18 @@ export default function PackageDetail() {
   function load() {
     if (!id) return;
     setErr(null);
-    Promise.all([registryInfo(id), stateList(), dependentsList(id).catch(() => null)])
-      .then(([p, s, d]) => {
+    Promise.all([registryInfo(id), stateList(), dependentsList(id).catch(() => null), updateCheck().catch(() => [])])
+      .then(([p, s, d, ups]) => {
         setPkg(p);
         setInstalled(id in (s.agents ?? {}));
         setDeps(d?.dependents ?? []);
-        const entry = (s.agents ?? {})[id] as { permissions?: { network?: string[]; filesystem?: string[]; env?: string[] } } | undefined;
+        const entry = (s.agents ?? {})[id] as
+          | { permissions?: { network?: string[]; filesystem?: string[]; env?: string[] }; installPath?: string; source?: string }
+          | undefined;
         setInstalledPerms(entry?.permissions ?? null);
+        setInstallPath(entry?.installPath ?? (entry?.source ? String(entry.source) : null));
+        const u = Array.isArray(ups) ? ups.find((x) => x.id === id && x.outdated) : undefined;
+        setOutdated(u ? u.latest : null);
       })
       .catch((e: unknown) => setErr(e instanceof Error ? e.message : String(e)));
   }
@@ -63,6 +73,20 @@ export default function PackageDetail() {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function update() {
+    if (!id) return;
+    setUpdating(true);
+    setErr(null);
+    try {
+      await updateApply(id);
+      load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUpdating(false);
     }
   }
 
@@ -139,6 +163,12 @@ export default function PackageDetail() {
         {installed ? (
           <>
             <span className="badge badge-verified">{t("mp.installed")} ✓</span>
+            {outdated && (
+              <button className="btn btn-primary" onClick={() => void update()} disabled={updating || busy}>
+                {updating ? <LoaderCircle size={14} className="spin" /> : null}
+                {updating ? t("updates.updating") : t("updates.update") + " v" + outdated}
+              </button>
+            )}
             <button className="btn btn-ghost" onClick={() => void uninstall()} disabled={busy}>
               <Unplug size={14} /> {t("plugins.uninstall")}
             </button>
@@ -166,6 +196,45 @@ export default function PackageDetail() {
       <section className="dashboard-section">
         <h2 className="dashboard-section-title">{t("pd.description")}</h2>
         <div className="card"><p>{pkg.description || "—"}</p></div>
+      </section>
+
+      <section className="dashboard-section">
+        <h2 className="dashboard-section-title">{t("pd.compatibility")}</h2>
+        <div className="card">
+          <div className="registry-row">
+            <span className="registry-k">{t("pd.forge")}</span>
+            <span className="registry-v mono">{pkg.compatibility?.forge ?? "—"}</span>
+          </div>
+          <div className="registry-row">
+            <span className="registry-k">{t("pd.dsh")}</span>
+            <span className="registry-v mono">
+              {pkg.compatibility?.dsh?.min
+                ? "min " + pkg.compatibility.dsh.min +
+                  (Array.isArray(pkg.compatibility.dsh.tested) && pkg.compatibility.dsh.tested.length > 0
+                    ? " · tested " + pkg.compatibility.dsh.tested.join(", ")
+                    : "")
+                : "—"}
+            </span>
+          </div>
+          <div className="registry-row">
+            <span className="registry-k">{t("pd.node")}</span>
+            <span className="registry-v mono">{pkg.compatibility?.node ?? "—"}</span>
+          </div>
+          <div className="registry-row">
+            <span className="registry-k">{t("pd.platform")}</span>
+            <span className="registry-v mono">
+              {Array.isArray(pkg.compatibility?.platform) && pkg.compatibility.platform.length > 0
+                ? pkg.compatibility.platform.join(", ")
+                : "—"}
+            </span>
+          </div>
+          {installPath && (
+            <div className="registry-row">
+              <span className="registry-k">{t("pd.installLocation")}</span>
+              <span className="registry-v mono">{installPath}</span>
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="dashboard-section">

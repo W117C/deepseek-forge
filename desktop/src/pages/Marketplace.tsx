@@ -72,8 +72,9 @@ export default function Marketplace() {
     }
     const sorted = [...list];
     if (sort === "popular") sorted.sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
-    else if (sort === "recent") sorted.sort((a, b) => a.id.localeCompare(b.id));
-    else sorted.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sort === "recent") {
+      sorted.sort((a, b) => String(b.pushedAt ?? "").localeCompare(String(a.pushedAt ?? "")));
+    } else sorted.sort((a, b) => a.name.localeCompare(b.name));
     return sorted;
   }, [packages, query, cat, sort, onlyInstalled, installed, licFilter, featured]);
 
@@ -184,6 +185,11 @@ export default function Marketplace() {
                   <div className="field-hint">
                     {p.type} · v{p.versionLatest}
                   </div>
+                  {p.repository && (
+                    <div className="field-hint mono" style={{ fontSize: 10.5 }}>
+                      {String(p.repository).replace("https://github.com/", "github.com/")}
+                    </div>
+                  )}
                 </div>
                 {p.stars !== null && p.stars !== undefined && (
                   <span className="stat" title="GitHub stars">
@@ -200,6 +206,9 @@ export default function Marketplace() {
                 <span className="badge badge-community">{t("mp.openSource")}</span>
                 {p.license && <span className="badge badge-community">{p.license}</span>}
                 {p.category && <span className="badge badge-community">{p.category}</span>}
+                {(p.capabilities ?? []).slice(0, 3).map((c) => (
+                  <span key={c} className="badge badge-community">{c}</span>
+                ))}
               </div>
 
               <div className="registry-row" style={{ padding: 0 }}>

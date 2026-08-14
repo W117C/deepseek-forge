@@ -31,6 +31,7 @@ export default function Composer() {
   const [agentBusy, setAgentBusy] = useState(false);
   const [agentResult, setAgentResult] = useState<Record<string, unknown> | null>(null);
   const [agentErr, setAgentErr] = useState<string | null>(null);
+  const [componentQuery, setComponentQuery] = useState("");
 
   function loadBundles() {
     bundleList()
@@ -131,7 +132,11 @@ export default function Composer() {
       .catch((e: unknown) => setErr(e instanceof Error ? e.message : String(e)));
   }, []);
 
-  const pool = available ?? [];
+  const pool = (available ?? []).filter((p) => {
+    const q = componentQuery.trim().toLowerCase();
+    if (!q) return true;
+    return [p.name, p.id, p.description, p.type].join(" ").toLowerCase().includes(q);
+  });
 
   function toggle(id: string) {
     setReport(null);
@@ -172,6 +177,13 @@ export default function Composer() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div className="card">
           <h2 className="dashboard-section-title">{t("co.available")}</h2>
+          <input
+            className="input"
+            style={{ marginBottom: 8, width: "100%" }}
+            placeholder={t("mp.search")}
+            value={componentQuery}
+            onChange={(e) => setComponentQuery(e.target.value)}
+          />
           {pool.length === 0 && <p className="sub">{t("co.empty")}</p>}
           {pool.map((p) => (
             <button

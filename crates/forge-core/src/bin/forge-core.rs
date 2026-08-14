@@ -352,6 +352,7 @@ fn package_import_github(
     state["agents"][id] = serde_json::json!({
         "kind": pkg.r#type,
         "source": repo_url,
+        "installPath": analysis.source,
         "version": pkg.version,
         "installedAt": iso_utc_colon(),
         "trust": "community",
@@ -718,54 +719,38 @@ fn run_catalog_plugin(args: &[String]) -> Result<(), ForgeError> {
 
 /// 从 LICENSE 文本识别 SPDX（与 Node 侧 curate-ecosystem 一致的模式表）。
 fn spdx_from_text_rust(text: &str) -> Option<&'static str> {
-    const PATTERNS: &[(fn(&str) -> bool, &str)] = &[
-        (
-            |t: &str| t.contains("Mozilla Public License Version 2.0"),
-            "MPL-2.0",
-        ),
-        (
-            |t: &str| {
-                t.contains("Apache License, Version 2.0")
-                    || t.contains(
-                        "Apache License
+    if text.contains("Mozilla Public License Version 2.0") {
+        return Some("MPL-2.0");
+    }
+    if text.contains("Apache License, Version 2.0")
+        || text.contains(
+            "Apache License
 Version 2.0",
-                    )
-            },
-            "Apache-2.0",
-        ),
-        (
-            |t: &str| t.contains("GNU AFFERO GENERAL PUBLIC LICENSE"),
-            "AGPL-3.0",
-        ),
-        (
-            |t: &str| t.contains("GNU GENERAL PUBLIC LICENSE"),
-            "GPL-3.0",
-        ),
-        (
-            |t: &str| {
-                t.contains("MIT License")
-                    || t.contains("Permission is hereby granted, free of charge")
-            },
-            "MIT",
-        ),
-        (
-            |t: &str| {
-                t.contains("BSD 3-Clause")
-                    || (t.contains("Redistribution and use in source and binary forms")
-                        && t.contains("Neither the name"))
-            },
-            "BSD-3-Clause",
-        ),
-        (|t: &str| t.contains("ISC License"), "ISC"),
-        (
-            |t: &str| t.contains("The Unlicense") || t.contains("public domain"),
-            "Unlicense",
-        ),
-    ];
-    for (pred, spdx) in PATTERNS {
-        if pred(text) {
-            return Some(spdx);
-        }
+        )
+    {
+        return Some("Apache-2.0");
+    }
+    if text.contains("GNU AFFERO GENERAL PUBLIC LICENSE") {
+        return Some("AGPL-3.0");
+    }
+    if text.contains("GNU GENERAL PUBLIC LICENSE") {
+        return Some("GPL-3.0");
+    }
+    if text.contains("MIT License") || text.contains("Permission is hereby granted, free of charge")
+    {
+        return Some("MIT");
+    }
+    if text.contains("BSD 3-Clause")
+        || (text.contains("Redistribution and use in source and binary forms")
+            && text.contains("Neither the name"))
+    {
+        return Some("BSD-3-Clause");
+    }
+    if text.contains("ISC License") {
+        return Some("ISC");
+    }
+    if text.contains("The Unlicense") || text.contains("public domain") {
+        return Some("Unlicense");
     }
     None
 }

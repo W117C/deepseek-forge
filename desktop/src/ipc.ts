@@ -33,6 +33,9 @@ export interface RegistrySummary {
   category?: string | null;
   license?: string | null;
   publisher?: string | null;
+  pushedAt?: string | null;
+  capabilities?: string[];
+  repository?: string | null;
 }
 
 export function installPackage(id: string): Promise<Record<string, unknown>> {
