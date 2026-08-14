@@ -37,3 +37,12 @@ GitHub Actions 发布工作流：tag v* 推送 → `npm publish`（`NPM_TOKEN` �
 
 - 发布后 CLI 即可 `npm i -g agenthub` 全局安装；
 - 未发 npm 期间，GitHub Release 的源码 tarball 仍是可用分发方式。
+
+## D1：forge-core 预构建二进制分发（v0.4 Desktop 起）
+
+CLI 的安装/签名/安全经 lib 委托桥调用 forge-core Rust 二进制；npm 包需要按平台分发：
+
+1. CI 已提供三平台构建矩阵（.github/workflows/ci.yml 的 binaries job：linux x86_64 / darwin aarch64 / windows x86_64），产物 upload-artifact。
+2. 发布时从 CI 下载三平台产物，打包为可选依赖包 @deepseek-forge/bin（目录结构 node_modules/@deepseek-forge/bin/<platform>/forge-core[.exe]）。
+3. lib/forge-core-bin.mjs 的解析优先级：FORGE_CORE_BIN → 仓库内 release/debug（开发）→ node_modules/@deepseek-forge/bin/<platform>/（发布）→ PATH。
+4. 当前仓库开发/CI 流程不受影响（e2e job 已前置 cargo build --release）。

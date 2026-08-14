@@ -97,3 +97,30 @@ jobs:
       - name: release 构建
         run: cargo build --release
         working-directory: crates/forge-core
+
+  binaries:
+    name: forge-core 预构建二进制（D1，三平台）
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            platform: linux
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            platform: darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            platform: windows
+    steps:
+      - uses: actions/checkout@v4
+      - name: 安装 Rust stable
+        run: rustup update stable && rustup default stable
+      - name: 构建 release 二进制
+        run: cargo build --release --manifest-path crates/forge-core/Cargo.toml --target ${{ matrix.target }}
+      - name: 上传制品
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-core-${{ matrix.platform }}
+          path: crates/forge-core/target/${{ matrix.target }}/release/forge-core*
