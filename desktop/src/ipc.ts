@@ -176,3 +176,15 @@ export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }>
 export function packageRollback(id: string): Promise<Record<string, unknown>> {
   return call<Record<string, unknown>>("package_rollback", { id });
 }
+
+/** Mirror of forge_core::updater::UpdateEntry. */
+export interface UpdateEntry {
+  id: string;
+  installed: string;
+  latest: string;
+  outdated: boolean;
+}
+
+export function updateCheck(): Promise<UpdateEntry[]> {
+  return call<UpdateEntry[]>("update_check");
+}

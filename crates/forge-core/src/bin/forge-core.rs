@@ -25,6 +25,7 @@ use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
 use forge_core::snapshot::iso_utc_colon;
 use forge_core::state::load_state;
+use forge_core::updater::check_updates;
 
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -136,6 +137,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "composer" => run_composer(&args[1..]),
         "runtime" => run_runtime(&args[1..]),
         "search" => run_search(&args[1..]),
+        "update" => run_update(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -816,6 +818,27 @@ fn run_search(args: &[String]) -> Result<(), ForgeError> {
     print_json(&hits)
 }
 
+fn run_update(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("update requires a subcommand (check)".to_string())
+    })?;
+    if sub != "check" {
+        return Err(ForgeError::InvalidManifest(format!(
+            "unknown update subcommand '{sub}'"
+        )));
+    }
+    let f = Flags::parse(&args[1..]);
+    let registry = f.get("registry").map(PathBuf::from).ok_or_else(|| {
+        ForgeError::InvalidManifest("update check requires --registry".to_string())
+    })?;
+    let home = f
+        .get("home")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| dsh_home(None));
+    let entries = check_updates(&home, &LocalRegistry::open(registry))?;
+    print_json(&entries)
+}
+
 fn print_usage() {
     eprintln!(
         r#"forge-core - DeepSeek Forge core (read-only)
@@ -842,6 +865,7 @@ USAGE:
   forge-core adapter generate DIR-OR-GITHUB-URL --out DIR
   forge-core composer resolve (stdin: 组件 JSON 数组)
   forge-core runtime status [--home DIR]
-  forge-core search QUERY [--registry PATH]"#
+  forge-core search QUERY [--registry PATH]
+  forge-core update check --registry PATH [--home DIR]"#
     );
 }

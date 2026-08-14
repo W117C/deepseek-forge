@@ -7,12 +7,12 @@ import Placeholder from "./pages/Placeholder";
 import Agents from "./pages/Agents";
 import Processes from "./pages/Processes";
 import Sessions from "./pages/Sessions";
+import Updates from "./pages/Updates";
 import {
   LogsPage,
   SecurityPage,
   SettingsPage,
   SourcesPage,
-  UpdatesPage,
 } from "./pages/SystemPages";
 
 export default function App() {
@@ -49,7 +49,7 @@ export default function App() {
           <Route path="/logs" element={<LogsPage />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/sources" element={<SourcesPage />} />
-          <Route path="/updates" element={<UpdatesPage />} />
+          <Route path="/updates" element={<Updates />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

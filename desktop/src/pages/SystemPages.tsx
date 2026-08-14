@@ -1,6 +1,6 @@
 // Phase 8: System 组诚实最小页 —— 只显示有真实后端支撑的数据，其余为空态。
 import { useEffect, useState } from "react";
-import { Database, LoaderCircle, RefreshCw, Settings, ShieldCheck, ScrollText, TriangleAlert } from "lucide-react";
+import { Database, LoaderCircle, Settings, ShieldCheck, ScrollText, TriangleAlert } from "lucide-react";
 import { stateList, systemStatus } from "../ipc";
 import type { InstalledAgent, SystemStatus } from "../ipc";
 
@@ -88,23 +88,6 @@ export function SourcesPage() {
           </p>
         </div>
       )}
-    </div>
-  );
-}
-
-export function UpdatesPage() {
-  return (
-    <div className="page">
-      <header className="page-header">
-        <h1 className="page-heading">Updates</h1>
-        <p className="page-sub">Update checking against the local registry.</p>
-      </header>
-      <div className="card empty-card">
-        <div className="empty-card-head"><RefreshCw size={15} /><span className="empty-card-title">No update source configured</span></div>
-        <p className="empty-card-body">
-          Local-first 阶段没有公网更新源；update 检查将随 Git Registry（Phase 4 后续）与已装包版本对比接入。
-        </p>
-      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@ pub mod security;
 pub mod signing;
 pub mod snapshot;
 pub mod state;
+pub mod updater;
 
 pub use adapter::{generate, propose, AdapterProposal};
 pub use composer::{
@@ -50,3 +51,4 @@ pub use security::{scan_agent_dir, scan_text, scan_text_report, ScanReport, Secu
 pub use signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload, Keypair};
 pub use snapshot::{restore_snapshot, snapshot, SnapshotInfo};
 pub use state::{load_state, save_state};
+pub use updater::{check_updates, UpdateEntry};

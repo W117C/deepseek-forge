@@ -612,10 +612,26 @@ pub fn analyze_source(source: &str) -> Result<RepositoryAnalysis, ForgeError> {
         if cache.exists() {
             return analyze_dir(&cache);
         }
-        return Err(ForgeError::RegistryUnavailable(format!(
-            "本地缓存中无该仓库（{}）。本阶段只分析本地目录/已克隆仓库：请先 git clone 到 ~/.deepseek-forge/cache/repos/{}__{} 后重试。",
-            source, owner, repo_name
-        )));
+        // 网络闭环：浅克隆到本地缓存后分析（只读分析，不执行第三方代码）
+        let clone_status = std::process::Command::new("git")
+            .args(["clone", "--depth", "1", source])
+            .arg(&cache)
+            .output();
+        match clone_status {
+            Ok(o) if o.status.success() => return analyze_dir(&cache),
+            Ok(o) => {
+                return Err(ForgeError::RegistryUnavailable(format!(
+                    "git clone 失败：{}（源：{}）。可手动克隆到 {} 后重试。",
+                    String::from_utf8_lossy(&o.stderr)
+                        .lines()
+                        .last()
+                        .unwrap_or(""),
+                    source,
+                    cache.display()
+                )))
+            }
+            Err(e) => return Err(ForgeError::Io(e)),
+        }
     }
     analyze_dir(Path::new(source))
 }

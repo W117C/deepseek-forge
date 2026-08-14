@@ -15,6 +15,7 @@ use forge_core::installer::rollback;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 use forge_core::runtime::runtime_status;
 use forge_core::state::load_state;
+use forge_core::updater::check_updates;
 use serde::Serialize;
 
 /// Shared state managed by Tauri. The bus is wired now for later
@@ -136,6 +137,12 @@ fn state_list() -> Result<serde_json::Value, String> {
     Ok(load_state(&forge_core::dsh::dsh_home(None)))
 }
 
+/// Increment ③: compare installed versions against the local registry.
+#[tauri::command]
+fn update_check() -> Result<Vec<forge_core::updater::UpdateEntry>, String> {
+    check_updates(&forge_core::dsh::dsh_home(None), &registry()).map_err(to_ipc_error)
+}
+
 /// Phase 8: rollback/uninstall an installed package via the Rust kernel.
 #[tauri::command]
 fn package_rollback(id: String) -> Result<serde_json::Value, String> {
@@ -171,7 +178,8 @@ pub fn run() {
             adapter_propose,
             runtime_status_cmd,
             state_list,
-            package_rollback
+            package_rollback,
+            update_check
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
