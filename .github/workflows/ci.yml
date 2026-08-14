@@ -31,15 +31,6 @@ jobs:
           dsh --version || true
           pnpm -v
 
-      # web/snapshot.json 必须与 bundles/*/agenthub.yaml 同步（Vercel 只读展示页数据源）
-      - name: 校验展示快照与 manifest 同步
-        run: |
-          node scripts/export-snapshot.mjs
-          git diff --exit-code -- web/snapshot.json || {
-            echo "::error::web/snapshot.json 过期，请运行 node scripts/export-snapshot.mjs 并提交"
-            exit 1
-          }
-
       - name: 运行全部 e2e 套件
         run: |
           FAIL=0
@@ -57,3 +48,27 @@ jobs:
             exit 1
           fi
           echo "全部 e2e 套件通过 ✓"
+
+  web:
+    name: 前端构建（landing + forge）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        app: [landing, forge]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.app }}/package-lock.json
+
+      - name: npm ci（${{ matrix.app }}）
+        run: npm ci
+        working-directory: ${{ matrix.app }}
+
+      - name: 类型检查 + 生产构建（${{ matrix.app }}）
+        run: npm run build
+        working-directory: ${{ matrix.app }}

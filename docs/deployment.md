@@ -3,6 +3,16 @@
 > 签名体系（ed25519 验签 + sha256 验哈希）只有在 HTTPS 下才有意义：
 > 明文 HTTP 可被中间人替换制品。公测前必须先上 TLS。
 
+## 0. 当前线上拓扑（已上线）
+
+| 站点 | URL | Vercel 项目 | root | 触发 |
+| --- | --- | --- | --- | --- |
+| Marketplace 前端 | https://deepseek-forge-marketplace.vercel.app | deepseek-forge-marketplace | forge/ | 推送 main 自动部署 |
+| 落地页 | https://deepseek-forge.vercel.app | deepseek-forge | landing/ | 推送 main 自动部署 |
+
+- 均为 Vite 静态构建 + SPA rewrites（配置见各目录 vercel.json）；GitHub Actions 承担构建/类型检查门槛（.github/workflows/ci.yml）。
+- Registry（有状态服务）尚未公测上线——下文的 Caddy + node registry 拓扑即其公测方案。
+
 ## 1. 拓扑
 
 ```

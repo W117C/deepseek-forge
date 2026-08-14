@@ -39,9 +39,10 @@ shots/          desktop / tablet / mobile preview PNGs
 
 ## Deployment
 
-Deploy as its own Vercel project (framework: **Vite**, root directory: **landing**) —
-the existing root `vercel.json` still routes the read-only marketplace in `web/`.
+独立 Vercel 项目（framework: **Vite**, root directory: **landing**）——
+线上：https://deepseek-forge.vercel.app（Git 集成，推送 main 自动部署）。
 
-The GitHub / Documentation buttons point at the real repository:
-`https://github.com/W117C/deepseek-agenthub` (update in `src/config.ts` if the repo moves).
+Marketplace 前端见 [../forge](../forge)：https://deepseek-forge-marketplace.vercel.app。
+
+GitHub / Marketplace / Documentation 链接集中定义在 `src/config.ts`（仓库迁移时改这里）。
 

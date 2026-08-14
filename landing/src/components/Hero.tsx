@@ -1,6 +1,6 @@
 import { ArrowRight, Github, Sparkle } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { GITHUB_URL } from '../config'
+import { GITHUB_URL, MARKETPLACE_URL } from '../config'
 import HeroArchitecture from './HeroArchitecture'
 import Reveal from './Reveal'
 
@@ -48,8 +48,8 @@ export default function Hero() {
                 from scratch.
               </p>
               <div className="hero-ctas">
-                <a className="btn btn-primary" href="#bundles">
-                  Explore DeepSeek Forge
+                <a className="btn btn-primary" href={MARKETPLACE_URL}>
+                  Explore the Marketplace
                   <ArrowRight size={16} />
                 </a>
                 <a className="btn btn-ghost" href={GITHUB_URL} target="_blank" rel="noreferrer">

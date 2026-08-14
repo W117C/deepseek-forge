@@ -4,3 +4,6 @@ dist
 *.log
 .vercel
 .env*
+
+# 本地调试脚本（puppeteer 浏览器验证，不入库）
+_forge-*.mjs

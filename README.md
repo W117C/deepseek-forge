@@ -1,29 +1,37 @@
-# AgentHub (M1)
+# AgentHub / DeepSeek Forge
 
-DeepSeek Harness Agent Bundle Marketplace — 本地安装闭环原型。
+DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一键变成专业领域 Agent。
 
-> 🌐 **官网/落地页（DeepSeek Forge）：https://deepseek-forge.vercel.app** —— React+Vite 独立站点，见 [landing/](landing/)，推送 main 自动部署
-> 线上展示（只读 Marketplace）：**https://agenthub-w117-c.vercel.app** —— Vercel 自动部署（Git 集成，推送 main 即上线；数据来自仓库内 manifest 快照，见 [web/](web/)）。
-> 仓库：https://github.com/W117C/deepseek-agenthub ｜ CI：GitHub Actions 全量 e2e 门槛 ｜ 发布：GitHub Releases（v0.1.0）
+## 线上站点
+
+| 站点 | 地址 | 说明 |
+| --- | --- | --- |
+| 🛍️ Marketplace | **https://deepseek-forge-marketplace.vercel.app** | 完整交互前端（Agent/Bundle/Plugin/Skill 发现、搜索、安装引导、发布向导），见 [forge/](forge/) |
+| 🌐 官网/落地页 | **https://deepseek-forge.vercel.app** | 产品介绍落地页，见 [landing/](landing/) |
+
+两者均：Vercel 托管、Git 集成（推送 main 自动部署）、GitHub Actions 构建门槛（typecheck + 生产构建）。
+
+> 仓库：https://github.com/W117C/deepseek-agenthub ｜ CI：GitHub Actions（e2e 203 项 + 前端双构建）｜ 发布：GitHub Releases（[v0.1.0](https://github.com/W117C/deepseek-agenthub/releases/tag/v0.1.0)）
 >
 > 状态：**M1–M4 验证通过（203/203）**——14 套 e2e：本地闭环 27 + 共存 20 + Registry/安全 25 + pnpm 路径 9 + 生命周期 21 + Web 24 + 开发者 14 + 鉴权 14 + 交互 5 + 组合 13 + 备份恢复 7 + 服务端组合 11 + 组合发布 9 + **模型层冒烟 4**。
-> 见 [docs/m1-verification.md](docs/m1-verification.md)、[docs/m2-verification.md](docs/m2-verification.md)、[docs/m3-verification.md](docs/m3-verification.md)、[docs/registry-production.md](docs/registry-production.md)、[docs/deployment.md](docs/deployment.md)、[docs/agent-builder-design.md](docs/agent-builder-design.md)。
 > 复现：`for t in test/e2e*.mjs; do node $t; done`（隔离 DSH_HOME，不触碰真实 ~/.dsh）。
 
-把通用 DSH 一键变成专业领域 Agent：
+## 目录结构
+
+- `cli/agenthub.mjs` —— 零依赖 CLI（install/uninstall/rollback/list/health/permissions/security/doctor/registry/publish/keygen/compose）
+- `lib/` —— dsh 适配层 / 安装器 / 安全扫描 / 健康检查 / manifest 解析 / Registry / Web UI
+- `bundles/` —— 领域 Agent：`finance-analyst`、`academic-researcher`（manifest + bundle + preset + skills）
+- `forge/` —— **Marketplace 前端**（React 18 + TS + Vite，React Router，无后端原型）
+- `landing/` —— **产品落地页**（React 18 + TS + Vite）
+- `test/` —— 14 套隔离 e2e（`test/e2e*.mjs`）
+- `docs/` —— 设计/验证/部署文档（含 [npm 发布 runbook](docs/npm-publish-runbook.md)）
+
+## 快速开始（本地闭环）
 
 ```sh
 node cli/agenthub.mjs install ./bundles/finance-analyst --yes
 dsh --profile finance            # 现在它是一个 Finance Agent
 ```
-
-## 目录
-
-- `cli/agenthub.mjs` —— 零依赖 CLI（install/uninstall/rollback/list/health/permissions/security/doctor）
-- `lib/` —— dsh 适配层 / 安装器 / 安全扫描 / 健康检查 / manifest 解析
-- `bundles/finance-analyst/` —— 第一款 Agent：manifest + finance-core bundle + finance-analyst preset + skills
-- `docs/dsh-integration.md` —— DSH 集成机制（源码级核实记录）
-- `test/e2e.sh` —— 隔离 DSH_HOME 端到端验证
 
 ## 多 Agent（选职业领域）
 
@@ -34,7 +42,7 @@ dsh --profile finance     # Finance Agent
 dsh --profile research    # Academic Researcher
 ```
 
-## Registry（M2，安全分发）
+## Registry（安全分发）
 
 ```sh
 node cli/agenthub.mjs registry ./.reg &           # 启动本地注册中心
@@ -44,6 +52,22 @@ node cli/agenthub.mjs install finance-analyst --registry http://127.0.0.1:PORT -
 ```
 
 远端安装前客户端强制验哈希 + 验 ed25519 签名，任何不匹配即阻断安装（防篡改，见 test/e2e-registry.mjs）。
+
+## 前端开发
+
+```sh
+# Marketplace（forge/）
+cd forge && npm install && npm run dev      # http://localhost:5173
+
+# 落地页（landing/）
+cd landing && npm install && npm run dev    # http://localhost:5173（端口冲突时另开）
+```
+
+## 部署与发布
+
+- **部署**：两个 Vercel 项目（Git 集成，推送 main 自动上线）；配置见各目录 `vercel.json`。生产 Registry 拓扑见 [docs/deployment.md](docs/deployment.md)。
+- **CI**：`.github/workflows/ci.yml` —— e2e 全量门槛 + landing/forge 构建/类型检查。
+- **发布**：打 tag → GitHub Releases（源码 tarball 自动附带）；CLI 上 npm 见 [docs/npm-publish-runbook.md](docs/npm-publish-runbook.md)。
 
 ## 设计原则
 

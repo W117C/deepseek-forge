@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Github, Menu, X } from 'lucide-react'
-import { GITHUB_URL } from '../config'
+import { GITHUB_URL, MARKETPLACE_URL } from '../config'
 import { ForgeMark } from './Logo'
 
 const LINKS = [
@@ -42,6 +42,9 @@ export default function Header() {
                 {l.label}
               </a>
             ))}
+            <a className="nav-link" href={MARKETPLACE_URL}>
+              Marketplace
+            </a>
             <a className="nav-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
               GitHub
               <Github size={14} />
