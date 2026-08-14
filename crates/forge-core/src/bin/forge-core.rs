@@ -322,6 +322,7 @@ fn package_import_github(
         "imported": true,
         "license": analysis.license,
         "dependencies": deps,
+        "enabled": true,
         "permissions": { "network": [], "env": [] },
     });
     save_state(home, &state)?;
@@ -449,22 +450,59 @@ fn run_state(args: &[String]) -> Result<(), ForgeError> {
         Some(sub) => sub,
         None => {
             return Err(ForgeError::InvalidManifest(
-                "state requires a subcommand (list)".to_string(),
+                "state requires a subcommand (list|set-enabled)".to_string(),
             ))
         }
     };
-    if sub == "list" {
-        let f = Flags::parse(&args[1..]);
-        let home = f
-            .get("home")
-            .map(PathBuf::from)
-            .unwrap_or_else(|| dsh_home(None));
-        let state = load_state(&home);
-        return print_json(&state);
+    let f = Flags::parse(&args[1..]);
+    let home = f
+        .get("home")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| dsh_home(None));
+    match sub.as_str() {
+        "list" => {
+            let state = load_state(&home);
+            return print_json(&state);
+        }
+        "set-enabled" => {
+            // 真实启用/禁用：写入共享状态库的 enabled 字段。
+            // Forge 自身的组合安装 / 更新会拒绝使用被禁用的插件（见 bundle install 与 update apply）。
+            let id = f.positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest("state set-enabled requires a package id".to_string())
+            })?;
+            let flag = match f.get("enabled") {
+                Some("true") => true,
+                Some("false") => false,
+                _ => {
+                    return Err(ForgeError::InvalidManifest(
+                        "state set-enabled requires --enabled true|false".to_string(),
+                    ))
+                }
+            };
+            let mut state = load_state(&home);
+            let rec = state
+                .get("agents")
+                .and_then(|a| a.get(id))
+                .cloned()
+                .ok_or_else(|| ForgeError::PackageNotFound(format!("未安装：{id}")))?;
+            let kind = rec.get("kind").and_then(|k| k.as_str()).unwrap_or("agent");
+            if kind == "agent" {
+                return Err(ForgeError::InvalidManifest(
+                    "启用/禁用当前仅支持 plugin（收录式安装）。Agent 的启停由 Harness profile 决定。".to_string(),
+                ));
+            }
+            state["agents"][id]["enabled"] = serde_json::json!(flag);
+            save_state(&home, &state)?;
+            return print_json(&serde_json::json!({
+                "id": id,
+                "enabled": flag,
+                "note": "已写入共享状态库；Forge 的组合安装/更新将拒绝使用被禁用的插件（Harness 侧运行策略随 Runtime 接入）。"
+            }));
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
+            "unknown state subcommand '{sub}'"
+        ))),
     }
-    Err(ForgeError::InvalidManifest(format!(
-        "unknown state subcommand '{sub}'"
-    )))
 }
 
 fn remove_any(p: &Path) -> Result<(), ForgeError> {
@@ -1075,7 +1113,25 @@ fn run_bundle(args: &[String]) -> Result<(), ForgeError> {
                 })
                 .unwrap_or_default();
             let mut results = Vec::new();
+            let installed_state = load_state(&home);
             for (i, cid) in comps.iter().enumerate() {
+                let disabled = installed_state
+                    .get("agents")
+                    .and_then(|a| a.get(cid))
+                    .and_then(|r| r.get("enabled"))
+                    .and_then(|v| v.as_bool())
+                    == Some(false);
+                if disabled {
+                    print_json(&serde_json::json!({
+                        "bundle": id,
+                        "ok": false,
+                        "failedAt": i,
+                        "component": cid,
+                        "results": results,
+                        "note": format!("安装中止：组件 {cid} 已被禁用，请先启用（forge-core state set-enabled {cid} --enabled true）")
+                    }))?;
+                    return Ok(());
+                }
                 match package_import_github_or_artifact(cid, &registry, &home) {
                     Ok(v) => {
                         results.push(serde_json::json!({ "id": cid, "ok": true, "result": v }))
@@ -1231,6 +1287,11 @@ fn run_update(args: &[String]) -> Result<(), ForgeError> {
                 .unwrap_or("")
                 .to_string();
             let pkg = reg.get_package(id)?;
+            if kind == "plugin" && rec.get("enabled").and_then(|v| v.as_bool()) == Some(false) {
+                return Err(ForgeError::InvalidManifest(format!(
+                    "插件 {id} 已被禁用：请先启用（forge-core state set-enabled {id} --enabled true）"
+                )));
+            }
             if !forge_core::updater::semver_lt(&installed, &pkg.version) {
                 return print_json(&serde_json::json!({
                     "id": id,

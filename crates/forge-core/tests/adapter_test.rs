@@ -3,7 +3,6 @@
 use std::path::Path;
 
 use forge_core::adapter::{generate, propose};
-use forge_core::errors::ForgeError;
 use forge_core::import::analyze_dir;
 use forge_core::manifest::parse_package_json;
 

@@ -155,6 +155,40 @@ try { entries2 = JSON.parse(c2.stdout); } catch { entries2 = []; }
 const pl2 = entries2.find(function (e) { return e.id === 'fixture-plugin'; });
 check('复查 check：fixture-plugin 已最新', !!pl2 && pl2.outdated === false);
 
+// 8. 禁用/启用：真实状态写入 + Forge 组合安装/更新拒绝使用被禁用插件
+const s1 = runForgeCore(['state', 'set-enabled', 'fixture-plugin', '--enabled', 'false', '--home', TEST_HOME]);
+let en1 = {};
+try { en1 = JSON.parse(s1.stdout); } catch { en1 = {}; }
+check('set-enabled false 写入成功', s1.status === 0 && en1.enabled === false, JSON.stringify(en1));
+const st2 = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
+check('state.json enabled=false', st2.agents['fixture-plugin'].enabled === false);
+
+const a4 = runForgeCore(['update', 'apply', 'fixture-plugin', '--registry', REG, '--home', TEST_HOME]);
+check('禁用的插件 update apply 被拒绝', a4.status !== 0 && /禁用/.test(a4.stderr || ''), (a4.stderr || '').trim());
+
+const b2 = runForgeCore(['bundle', 'install', 'dbg', '--registry', REG, '--home', TEST_HOME]);
+let bin2 = {};
+try { bin2 = JSON.parse(b2.stdout); } catch { bin2 = {}; }
+check('禁用的组件使 bundle install 停止', b2.status === 0 && bin2.ok === false && /禁用/.test(JSON.stringify(bin2)), JSON.stringify(bin2));
+
+const s2 = runForgeCore(['state', 'set-enabled', 'fixture-plugin', '--enabled', 'true', '--home', TEST_HOME]);
+let en2 = {};
+try { en2 = JSON.parse(s2.stdout); } catch { en2 = {}; }
+check('set-enabled true 恢复', s2.status === 0 && en2.enabled === true);
+
+const b3 = runForgeCore(['bundle', 'install', 'dbg', '--registry', REG, '--home', TEST_HOME]);
+let bin3 = {};
+try { bin3 = JSON.parse(b3.stdout); } catch { bin3 = {}; }
+check('启用后 bundle install 全量成功', b3.status === 0 && bin3.ok === true, JSON.stringify(bin3));
+
+const b4 = runForgeCore(['bundle', 'uninstall', 'dbg', '--registry', REG, '--home', TEST_HOME]);
+let bun4 = {};
+try { bun4 = JSON.parse(b4.stdout); } catch { bun4 = {}; }
+check('bundle uninstall 移除组件登记', b4.status === 0 && bun4.ok === true, JSON.stringify(bun4));
+const st3 = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
+check('卸载后 state 中组件已移除', st3.agents['fixture-plugin'] === undefined && st3.agents['fixture-helper'] === undefined);
+
+
 const failed = results.filter(function (r) { return !r.ok; });
 console.log('== e2e-updates: ' + (results.length - failed.length) + '/' + results.length + ' passed ==');
 process.exit(failed.length > 0 ? 1 : 0);

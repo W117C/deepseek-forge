@@ -191,6 +191,7 @@ export interface InstalledAgent {
   source?: string;
   scanVerdict?: string;
   license?: string;
+  enabled?: boolean;
 }
 
 export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }> {
@@ -199,6 +200,29 @@ export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }>
 
 export function packageRollback(id: string): Promise<Record<string, unknown>> {
   return call<Record<string, unknown>>("package_rollback", { id });
+}
+
+export interface SourcesStats {
+  registryPath: string;
+  packages: number;
+  githubSources: number;
+  licenses: Record<string, number>;
+  cacheRepos: number;
+  cachePath: string;
+}
+
+export function sourcesStats(): Promise<SourcesStats> {
+  return call<SourcesStats>("sources_stats");
+}
+
+export function setPluginEnabled(
+  id: string,
+  enabled: boolean
+): Promise<{ id: string; enabled: boolean; note?: string }> {
+  return call<{ id: string; enabled: boolean; note?: string }>("state_set_enabled", {
+    id,
+    enabled,
+  });
 }
 
 /** Mirror of forge_core::updater::UpdateEntry. */

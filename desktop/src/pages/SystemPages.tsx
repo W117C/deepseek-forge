@@ -1,7 +1,8 @@
 // Phase 8: System 组诚实最小页 —— 只显示有真实后端支撑的数据，其余为空态。
 import { useEffect, useState } from "react";
 import { Database, LoaderCircle, Settings, ShieldCheck, TriangleAlert } from "lucide-react";
-import { stateList, systemStatus } from "../ipc";
+import { sourcesStats, stateList, systemStatus } from "../ipc";
+import type { SourcesStats } from "../ipc";
 import { useI18n } from "../i18n";
 import type { InstalledAgent, SystemStatus } from "../ipc";
 
@@ -56,6 +57,13 @@ export function SecurityPage() {
 export function SourcesPage() {
   const { t } = useI18n();
   const { system, err } = useSystem();
+  const [stats, setStats] = useState<SourcesStats | null>(null);
+  const [statsErr, setStatsErr] = useState<string | null>(null);
+  useEffect(() => {
+    sourcesStats()
+      .then(setStats)
+      .catch((e: unknown) => setStatsErr(e instanceof Error ? e.message : String(e)));
+  }, []);
   return (
     <div className="page">
       <header className="page-header">
@@ -84,7 +92,35 @@ export function SourcesPage() {
             <span className="registry-k">{t("db.name")}</span>
             <span className="registry-v">{system.registryName ?? "—"}</span>
           </div>
-          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.gitNote")}</p>
+          {statsErr && (
+            <p className="field-error" style={{ marginTop: 10 }}>{statsErr}</p>
+          )}
+          {stats && (
+            <>
+              <div className="registry-row">
+                <span className="registry-k">{t("sy.packages")}</span>
+                <span className="registry-v">
+                  {stats.packages} · {t("sy.githubSources")} {stats.githubSources}
+                </span>
+              </div>
+              <div className="registry-row">
+                <span className="registry-k">{t("sy.licenses")}</span>
+                <span className="registry-v mono">
+                  {Object.entries(stats.licenses)
+                    .map(([l, n]) => l + " ×" + n)
+                    .join("  ") || "—"}
+                </span>
+              </div>
+              <div className="registry-row">
+                <span className="registry-k">{t("sy.cacheRepos")}</span>
+                <span className="registry-v mono">
+                  {stats.cacheRepos} {t("sy.repos")} · {stats.cachePath}
+                </span>
+              </div>
+            </>
+          )}
+          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.sourcesNote")}</p>
+          <p className="field-hint" style={{ marginTop: 6 }}>{t("sy.gitNote")}</p>
         </div>
       )}
     </div>

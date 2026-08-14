@@ -19,6 +19,7 @@ export default function Marketplace() {
   const [sort, setSort] = useState("popular");
   const [installing, setInstalling] = useState<InstallState | null>(null);
   const [onlyInstalled, setOnlyInstalled] = useState(false);
+  const [licFilter, setLicFilter] = useState("all");
 
   function load() {
     setErr(null);
@@ -61,12 +62,23 @@ export default function Marketplace() {
     if (onlyInstalled) {
       list = list.filter((p) => p.id in installed);
     }
+    if (licFilter !== "all") {
+      list = list.filter((p) => (p.license ?? "") === licFilter);
+    }
     const sorted = [...list];
     if (sort === "popular") sorted.sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
     else if (sort === "recent") sorted.sort((a, b) => a.id.localeCompare(b.id));
     else sorted.sort((a, b) => a.name.localeCompare(b.name));
     return sorted;
-  }, [packages, query, cat, sort, onlyInstalled, installed]);
+  }, [packages, query, cat, sort, onlyInstalled, installed, licFilter]);
+
+  const licenses = useMemo(() => {
+    const set = new Set<string>();
+    (packages ?? []).forEach((p) => {
+      if (p.license) set.add(p.license);
+    });
+    return Array.from(set).sort();
+  }, [packages]);
 
   const cats = useMemo(() => {
     const set = new Set<string>();
@@ -93,6 +105,12 @@ export default function Marketplace() {
           <option value="popular">{t("mp.sort.popular")}</option>
           <option value="recent">{t("mp.sort.recent")}</option>
           <option value="az">{t("mp.sort.az")}</option>
+        </select>
+        <select className="input" value={licFilter} onChange={(e) => setLicFilter(e.target.value)} style={{ width: 170 }}>
+          <option value="all">{t("mp.filterLicense")}</option>
+          {licenses.map((l) => (
+            <option key={l} value={l}>{l}</option>
+          ))}
         </select>
       </div>
 

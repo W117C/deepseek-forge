@@ -2,8 +2,8 @@
 // 被其他插件依赖声明或组合 Bundle 引用的插件，卸载前会被拦截并列出使用方。
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, LoaderCircle, TriangleAlert, Unplug } from "lucide-react";
-import { dependentsList, packageRollback, stateList } from "../ipc";
+import { Box, LoaderCircle, Power, TriangleAlert, Unplug } from "lucide-react";
+import { dependentsList, packageRollback, setPluginEnabled, stateList } from "../ipc";
 import type { DependentRef, InstalledAgent } from "../ipc";
 import { useI18n } from "../i18n";
 
@@ -13,6 +13,7 @@ export default function Plugins() {
   const [deps, setDeps] = useState<Record<string, DependentRef[]>>({});
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "enabled" | "disabled">("all");
 
   function load() {
     setErr(null);
@@ -39,6 +40,19 @@ export default function Plugins() {
   }
   useEffect(load, []);
 
+  async function toggleEnabled(id: string, enabled: boolean) {
+    setBusy("toggle:" + id);
+    setErr(null);
+    try {
+      await setPluginEnabled(id, enabled);
+      load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function uninstall(id: string) {
     const used = deps[id] ?? [];
     if (used.length > 0) {
@@ -62,9 +76,13 @@ export default function Plugins() {
     }
   }
 
-  const entries = Object.entries(agents ?? {}).filter(
-    ([, a]) => a.kind === "plugin"
-  );
+  const allEntries = Object.entries(agents ?? {}).filter(([, a]) => a.kind === "plugin");
+  const entries =
+    filter === "all"
+      ? allEntries
+      : allEntries.filter(([, a]) =>
+          filter === "enabled" ? a.enabled !== false : a.enabled === false
+        );
 
   return (
     <div className="page">
@@ -86,6 +104,22 @@ export default function Plugins() {
           <span>{t("mp.loading")}</span>
         </div>
       )}
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+        {(["all", "enabled", "disabled"] as const).map((f) => (
+          <button
+            key={f}
+            className={"btn " + (filter === f ? "btn-primary" : "btn-ghost")}
+            onClick={() => setFilter(f)}
+          >
+            {f === "all"
+              ? t("plugins.filterAll")
+              : f === "enabled"
+                ? t("plugins.enabled")
+                : t("plugins.disabled")}
+          </button>
+        ))}
+      </div>
 
       {agents && entries.length === 0 && (
         <div className="card empty-card">
@@ -120,7 +154,26 @@ export default function Plugins() {
                     </span>
                   )}
                 </div>
+                <div className="field-hint">
+                  <span className={"badge " + (a.enabled === false ? "badge-community" : "badge-verified")}>
+                    {a.enabled === false ? t("plugins.disabled") : t("plugins.enabled")}
+                  </span>
+                  {a.enabled === false && " · " + t("plugins.disabledNote")}
+                </div>
               </div>
+              <button
+                className="btn btn-ghost"
+                onClick={() => void toggleEnabled(id, a.enabled === false)}
+                disabled={busy !== null}
+                aria-label={(a.enabled === false ? t("plugins.enable") : t("plugins.disable")) + " " + id}
+              >
+                {busy === "toggle:" + id ? (
+                  <LoaderCircle size={14} className="spin" />
+                ) : (
+                  <Power size={14} />
+                )}
+                {a.enabled === false ? t("plugins.enable") : t("plugins.disable")}
+              </button>
               <button
                 className="btn btn-ghost"
                 onClick={() => void uninstall(id)}

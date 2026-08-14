@@ -300,6 +300,70 @@ fn dependents_list(id: String) -> Result<serde_json::Value, String> {
     run_forge(&["dependents".to_string(), id, "--home".to_string(), home_arg()])
 }
 
+/// Sources 页真实统计：本地 Registry 包数 / GitHub 来源数 / 本地源码缓存数。
+#[tauri::command]
+fn sources_stats() -> Result<serde_json::Value, String> {
+    let reg = registry();
+    let root = reg.root().to_path_buf();
+    let mut packages = 0usize;
+    let mut github = 0usize;
+    let mut licenses: std::collections::BTreeMap<String, usize> = std::collections::BTreeMap::new();
+    if let Ok(rd) = std::fs::read_dir(root.join("packages")) {
+        for entry in rd.flatten() {
+            let pj = entry.path().join("package.json");
+            if let Ok(text) = std::fs::read_to_string(&pj) {
+                if let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) {
+                    packages += 1;
+                    let is_github = v
+                        .get("source")
+                        .and_then(|s| s.get("type"))
+                        .and_then(|t| t.as_str())
+                        == Some("github");
+                    if is_github {
+                        github += 1;
+                    }
+                    if let Some(l) = v
+                        .get("license")
+                        .and_then(|l| l.get("spdx"))
+                        .and_then(|l| l.as_str())
+                    {
+                        *licenses.entry(l.to_string()).or_insert(0) += 1;
+                    }
+                }
+            }
+        }
+    }
+    let cache_repos = std::path::Path::new(&forge_core::dsh::dsh_home(None))
+        .join(".deepseek-forge")
+        .join("cache")
+        .join("repos");
+    let mut cache_count = 0usize;
+    if let Ok(rd) = std::fs::read_dir(&cache_repos) {
+        cache_count = rd.flatten().count();
+    }
+    Ok(serde_json::json!({
+        "registryPath": root,
+        "packages": packages,
+        "githubSources": github,
+        "licenses": licenses,
+        "cacheRepos": cache_count,
+        "cachePath": cache_repos,
+    }))
+}
+
+#[tauri::command]
+fn state_set_enabled(id: String, enabled: bool) -> Result<serde_json::Value, String> {
+    run_forge(&[
+        "state".to_string(),
+        "set-enabled".to_string(),
+        id,
+        "--enabled".to_string(),
+        enabled.to_string(),
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
 /// 定位 forge-core（开发 target 优先，其次发布布局，最后 PATH）
 fn published_or_dev_bin() -> Option<String> {
     let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -392,7 +456,9 @@ pub fn run() {
             bundle_install,
             bundle_uninstall,
             update_apply,
-            dependents_list
+            dependents_list,
+            state_set_enabled,
+            sources_stats
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
