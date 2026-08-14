@@ -32,7 +32,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     const base: Item[] = [
       { kind: "cmd", id: "explore", label: "Explore Marketplace", hint: "Browse all packages", action: () => navigate("/explore") },
       { kind: "cmd", id: "publish", label: "Publish a Package", hint: "Share with the community", action: () => navigate("/publish") },
-      { kind: "cmd", id: "docs", label: "Open GitHub Repository", hint: "github.com/W117C/deepseek-agenthub", action: () => window.open("https://github.com/W117C/deepseek-agenthub", "_blank", "noopener") },
+      { kind: "cmd", id: "docs", label: "Open GitHub Repository", hint: "github.com/W117C/deepseek-forge", action: () => window.open("https://github.com/W117C/deepseek-forge", "_blank", "noopener") },
       { kind: "cmd", id: "theme", label: theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode", hint: "Appearance", action: toggleTheme },
     ];
     if (!q) return base;

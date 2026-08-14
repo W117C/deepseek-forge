@@ -7,12 +7,12 @@
   "files": ["cli", "lib", "bundles", "README.md", "LICENSE"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/W117C/deepseek-agenthub.git"
+    "url": "https://github.com/W117C/deepseek-forge.git"
   },
   "keywords": ["deepseek", "harness", "agent", "bundle", "marketplace", "cli"],
   "engines": { "node": ">=22" },
   "license": "MIT",
   "scripts": {
-    "test:e2e": "bash -c 'for t in test/e2e*.mjs; do node "$t" || exit 1; done'"
+    "test:e2e": "bash -c 'for t in test/e2e*.mjs; do node \"$t\" || exit 1; done'"
   }
 }

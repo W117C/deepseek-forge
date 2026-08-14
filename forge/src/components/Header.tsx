@@ -71,7 +71,7 @@ export function Header() {
 
             <a
               className="icon-btn"
-              href="https://github.com/W117C/deepseek-agenthub"
+              href="https://github.com/W117C/deepseek-forge"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"

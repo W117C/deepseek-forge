@@ -214,10 +214,10 @@ export function Home() {
           </div>
           <div className="btn-row">
             <Link to="/publish" className="btn btn-primary btn-lg">Publish a Package</Link>
-            <a className="btn btn-outline btn-lg" href="https://github.com/W117C/deepseek-agenthub/tree/main/docs" target="_blank" rel="noopener noreferrer">
+            <a className="btn btn-outline btn-lg" href="https://github.com/W117C/deepseek-forge/tree/main/docs" target="_blank" rel="noopener noreferrer">
               <BookOpen size={15} /> Read Documentation
             </a>
-            <a className="btn btn-ghost btn-lg" href="https://github.com/W117C/deepseek-agenthub" target="_blank" rel="noopener noreferrer">
+            <a className="btn btn-ghost btn-lg" href="https://github.com/W117C/deepseek-forge" target="_blank" rel="noopener noreferrer">
               <Github size={15} /> GitHub
             </a>
           </div>

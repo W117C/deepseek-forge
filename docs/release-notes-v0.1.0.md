@@ -17,7 +17,7 @@ DeepSeek Harness Agent Bundle Marketplace — M1-M4 验证通过（203/203 e2e�
 ## 快速开始
 
 ```sh
-git clone https://github.com/W117C/deepseek-agenthub
+git clone https://github.com/W117C/deepseek-forge
 cd agenthub
 node cli/agenthub.mjs install ./bundles/finance-analyst --yes
 dsh --profile finance

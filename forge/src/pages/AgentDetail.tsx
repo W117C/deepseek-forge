@@ -89,7 +89,7 @@ export function AgentDetail() {
           </div>
           <div className="detail-actions">
             <InstallButton pkg={agent} size="lg" />
-            <a className="btn btn-outline btn-sm" href="https://github.com/W117C/deepseek-agenthub" target="_blank" rel="noopener noreferrer">
+            <a className="btn btn-outline btn-sm" href="https://github.com/W117C/deepseek-forge" target="_blank" rel="noopener noreferrer">
               <Terminal size={13} /> forge install {agent.slug}
             </a>
           </div>

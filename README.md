@@ -11,7 +11,7 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 
 两者均：Vercel 托管、Git 集成（推送 main 自动部署）、GitHub Actions 构建门槛（typecheck + 生产构建）。
 
-> 仓库：https://github.com/W117C/deepseek-agenthub ｜ CI：GitHub Actions（e2e 203 项 + 前端双构建）｜ 发布：GitHub Releases（[v0.1.0](https://github.com/W117C/deepseek-agenthub/releases/tag/v0.1.0)）
+> 仓库：https://github.com/W117C/deepseek-forge ｜ CI：GitHub Actions（e2e 203 项 + 前端双构建）｜ 发布：GitHub Releases（[v0.1.0](https://github.com/W117C/deepseek-forge/releases/tag/v0.1.0)）
 >
 > 状态：**M1–M4 验证通过（203/203）**——14 套 e2e：本地闭环 27 + 共存 20 + Registry/安全 25 + pnpm 路径 9 + 生命周期 21 + Web 24 + 开发者 14 + 鉴权 14 + 交互 5 + 组合 13 + 备份恢复 7 + 服务端组合 11 + 组合发布 9 + **模型层冒烟 4**。
 > 复现：`for t in test/e2e*.mjs; do node $t; done`（隔离 DSH_HOME，不触碰真实 ~/.dsh）。

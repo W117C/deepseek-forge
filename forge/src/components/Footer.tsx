@@ -29,17 +29,17 @@ export function Footer() {
           <div className="footer-col">
             <h4>Developers</h4>
             <Link to="/publish">Publish a Package</Link>
-            <a href="https://github.com/W117C/deepseek-agenthub/tree/main/docs" target="_blank" rel="noopener noreferrer">Documentation</a>
-            <a href="https://github.com/W117C/deepseek-agenthub/tree/main/cli" target="_blank" rel="noopener noreferrer">CLI Reference</a>
-            <a href="https://github.com/W117C/deepseek-agenthub/blob/main/lib/registry-server.mjs" target="_blank" rel="noopener noreferrer">Registry API</a>
+            <a href="https://github.com/W117C/deepseek-forge/tree/main/docs" target="_blank" rel="noopener noreferrer">Documentation</a>
+            <a href="https://github.com/W117C/deepseek-forge/tree/main/cli" target="_blank" rel="noopener noreferrer">CLI Reference</a>
+            <a href="https://github.com/W117C/deepseek-forge/blob/main/lib/registry-server.mjs" target="_blank" rel="noopener noreferrer">Registry API</a>
           </div>
 
           <div className="footer-col">
             <h4>Community</h4>
-            <a href="https://github.com/W117C/deepseek-agenthub" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://github.com/W117C/deepseek-agenthub/discussions" target="_blank" rel="noopener noreferrer">Discussions</a>
-            <a href="https://github.com/W117C/deepseek-agenthub/security/policy" target="_blank" rel="noopener noreferrer">Security Policy</a>
-            <a href="https://github.com/W117C/deepseek-agenthub/issues" target="_blank" rel="noopener noreferrer">Report an Issue</a>
+            <a href="https://github.com/W117C/deepseek-forge" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/W117C/deepseek-forge/discussions" target="_blank" rel="noopener noreferrer">Discussions</a>
+            <a href="https://github.com/W117C/deepseek-forge/security/policy" target="_blank" rel="noopener noreferrer">Security Policy</a>
+            <a href="https://github.com/W117C/deepseek-forge/issues" target="_blank" rel="noopener noreferrer">Report an Issue</a>
           </div>
         </div>
 
