@@ -1,0 +1,17 @@
+{
+  "name": "@agenthub/finance-core",
+  "version": "0.1.0",
+  "description": "Finance host-plane bundle: full-page research fetch, market-data MCP seam, session schedule",
+  "type": "module",
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": ["cordis.patch.yml"],
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "dependencies": {
+    "@deepseek-ai/dsh-mcp-client": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-schedule": "^0.1.0-rc.6"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,39 @@
+schema: agenthub.dev/agent/v1
+id: finance-analyst
+name: Finance Analyst
+category: 金融 Finance
+version: 0.1.0
+description: 把 DeepSeek Harness 变成金融研究与决策支持 Agent。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles:
+    - package: "@agenthub/finance-core"
+      version: "0.1.0"
+  presets:
+    - id: finance-analyst
+      base: standard
+  skills:
+    - financial-analysis
+    - company-research
+profile:
+  name: finance
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/finance-core"]
+  patch: ./profile.patch.yml
+permissions:
+  network: ["localhost:3111"]
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: [mcp-market-data, schedule]
+updatePolicy: notify
+trust: official

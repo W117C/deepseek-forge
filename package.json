@@ -1,0 +1,11 @@
+{
+  "name": "agenthub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DeepSeek Harness Agent Bundle Marketplace — local installer (M1)",
+  "type": "module",
+  "bin": { "agenthub": "./cli/agenthub.mjs" },
+  "scripts": {
+    "test:e2e": "bash test/e2e.sh"
+  }
+}

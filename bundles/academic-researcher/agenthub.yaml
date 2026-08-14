@@ -1,0 +1,39 @@
+schema: agenthub.dev/agent/v1
+id: academic-researcher
+name: Academic Researcher
+category: 学术 Academic
+version: 0.1.0
+description: 把 DeepSeek Harness 变成学术研究 Agent：文献检索与综述、论文分析、引文核验。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles:
+    - package: "@agenthub/research-core"
+      version: "0.1.0"
+  presets:
+    - id: academic-researcher
+      base: standard
+  skills:
+    - literature-review
+    - paper-analysis
+profile:
+  name: research
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/research-core"]
+  patch: ./profile.patch.yml
+permissions:
+  network: ["localhost:3112"]
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: [mcp-papers, schedule]
+updatePolicy: notify
+trust: official

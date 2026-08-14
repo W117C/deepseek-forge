@@ -1,0 +1,9 @@
+# finance-analyst 托管段（由 agenthub 写入本 profile 的 cordis.patch.yml，可自由编辑）。
+# 启用市场数据示例：取消下面行的注释并替换为你的 MCP 数据源地址，然后重启 dsh。
+# - id: mcp-market-data
+#   disabled: false
+#   config:
+#     serverName: marketdata
+#     transport: streamable-http
+#     url: 'http://localhost:3111/mcp'
+[]

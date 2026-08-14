@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# AgentHub 运行时状态（密钥/数据永不入库）
+keys.json
+.reg/
+.credentials.yaml
+
+# e2e 隔离环境产物
+.e2e-home/
+.e2e-pnpm-home/
+
+# 打包产物
+*.tgz

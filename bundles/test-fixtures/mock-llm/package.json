@@ -1,0 +1,10 @@
+{
+  "name": "@agenthub/mock-llm",
+  "version": "0.1.0",
+  "description": "Mock LLM adapter bundle for smoke tests: registers the mock provider route",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": { ".": "./lib/index.js", "./package.json": "./package.json" },
+  "dependencies": { "@deepseek-ai/dsh-llm": "^0.1.0-rc.6" },
+  "license": "MIT"
+}

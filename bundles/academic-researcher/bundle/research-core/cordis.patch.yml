@@ -1,0 +1,26 @@
+# @agenthub/research-core —— 学术研究 profile 的宿主平面 bundle 层。
+# 应用在 dsh-base / dsh-web-app 之后；按 row id 覆盖（整 config 替换，后写赢）。
+
+# 文献研究需要全文抓取：web_search + web_fetch。
+- id: tool-web
+  config:
+    search: true
+    fetch: true
+    searchTimeoutMs: 60000
+    fetchTimeoutMs: 60000
+
+- insert:
+    # 论文数据 seam：默认禁用。安装后在 profile patch 中启用并配置 provider
+    # （arXiv/Semantic Scholar/Crossref 等 MCP server，换 provider 只改这一行）。
+    - id: mcp-papers
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: true
+      config:
+        serverName: papers
+        transport: streamable-http
+        url: 'http://localhost:3112/mcp'
+        failOnStartupError: false
+
+    # 会话级定时任务（文献追踪 / 定期综述）。
+    - id: schedule
+      name: '@deepseek-ai/dsh-schedule'
