@@ -349,7 +349,7 @@ fn package_import_github(
         .collect();
     let mut state = load_state(home);
     state["agents"][id] = serde_json::json!({
-        "kind": "plugin",
+        "kind": pkg.r#type,
         "source": repo_url,
         "version": pkg.version,
         "installedAt": iso_utc_colon(),

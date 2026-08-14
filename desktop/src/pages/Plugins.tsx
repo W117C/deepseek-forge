@@ -41,7 +41,7 @@ export default function Plugins() {
         const list = s.agents ?? {};
         setAgents(list);
         const ids = Object.entries(list)
-          .filter(([, a]) => a.kind === "plugin")
+          .filter(([, a]) => ["plugin", "mcp", "skill", "tool"].includes(a.kind ?? "plugin"))
           .map(([id]) => id);
         Promise.all(
           ids.map((id) =>
@@ -121,7 +121,10 @@ export default function Plugins() {
     }
   }
 
-  const allEntries = Object.entries(agents ?? {}).filter(([, a]) => a.kind === "plugin");
+  const IMPORTED_KINDS = ["plugin", "mcp", "skill", "tool"];
+  const allEntries = Object.entries(agents ?? {}).filter(([, a]) =>
+    IMPORTED_KINDS.includes(a.kind ?? "plugin")
+  );
   const entries =
     filter === "all"
       ? allEntries

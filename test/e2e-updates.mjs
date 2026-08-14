@@ -71,6 +71,11 @@ writeFileSync(
   join(REG, 'packages', 'fixture-helper', 'package.json'),
   JSON.stringify(packageJson('fixture-helper', '0.1.0', []), null, 2)
 );
+mkdirSync(join(REG, 'packages', 'fixture-skill'), { recursive: true });
+writeFileSync(
+  join(REG, 'packages', 'fixture-skill', 'package.json'),
+  JSON.stringify(Object.assign(packageJson('fixture-skill', '0.1.0', []), { type: 'skill' }), null, 2)
+);
 // 初始状态：fixture-plugin 已收录 0.1.0；fixture-consumer 声明依赖它
 writeFileSync(
   join(TEST_HOME, '.agenthub', 'state.json'),
@@ -162,6 +167,20 @@ check('再次 apply 报已是最新', a2.status === 0 && again.updated === false
 // 6. 未安装包 → PACKAGE_NOT_FOUND
 const a3 = runForgeCore(['update', 'apply', 'no-such-pkg', '--registry', REG, '--home', TEST_HOME]);
 check('apply 未安装包 → 非零退出 + PACKAGE_NOT_FOUND', a3.status !== 0 && /PACKAGE_NOT_FOUND/.test(a3.stderr || ''));
+
+// 6.5 多类型收录：skill 类型组件经 import-github → state kind=skill + pending
+const sk = runForgeCore(['package', 'import-github', 'fixture-skill', '--registry', REG, '--home', TEST_HOME]);
+let skv = {};
+try { skv = JSON.parse(sk.stdout); } catch { skv = {}; }
+check('skill 组件收录成功', sk.status === 0 && skv.imported === true, (sk.stderr || sk.stdout || '').trim().slice(0, 120));
+const sts = JSON.parse(readFileSync(join(TEST_HOME, '.agenthub', 'state.json'), 'utf8'));
+check(
+  'state kind=skill + reviewStatus=pending',
+  sts.agents['fixture-skill']?.kind === 'skill' && sts.agents['fixture-skill']?.reviewStatus === 'pending',
+  JSON.stringify(sts.agents['fixture-skill'])
+);
+const skr = runForgeCore(['state', 'set-review', 'fixture-skill', '--status', 'approved', '--home', TEST_HOME]);
+check('skill 组件批准', skr.status === 0);
 
 // 7. check 复查：不再 outdated
 const c2 = runForgeCore(['update', 'check', '--registry', REG, '--home', TEST_HOME]);

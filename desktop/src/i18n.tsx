@@ -65,7 +65,7 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "updates.nothingInstalled": { zh: "尚未安装任何内容", en: "Nothing installed" },
   "updates.nothingBody": { zh: "已安装的包会在这里与本地 Registry 对比。", en: "Installed packages will be compared against the local registry here." },
   "updates.applied": { zh: "已更新", en: "Updated" },
-  "plugins.subtitle": { zh: "已安装 / 已收录的插件（与 CLI 共享状态库）。", en: "Installed / imported plugins (shared state store with the CLI)." },
+  "plugins.subtitle": { zh: "已安装 / 已收录的组件（插件 / Skills / MCP / Tools，与 CLI 共享状态库）。", en: "Installed / imported components (Plugins / Skills / MCP / Tools; shared state store with the CLI)." },
   "plugins.emptyTitle": { zh: "还没有安装插件", en: "No plugins installed yet" },
   "plugins.emptyBody1": { zh: "去市场看看", en: "Browse the marketplace" },
   "plugins.emptyBody2": { zh: "，收录/安装你需要的开源能力。", en: " and import the open-source capabilities you need." },
