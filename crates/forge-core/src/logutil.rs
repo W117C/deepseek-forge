@@ -1,7 +1,7 @@
 //! Increment ⑥: install log persistence (append-only JSONL).
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
