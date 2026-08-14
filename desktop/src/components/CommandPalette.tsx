@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Command } from "lucide-react";
+import { installPackage, registryList } from "../ipc";
+import type { RegistrySummary } from "../ipc";
 import { useI18n } from "../i18n";
 
 interface Item {
@@ -22,6 +24,8 @@ export default function CommandPalette({
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [active, setActive] = useState(0);
+  const [matches, setMatches] = useState<RegistrySummary[]>([]);
+  const [installErr, setInstallErr] = useState<string | null>(null);
 
   const items: Item[] = useMemo(() => {
     const pages: [string, string][] = [
@@ -52,11 +56,66 @@ export default function CommandPalette({
     return list;
   }, [t, locale, setLocale, navigate]);
 
+  // "install <query>" / "安装 <query>"：真实 Core API —— 检索 Registry 并一键收录安装。
+  const installQuery = useMemo(() => {
+    const m = query.trim().match(/^(?:install|安装)\s+(.+)$/i);
+    return m ? m[1] : null;
+  }, [query]);
+
+  useEffect(() => {
+    if (!installQuery) {
+      setMatches([]);
+      return;
+    }
+    let cancelled = false;
+    registryList()
+      .then((pkgs) => {
+        if (cancelled) return;
+        const q = installQuery.toLowerCase();
+        setMatches(
+          pkgs
+            .filter((p) =>
+              [p.name, p.id, p.description].join(" ").toLowerCase().includes(q)
+            )
+            .slice(0, 8)
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setMatches([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [installQuery]);
+
+  const installItems: Item[] = useMemo(
+    () =>
+      matches.map((p) => ({
+        id: "install:" + p.id,
+        label: t("mp.install") + " " + p.name + "（" + p.id + "）",
+        action: () => {
+          setInstallErr(null);
+          installPackage(p.id)
+            .then(() => navigate("/plugins/" + p.id))
+            .catch((e: unknown) =>
+              setInstallErr(e instanceof Error ? e.message : String(e))
+            );
+        },
+      })),
+    [matches, t, navigate]
+  );
+
+  const allItems = useMemo(
+    () => (installQuery ? [...installItems, ...items] : items),
+    [installItems, items, installQuery]
+  );
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter((i) => i.label.toLowerCase().includes(q));
-  }, [items, query]);
+    if (!q) return allItems;
+    if (installQuery) return allItems;
+    return allItems.filter((i) => i.label.toLowerCase().includes(q));
+  }, [allItems, query, installQuery]);
 
   useEffect(() => {
     if (open) {
@@ -124,6 +183,9 @@ export default function CommandPalette({
             }}
           />
         </div>
+        {installErr && (
+          <p className="field-error" style={{ padding: "8px 10px" }}>{installErr}</p>
+        )}
         <div style={{ maxHeight: 320, overflow: "auto" }}>
           {filtered.length === 0 && (
             <p className="field-hint" style={{ padding: "8px 10px" }}>{t("mp.empty")}</p>
