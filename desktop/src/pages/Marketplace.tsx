@@ -1,6 +1,7 @@
 // STEP 4: Marketplace —— 真实 Local Registry 数据：搜索/分类/排序/卡片/安装状态。
 // 安装 = install_package IPC（Core 收录式安装：克隆→扫描→状态登记），无 mock。
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Box, Github, LoaderCircle, ShieldCheck, Star, TriangleAlert } from "lucide-react";
 import { installPackage, registryList, stateList } from "../ipc";
 import type { RegistrySummary } from "../ipc";
@@ -138,7 +139,9 @@ export default function Marketplace() {
                   <Github size={15} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div className="mono" style={{ fontWeight: 600 }}>{p.name}</div>
+                  <Link to={"/plugins/" + p.id} className="mono" style={{ fontWeight: 600 }}>
+                    {p.name}
+                  </Link>
                   <div className="field-hint">
                     {p.type} · v{p.versionLatest}
                   </div>

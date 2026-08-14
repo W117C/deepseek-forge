@@ -140,7 +140,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "search" => run_search(&args[1..]),
         "update" => run_update(&args[1..]),
         "logs" => run_logs(&args[1..]),
-        "package" => run_package(&args[1..]),
+        "bundle" => run_bundle(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -254,7 +254,7 @@ fn run_package(args: &[String]) -> Result<(), ForgeError> {
                 .get("home")
                 .map(PathBuf::from)
                 .unwrap_or_else(|| dsh_home(None));
-            package_import_github(id, &registry, &home)
+            print_json(&package_import_github(id, &registry, &home)?)
         }
         _ => Err(ForgeError::InvalidManifest(format!(
             "unknown package subcommand '{sub}'"
@@ -264,7 +264,11 @@ fn run_package(args: &[String]) -> Result<(), ForgeError> {
 
 /// 收录式安装：GitHub 源包 → 浅克隆到缓存 → 安全扫描 → 登记安装状态 → 写安装日志。
 /// 真实落盘（缓存源码 + state.json + 日志）；未适配的 upstream 不会伪装成已装进 Harness。
-fn package_import_github(id: &str, registry: &Path, home: &Path) -> Result<(), ForgeError> {
+fn package_import_github(
+    id: &str,
+    registry: &Path,
+    home: &Path,
+) -> Result<serde_json::Value, ForgeError> {
     use forge_core::import::analyze_source;
     use forge_core::logutil::append_install_log;
     use forge_core::snapshot::iso_utc_colon;
@@ -310,7 +314,7 @@ fn package_import_github(id: &str, registry: &Path, home: &Path) -> Result<(), F
     });
     save_state(home, &state)?;
     let _ = append_install_log(id, &pkg.version, true, &steps, None);
-    print_json(&serde_json::json!({
+    Ok(serde_json::json!({
         "id": id,
         "version": pkg.version,
         "source": analysis.source,
@@ -925,6 +929,210 @@ fn run_runtime(args: &[String]) -> Result<(), ForgeError> {
         _ => Err(ForgeError::InvalidManifest(format!(
             "unknown runtime subcommand '{sub}'"
         ))),
+    }
+}
+
+/// 组合（Bundle）管理：create/list/install/uninstall。
+/// Bundle = 依赖组合描述（不重复存储组件源码）；安装/卸载逐组件执行，失败即停。
+fn run_bundle(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest(
+            "bundle requires a subcommand (create|list|install|uninstall)".to_string(),
+        )
+    })?;
+    let f = Flags::parse(&args[1..]);
+    let registry = f
+        .get("registry")
+        .map(PathBuf::from)
+        .unwrap_or_else(default_registry_path);
+    let home = f
+        .get("home")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| dsh_home(None));
+    let bundles_dir = home.join(".deepseek-forge").join("bundles");
+
+    match sub.as_str() {
+        "create" => {
+            let name = f.get("name").ok_or_else(|| {
+                ForgeError::InvalidManifest("bundle create requires --name".to_string())
+            })?;
+            let ids: Vec<String> = f
+                .get("ids")
+                .map(|s| {
+                    s.split(',')
+                        .map(|x| x.trim().to_string())
+                        .filter(|x| !x.is_empty())
+                        .collect()
+                })
+                .unwrap_or_default();
+            if ids.len() < 2 {
+                return Err(ForgeError::InvalidManifest(
+                    "bundle create 至少需要 2 个组件（--ids a,b,c）".to_string(),
+                ));
+            }
+            let reg = LocalRegistry::open(registry.clone());
+            for id in &ids {
+                reg.get_package(id)
+                    .map_err(|_| ForgeError::PackageNotFound(format!("组件不在 Registry：{id}")))?;
+            }
+            let slug = name
+                .to_lowercase()
+                .chars()
+                .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+                .collect::<String>();
+            let slug = slug.trim_matches('-').to_string();
+            let dir = bundles_dir.join(&slug);
+            fs::create_dir_all(&dir).map_err(ForgeError::Io)?;
+            let bundle_json = serde_json::json!({
+                "schema": "forge.bundle.v1",
+                "id": slug,
+                "name": name,
+                "type": "bundle",
+                "components": ids,
+                "createdAt": iso_utc_colon(),
+            });
+            fs::write(
+                dir.join("bundle.json"),
+                serde_json::to_string_pretty(&bundle_json).map_err(ForgeError::Json)? + "\n",
+            )
+            .map_err(ForgeError::Io)?;
+            let pkg = serde_json::json!({
+                "schema": "forge.package.v1",
+                "id": slug,
+                "name": name,
+                "type": "bundle",
+                "version": "0.1.0",
+                "description": format!("Bundle: {}", ids.join(", ")),
+                "category": "bundle",
+                "tags": [],
+                "publisher": { "id": "local", "name": "Local" },
+                "source": { "type": "forge", "repository": null, "ref": null, "commit": null },
+                "upstream": { "repository": null, "author": null, "license": null, "version": null, "url": null, "adapterVersion": null },
+                "license": { "spdx": "NOASSERTION", "file": null },
+                "compatibility": { "forge": ">=0.4.0", "dsh": { "min": null, "tested": [] }, "node": null, "platform": [] },
+                "capabilities": [],
+                "permissions": { "network": [], "env": [] },
+                "security": { "scan": "required", "status": "UNKNOWN", "scannedAt": null, "findings": [] },
+                "artifact": { "filename": "", "sha256": null, "signature": null, "signatureAlgorithm": "ed25519", "publisherKeyId": null },
+                "entrypoint": { "type": "workflow", "profile": null, "command": null, "config": {} },
+                "dependencies": ids.iter().map(|id| serde_json::json!({ "package": id, "version": null, "required": true })).collect::<Vec<_>>(),
+                "runtime": { "engine": "deepseek-harness", "profile": { "name": slug, "bundles": [], "patch": null }, "components": { "bundles": [], "presets": [], "skills": [] }, "health": [] },
+            });
+            let pkg_dir = registry.join("packages").join(&slug);
+            fs::create_dir_all(&pkg_dir).map_err(ForgeError::Io)?;
+            fs::write(
+                pkg_dir.join("package.json"),
+                serde_json::to_string_pretty(&pkg).map_err(ForgeError::Json)? + "\n",
+            )
+            .map_err(ForgeError::Io)?;
+            print_json(
+                &serde_json::json!({ "id": slug, "name": name, "components": ids, "registry": registry }),
+            )
+        }
+        "list" => {
+            let mut out = Vec::new();
+            if let Ok(rd) = fs::read_dir(&bundles_dir) {
+                for e in rd.flatten() {
+                    let p = e.path().join("bundle.json");
+                    if let Ok(text) = fs::read_to_string(&p) {
+                        if let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) {
+                            out.push(v);
+                        }
+                    }
+                }
+            }
+            print_json(&out)
+        }
+        "install" => {
+            let id = f.positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest("bundle install requires a bundle id".to_string())
+            })?;
+            let text = fs::read_to_string(bundles_dir.join(id).join("bundle.json"))
+                .map_err(|_| ForgeError::PackageNotFound(format!("bundle 不存在：{id}")))?;
+            let b: serde_json::Value = serde_json::from_str(&text).map_err(ForgeError::Json)?;
+            let comps: Vec<String> = b
+                .get("components")
+                .and_then(|c| c.as_array())
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect()
+                })
+                .unwrap_or_default();
+            let mut results = Vec::new();
+            for (i, cid) in comps.iter().enumerate() {
+                match package_import_github_or_artifact(cid, &registry, &home) {
+                    Ok(v) => {
+                        results.push(serde_json::json!({ "id": cid, "ok": true, "result": v }))
+                    }
+                    Err(e) => {
+                        results.push(
+                            serde_json::json!({ "id": cid, "ok": false, "error": e.to_string() }),
+                        );
+                        print_json(&serde_json::json!({
+                            "bundle": id,
+                            "ok": false,
+                            "failedAt": i,
+                            "results": results,
+                            "note": format!("安装中止：第 {} 个组件失败", i + 1)
+                        }));
+                        return Ok(());
+                    }
+                }
+            }
+            print_json(&serde_json::json!({ "bundle": id, "ok": true, "results": results }))
+        }
+        "uninstall" => {
+            let id = f.positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest("bundle uninstall requires a bundle id".to_string())
+            })?;
+            let text = fs::read_to_string(bundles_dir.join(id).join("bundle.json"))
+                .map_err(|_| ForgeError::PackageNotFound(format!("bundle 不存在：{id}")))?;
+            let b: serde_json::Value = serde_json::from_str(&text).map_err(ForgeError::Json)?;
+            let comps: Vec<String> = b
+                .get("components")
+                .and_then(|c| c.as_array())
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect()
+                })
+                .unwrap_or_default();
+            let mut results = Vec::new();
+            for cid in &comps {
+                let r = forge_core::installer::rollback(&home, cid);
+                results.push(serde_json::json!({
+                    "id": cid,
+                    "ok": r.is_ok(),
+                    "result": r.unwrap_or_else(|e| serde_json::json!({ "error": e.to_string() })),
+                }));
+            }
+            fs::remove_dir_all(bundles_dir.join(id)).map_err(ForgeError::Io)?;
+            fs::remove_dir_all(registry.join("packages").join(id)).map_err(ForgeError::Io)?;
+            print_json(&serde_json::json!({ "bundle": id, "ok": true, "results": results }))
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
+            "unknown bundle subcommand '{sub}'"
+        ))),
+    }
+}
+
+/// 组件安装：GitHub 源无制品 → 收录式安装；否则报告未支持（诚实）。
+fn package_import_github_or_artifact(
+    id: &str,
+    registry: &Path,
+    home: &Path,
+) -> Result<serde_json::Value, ForgeError> {
+    let pkg = LocalRegistry::open(registry.to_path_buf()).get_package(id)?;
+    if pkg.source.r#type == forge_core::model::SourceType::Github
+        && pkg.artifact.filename.is_empty()
+    {
+        package_import_github(id, registry, home)
+    } else {
+        Err(ForgeError::InvalidManifest(format!(
+            "{}：该包需要制品安装管线（后续 STEP 接入）",
+            id
+        )))
     }
 }
 

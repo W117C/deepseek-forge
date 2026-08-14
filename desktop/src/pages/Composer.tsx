@@ -2,7 +2,14 @@
 // Resolve 经 Rust Kernel 输出确定性安装序 + 冲突/缺失（提前发现）。
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Boxes, LoaderCircle, TriangleAlert } from "lucide-react";
-import { composerResolve, registryList } from "../ipc";
+import {
+  bundleCreate,
+  bundleInstall,
+  bundleList,
+  bundleUninstall,
+  composerResolve,
+  registryList,
+} from "../ipc";
 import type { RegistrySummary, ResolveReport } from "../ipc";
 
 export default function Composer() {
@@ -11,6 +18,59 @@ export default function Composer() {
   const [selected, setSelected] = useState<string[]>([]);
   const [report, setReport] = useState<ResolveReport | null>(null);
   const [busy, setBusy] = useState(false);
+  const [bundleName, setBundleName] = useState("");
+  const [bundles, setBundles] = useState<Record<string, any>[]>([]);
+  const [bundleBusy, setBundleBusy] = useState<string | null>(null);
+  const [bundleErr, setBundleErr] = useState<string | null>(null);
+
+  function loadBundles() {
+    bundleList()
+      .then(setBundles)
+      .catch((e: unknown) => setBundleErr(e instanceof Error ? e.message : String(e)));
+  }
+  useEffect(loadBundles, []);
+
+  async function createBundle() {
+    if (!bundleName.trim() || selected.length < 2) return;
+    setBundleBusy("create");
+    setBundleErr(null);
+    try {
+      await bundleCreate(bundleName.trim(), selected);
+      setBundleName("");
+      loadBundles();
+    } catch (e) {
+      setBundleErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBundleBusy(null);
+    }
+  }
+
+  async function installBundle(id: string) {
+    setBundleBusy("install:" + id);
+    setBundleErr(null);
+    try {
+      await bundleInstall(id);
+      loadBundles();
+    } catch (e) {
+      setBundleErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBundleBusy(null);
+    }
+  }
+
+  async function uninstallBundle(id: string) {
+    if (!window.confirm("Uninstall bundle " + id + "?\n其组件登记将被移除（被其他组合引用的组件需单独处理）。")) return;
+    setBundleBusy("uninstall:" + id);
+    setBundleErr(null);
+    try {
+      await bundleUninstall(id);
+      loadBundles();
+    } catch (e) {
+      setBundleErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBundleBusy(null);
+    }
+  }
 
   useEffect(() => {
     registryList()
@@ -91,6 +151,47 @@ export default function Composer() {
           </div>
         </div>
       </div>
+
+      <div className="card" style={{ marginTop: 16, display: "flex", gap: 8, alignItems: "center" }}>
+        <input
+          className="input"
+          style={{ flex: 1 }}
+          placeholder="Bundle 名称（如 Research Stack）"
+          value={bundleName}
+          onChange={(e) => setBundleName(e.target.value)}
+        />
+        <button
+          className="btn btn-primary"
+          onClick={() => void createBundle()}
+          disabled={bundleBusy === "create" || selSummary.length < 2}
+        >
+          {bundleBusy === "create" ? <LoaderCircle size={14} className="spin" /> : null}
+          Create Bundle
+        </button>
+      </div>
+
+      {bundles.length > 0 && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <h2 className="dashboard-section-title">Bundles</h2>
+          {bundles.map((b) => (
+            <div key={b.id} className="registry-row" style={{ padding: "8px 0" }}>
+              <span className="registry-k mono">{b.name}</span>
+              <span className="registry-v" style={{ flex: 1 }}>
+                {(b.components ?? []).join(", ")}
+              </span>
+              <button className="btn btn-ghost" onClick={() => void installBundle(b.id)} disabled={bundleBusy !== null}>
+                {bundleBusy === "install:" + b.id ? <LoaderCircle size={14} className="spin" /> : null}
+                Install All
+              </button>
+              <button className="btn btn-ghost" onClick={() => void uninstallBundle(b.id)} disabled={bundleBusy !== null}>
+                Uninstall
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {bundleErr && <div className="field-error" style={{ marginTop: 10 }}>{bundleErr}</div>}
 
       {report && (
         <div className="card" style={{ marginTop: 16 }}>

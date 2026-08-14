@@ -203,6 +203,84 @@ fn install_package(id: String) -> Result<serde_json::Value, String> {
     .unwrap_or_default())
 }
 
+/// 通用 forge-core 调用：stdout JSON / stderr 错误信封。
+fn run_forge(args: &[String]) -> Result<serde_json::Value, String> {
+    let bin = published_or_dev_bin()
+        .ok_or_else(|| "forge-core 二进制不可用：请先构建或设置 FORGE_CORE_BIN".to_string())?;
+    let out = std::process::Command::new(bin)
+        .args(args)
+        .output()
+        .map_err(|e| e.to_string())?;
+    if !out.status.success() {
+        let raw = String::from_utf8_lossy(&out.stderr);
+        let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
+            serde_json::json!({ "code": "FAILED", "human": raw.trim() })
+        });
+        return Err(serde_json::to_string(&env).unwrap_or_default());
+    }
+    serde_json::from_slice(&out.stdout).map_err(|e| e.to_string())
+}
+
+fn home_arg() -> String {
+    forge_core::dsh::dsh_home(None).to_string_lossy().to_string()
+}
+
+#[tauri::command]
+fn bundle_create(name: String, ids: Vec<String>) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    let args = vec![
+        "bundle".to_string(),
+        "create".to_string(),
+        "--name".to_string(),
+        name,
+        "--ids".to_string(),
+        ids.join(","),
+        "--registry".to_string(),
+        reg,
+        "--home".to_string(),
+        home_arg(),
+    ];
+    run_forge(&args)
+}
+
+#[tauri::command]
+fn bundle_list() -> Result<serde_json::Value, String> {
+    run_forge(&[
+        "bundle".to_string(),
+        "list".to_string(),
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
+#[tauri::command]
+fn bundle_install(id: String) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    run_forge(&[
+        "bundle".to_string(),
+        "install".to_string(),
+        id,
+        "--registry".to_string(),
+        reg,
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
+#[tauri::command]
+fn bundle_uninstall(id: String) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    run_forge(&[
+        "bundle".to_string(),
+        "uninstall".to_string(),
+        id,
+        "--registry".to_string(),
+        reg,
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
 /// 定位 forge-core（开发 target 优先，其次发布布局，最后 PATH）
 fn published_or_dev_bin() -> Option<String> {
     let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -289,7 +367,11 @@ pub fn run() {
             runtime_stop,
             runtime_restart,
             logs_list,
-            install_package
+            install_package,
+            bundle_create,
+            bundle_list,
+            bundle_install,
+            bundle_uninstall
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

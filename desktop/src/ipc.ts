@@ -37,6 +37,19 @@ export function installPackage(id: string): Promise<Record<string, unknown>> {
   return call<Record<string, unknown>>("install_package", { id });
 }
 
+export function bundleCreate(name: string, ids: string[]): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("bundle_create", { name, ids });
+}
+export function bundleList(): Promise<Record<string, unknown>[]> {
+  return call<Record<string, unknown>[]>("bundle_list");
+}
+export function bundleInstall(id: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("bundle_install", { id });
+}
+export function bundleUninstall(id: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("bundle_uninstall", { id });
+}
+
 /**
  * Convert a rejected invoke value into a human-readable Error. The Rust
  * commands return errors as `Result<T, String>`, where the String is a
@@ -174,6 +187,10 @@ export interface InstalledAgent {
   permissions?: { network?: string[]; env?: string[] };
   presetIds?: string[];
   skillNames?: string[];
+  imported?: boolean;
+  source?: string;
+  scanVerdict?: string;
+  license?: string;
 }
 
 export function stateList(): Promise<{ agents: Record<string, InstalledAgent> }> {

@@ -7,6 +7,8 @@ import Placeholder from "./pages/Placeholder";
 import Agents from "./pages/Agents";
 import Composer from "./pages/Composer";
 import Marketplace from "./pages/Marketplace";
+import PackageDetail from "./pages/PackageDetail";
+import Plugins from "./pages/Plugins";
 import Processes from "./pages/Processes";
 import Sessions from "./pages/Sessions";
 import Updates from "./pages/Updates";
@@ -35,10 +37,8 @@ export default function App() {
             path="/skills"
             element={<Placeholder title="My Skills" phase="Phase 6" />}
           />
-          <Route
-            path="/plugins"
-            element={<Placeholder title="My Plugins" phase="Phase 3" />}
-          />
+          <Route path="/plugins" element={<Plugins />} />
+          <Route path="/plugins/:id" element={<PackageDetail />} />
           <Route path="/bundles" element={<Composer />} />
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/processes" element={<Processes />} />
