@@ -83,8 +83,18 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), ForgeError> {
     if meta.file_type().is_symlink() {
         let target = fs::read_link(src).map_err(ForgeError::Io)?;
         remove_any(dst)?;
-        std::os::unix::fs::symlink(&target, dst).map_err(ForgeError::Io)?;
-        return Ok(());
+        #[cfg(unix)]
+        {
+            return std::os::unix::fs::symlink(&target, dst).map_err(ForgeError::Io);
+        }
+        #[cfg(not(unix))]
+        {
+            let m = fs::metadata(&target).map_err(ForgeError::Io)?;
+            if m.is_dir() {
+                return copy_dir(&target, dst);
+            }
+            return fs::copy(&target, dst).map_err(ForgeError::Io);
+        }
     }
     if meta.is_dir() {
         fs::create_dir_all(dst).map_err(ForgeError::Io)?;

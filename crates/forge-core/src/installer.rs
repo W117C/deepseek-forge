@@ -93,14 +93,30 @@ fn remove_any(p: &Path) -> Result<(), ForgeError> {
     }
 }
 
+/// symlink（unix）或复制（windows）：与 Node cpSync 的跨平台行为对齐。
+fn link_or_copy(target: &Path, dst: &Path) -> Result<(), ForgeError> {
+    remove_any(dst)?;
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(target, dst).map_err(ForgeError::Io)
+    }
+    #[cfg(not(unix))]
+    {
+        let meta = fs::metadata(target).map_err(ForgeError::Io)?;
+        if meta.is_dir() {
+            copy_dir(target, dst)
+        } else {
+            fs::copy(target, dst).map_err(ForgeError::Io)
+        }
+    }
+}
+
 /// Symlink-preserving recursive copy skipping dot-basename entries.
 fn copy_dir_filtered(src: &Path, dst: &Path) -> Result<(), ForgeError> {
     let meta = fs::symlink_metadata(src).map_err(ForgeError::Io)?;
     if meta.file_type().is_symlink() {
         let target = fs::read_link(src).map_err(ForgeError::Io)?;
-        remove_any(dst)?;
-        std::os::unix::fs::symlink(&target, dst).map_err(ForgeError::Io)?;
-        return Ok(());
+        return link_or_copy(&target, dst);
     }
     if meta.is_dir() {
         fs::create_dir_all(dst).map_err(ForgeError::Io)?;
@@ -123,9 +139,7 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), ForgeError> {
     let meta = fs::symlink_metadata(src).map_err(ForgeError::Io)?;
     if meta.file_type().is_symlink() {
         let target = fs::read_link(src).map_err(ForgeError::Io)?;
-        remove_any(dst)?;
-        std::os::unix::fs::symlink(&target, dst).map_err(ForgeError::Io)?;
-        return Ok(());
+        return link_or_copy(&target, dst);
     }
     if meta.is_dir() {
         fs::create_dir_all(dst).map_err(ForgeError::Io)?;

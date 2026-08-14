@@ -12,6 +12,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          # parity 套件需要 git show 6f07733（委托桥前父提交）
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:

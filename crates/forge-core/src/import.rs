@@ -436,16 +436,24 @@ fn detect_install_scripts(files: &[PathBuf]) -> Vec<String> {
 }
 
 fn detect_executables(files: &[PathBuf]) -> Vec<String> {
-    use std::os::unix::fs::PermissionsExt;
+    #[cfg(unix)]
+    fn is_exec(p: &Path) -> bool {
+        use std::os::unix::fs::PermissionsExt;
+        fs::metadata(p)
+            .map(|m| m.permissions().mode() & 0o111 != 0)
+            .unwrap_or(false)
+    }
+    #[cfg(not(unix))]
+    fn is_exec(_p: &Path) -> bool {
+        true // Windows 按扩展名判断即可
+    }
     files
         .iter()
         .filter(|p| {
             p.extension()
                 .map(|e| matches!(e.to_str(), Some("sh") | Some("bash") | Some("py")))
                 .unwrap_or(false)
-                && fs::metadata(p)
-                    .map(|m| m.permissions().mode() & 0o111 != 0)
-                    .unwrap_or(false)
+                && is_exec(p)
         })
         .map(|p| p.to_string_lossy().to_string())
         .collect()
