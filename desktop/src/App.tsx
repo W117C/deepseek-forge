@@ -19,8 +19,10 @@ import {
   SourcesPage,
 } from "./pages/SystemPages";
 import CommandPalette from "./components/CommandPalette";
+import { useI18n } from "./i18n";
 
 export default function App() {
+  const { t } = useI18n();
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function App() {
           <Route path="/agents" element={<Agents />} />
           <Route
             path="/skills"
-            element={<Placeholder title="My Skills" phase="Phase 6" />}
+            element={<Placeholder title={t("nav.skills")} />}
           />
           <Route path="/plugins" element={<Plugins />} />
           <Route path="/plugins/:id" element={<PackageDetail />} />

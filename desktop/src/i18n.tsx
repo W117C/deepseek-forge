@@ -52,6 +52,8 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "common.failed": { zh: "失败", en: "Failed" },
   "common.success": { zh: "成功", en: "Success" },
   "common.details": { zh: "详情", en: "Details" },
+  "common.comingSoon": { zh: "即将推出", en: "Coming Soon" },
+  "common.comingSoonBody": { zh: "该模块尚未实现；不会伪装成可用功能。", en: "This module is not implemented yet; it will not pretend to be functional." },
   "updates.title": { zh: "更新", en: "Updates" },
   "updates.subAvailable": { zh: "本地 Registry 中有 {n} 个可更新项。", en: "{n} update(s) available in the local registry." },
   "updates.subNone": { zh: "本地 Registry 中没有可用的更新。", en: "No updates available in the local registry." },
