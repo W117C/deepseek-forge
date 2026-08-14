@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deepseek-forge.dev/schemas/forge-package.schema.json",
+  "title": "Forge Package Manifest v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "id", "name", "type", "version"],
+  "properties": {
+    "schema": {
+      "const": "forge.package.v1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "enum": ["agent", "skill", "tool", "mcp", "plugin", "workflow", "bundle"]
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": { "enum": ["github", "forge", "local"] },
+        "repository": { "type": "string" },
+        "ref": { "type": "string" },
+        "commit": { "type": "string" }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repository": { "type": "string" },
+        "author": { "type": "string" },
+        "license": { "type": "string" },
+        "version": { "type": "string" },
+        "url": { "type": "string" },
+        "adapterVersion": { "type": "string" }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "spdx": { "type": "string" },
+        "file": { "type": "string" }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "forge": { "type": "string" },
+        "dsh": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min": { "type": "string" },
+            "tested": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "node": { "type": "string" },
+        "platform": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "network": { "type": "array", "items": { "type": "string" } },
+        "env": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "scan": { "enum": ["required", "optional"] },
+        "status": { "enum": ["PASS", "WARNING", "BLOCKED", "UNKNOWN"] },
+        "scannedAt": { "type": "string" },
+        "findings": { "type": "array" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "filename": { "type": "string" },
+        "sha256": { "type": "string" },
+        "signature": { "type": "string" },
+        "signatureAlgorithm": { "type": "string" },
+        "publisherKeyId": { "type": "string" }
+      }
+    },
+    "entrypoint": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": { "enum": ["harness-profile", "process", "mcp-server", "workflow"] },
+        "profile": { "type": "string" },
+        "command": { "type": "string" },
+        "config": { "type": "object" }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "package": { "type": "string" },
+          "version": { "type": "string" },
+          "required": { "type": "boolean" }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "engine": { "type": "string" },
+        "profile": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "name": { "type": "string" },
+            "bundles": { "type": "array", "items": { "type": "string" } },
+            "patch": { "type": "string" }
+          }
+        },
+        "components": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "bundles": { "type": "array" },
+            "presets": { "type": "array" },
+            "skills": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "health": { "type": "array" }
+      }
+    }
+  }
+}

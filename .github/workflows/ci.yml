@@ -72,3 +72,25 @@ jobs:
       - name: 类型检查 + 生产构建（${{ matrix.app }}）
         run: npm run build
         working-directory: ${{ matrix.app }}
+
+  core:
+    name: Rust 核心（forge-core）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Rust stable
+        run: rustup update stable && rustup default stable
+
+      - name: fmt 检查
+        run: cargo fmt --all -- --check
+        working-directory: crates/forge-core
+
+      - name: 单元测试
+        run: cargo test
+        working-directory: crates/forge-core
+
+      - name: release 构建
+        run: cargo build --release
+        working-directory: crates/forge-core
