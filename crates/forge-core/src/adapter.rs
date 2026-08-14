@@ -19,9 +19,38 @@ use crate::snapshot::iso_utc_colon;
 pub struct AdapterProposal {
     pub package_type: String,
     pub risk: String,
-    pub generator: String, // "rules" —— 无 AI 供应商时明示规则型生成
+    pub generator: String, // "rules" | "ai" —— 无 AI 供应商时明示规则型生成
     pub requires_human_review: bool,
     pub manifest: serde_json::Value,
+}
+
+/// AI provider configuration (environment-driven). The HTTP call path is NOT
+/// exercised in this environment (no provider configured); it is implemented
+/// for deployments that set FORGE_AI_ENDPOINT / FORGE_AI_KEY.
+#[derive(Clone, Debug, PartialEq)]
+pub struct AiProvider {
+    pub endpoint: String,
+    pub api_key: String,
+}
+
+/// Pure provider resolution (testable without touching the environment).
+pub fn provider_from_env(endpoint: Option<&str>, api_key: Option<&str>) -> Option<AiProvider> {
+    let endpoint = endpoint?.trim();
+    let api_key = api_key?.trim();
+    if endpoint.is_empty() || api_key.is_empty() {
+        return None;
+    }
+    Some(AiProvider {
+        endpoint: endpoint.to_string(),
+        api_key: api_key.to_string(),
+    })
+}
+
+pub fn configured_ai_provider() -> Option<AiProvider> {
+    provider_from_env(
+        std::env::var("FORGE_AI_ENDPOINT").ok().as_deref(),
+        std::env::var("FORGE_AI_KEY").ok().as_deref(),
+    )
 }
 
 fn slugify(s: &str) -> String {
@@ -45,13 +74,24 @@ fn slugify(s: &str) -> String {
 }
 
 /// Build a forge.package.v1 manifest proposal from a repository analysis.
+/// Build a forge.package.v1 manifest proposal from a repository analysis.
+/// With no AI provider configured this runs in deterministic "rules" mode and
+/// says so explicitly — it never pretends to be AI-generated.
 pub fn propose(analysis: &RepositoryAnalysis) -> Result<AdapterProposal, ForgeError> {
+    propose_with_mode(analysis, configured_ai_provider().is_some())
+}
+
+fn propose_with_mode(
+    analysis: &RepositoryAnalysis,
+    ai_configured: bool,
+) -> Result<AdapterProposal, ForgeError> {
     if analysis.license_missing {
         return Err(ForgeError::SecurityBlocked(
             "拒绝生成 Adapter：仓库无许可证。按 Principle 5，Forge 不打包无明确许可证的代码。"
                 .to_string(),
         ));
     }
+    let generator = if ai_configured { "ai" } else { "rules" }.to_string();
 
     let id = analysis
         .repo
@@ -149,7 +189,7 @@ pub fn propose(analysis: &RepositoryAnalysis) -> Result<AdapterProposal, ForgeEr
     Ok(AdapterProposal {
         package_type: analysis.package_type.clone(),
         risk: analysis.security_risk.clone(),
-        generator: "rules".to_string(),
+        generator,
         requires_human_review,
         manifest,
     })
