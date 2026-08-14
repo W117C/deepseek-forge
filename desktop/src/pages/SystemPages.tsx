@@ -1,6 +1,6 @@
 // Phase 8: System 组诚实最小页 —— 只显示有真实后端支撑的数据，其余为空态。
 import { useEffect, useState } from "react";
-import { Database, LoaderCircle, Settings, ShieldCheck, ScrollText, TriangleAlert } from "lucide-react";
+import { Database, LoaderCircle, Settings, ShieldCheck, TriangleAlert } from "lucide-react";
 import { stateList, systemStatus } from "../ipc";
 import type { InstalledAgent, SystemStatus } from "../ipc";
 
@@ -103,23 +103,6 @@ export function SettingsPage() {
         <div className="empty-card-head"><Settings size={15} /><span className="empty-card-title">No configurable settings yet</span></div>
         <p className="empty-card-body">
           主题当前固定为 dark（设计系统 token）；其余设置项将随对应功能（默认 Registry、验证策略、日志级别）逐步开放。
-        </p>
-      </div>
-    </div>
-  );
-}
-
-export function LogsPage() {
-  return (
-    <div className="page">
-      <header className="page-header">
-        <h1 className="page-heading">Logs</h1>
-        <p className="page-sub">Forge / harness / install / security logs.</p>
-      </header>
-      <div className="card empty-card">
-        <div className="empty-card-head"><ScrollText size={15} /><span className="empty-card-title">Log aggregation not wired yet</span></div>
-        <p className="empty-card-body">
-          日志落盘与聚合（forge/harness/install/security 四类）在 Runtime 阶段后续接入；CLI 安装输出即安装日志。
         </p>
       </div>
     </div>

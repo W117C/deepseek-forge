@@ -1,7 +1,7 @@
 // Phase 7: Runtime —— 进程表来自真实 ps 输出；进程管理（stop/restart）在后续阶段接入。
 import { useEffect, useState } from "react";
 import { Activity, LoaderCircle, TriangleAlert } from "lucide-react";
-import { runtimeStatus } from "../ipc";
+import { runtimeRestart, runtimeStatus, runtimeStop } from "../ipc";
 import type { RuntimeStatus } from "../ipc";
 
 type State =
@@ -48,6 +48,25 @@ export default function Processes() {
   }
 
   const { runtime } = state;
+
+  async function stop(pid: number) {
+    try {
+      await runtimeStop(pid);
+      window.location.reload();
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function restart(command: string) {
+    try {
+      await runtimeRestart(command);
+      window.location.reload();
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : String(err));
+    }
+  }
+
   return (
     <div className="page">
       <header className="page-header">
@@ -67,13 +86,15 @@ export default function Processes() {
           {runtime.processes.map((p) => (
             <div key={p.pid} className="registry-row">
               <span className="registry-k mono">{p.pid}</span>
-              <span className="registry-v mono">{p.command}</span>
+              <span className="registry-v mono" style={{ flex: 1 }}>{p.command}</span>
+              <button className="btn btn-ghost" onClick={() => void restart(p.command)}>Restart</button>
+              <button className="btn btn-ghost" onClick={() => void stop(p.pid)}>Stop</button>
             </div>
           ))}
         </div>
       )}
       <p className="field-hint" style={{ marginTop: 12 }}>
-        Stop/restart 控制（由 Rust Core 执行，UI 不得直接 kill）将在 Runtime 阶段后续接入。
+        Stop/Restart 由 Rust Core 执行（kill -TERM / 分离重启），UI 不直接操作进程。
       </p>
     </div>
   );

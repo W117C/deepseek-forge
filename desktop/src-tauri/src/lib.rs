@@ -10,10 +10,12 @@ use std::path::{Path, PathBuf};
 use forge_core::errors::{ErrorEnvelope, ForgeError};
 use forge_core::events::EventBus;
 use forge_core::adapter::propose;
+use forge_core::composer::{resolve_graph, validate_components, ComponentSpec, DependencySpec};
 use forge_core::import::analyze_source;
 use forge_core::installer::rollback;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
-use forge_core::runtime::runtime_status;
+use forge_core::logutil::list_install_logs;
+use forge_core::runtime::{restart_process, runtime_status, stop_process};
 use forge_core::state::load_state;
 use forge_core::updater::check_updates;
 use serde::Serialize;
@@ -137,6 +139,49 @@ fn state_list() -> Result<serde_json::Value, String> {
     Ok(load_state(&forge_core::dsh::dsh_home(None)))
 }
 
+/// Increment ⑤: process control via Core (UI never kills directly).
+#[tauri::command]
+fn runtime_stop(pid: u32) -> Result<serde_json::Value, String> {
+    let ok = stop_process(pid).map_err(to_ipc_error)?;
+    Ok(serde_json::json!({ "ok": ok, "pid": pid }))
+}
+
+#[tauri::command]
+fn runtime_restart(command: String) -> Result<serde_json::Value, String> {
+    let pid = restart_process(&command).map_err(to_ipc_error)?;
+    Ok(serde_json::json!({ "pid": pid }))
+}
+
+/// Increment ⑥: install log entries (append-only JSONL).
+#[tauri::command]
+fn logs_list() -> Result<Vec<forge_core::logutil::LogEntry>, String> {
+    Ok(list_install_logs())
+}
+
+/// Increment ④: resolve a composition of registry packages (deps from manifests).
+#[tauri::command]
+fn composer_resolve(ids: Vec<String>) -> Result<forge_core::composer::ResolveReport, String> {
+    let reg = registry();
+    let mut components = Vec::new();
+    for id in &ids {
+        let pkg = reg.get_package(id).map_err(to_ipc_error)?;
+        let deps: Vec<DependencySpec> = pkg
+            .dependencies
+            .iter()
+            .map(|d| DependencySpec {
+                package: d.package.clone(),
+                version: d.version.clone(),
+            })
+            .collect();
+        components.push(ComponentSpec {
+            name: id.clone(),
+            dependencies: deps,
+        });
+    }
+    validate_components(&components).map_err(to_ipc_error)?;
+    resolve_graph(&components).map_err(to_ipc_error)
+}
+
 /// Increment ③: compare installed versions against the local registry.
 #[tauri::command]
 fn update_check() -> Result<Vec<forge_core::updater::UpdateEntry>, String> {
@@ -179,7 +224,11 @@ pub fn run() {
             runtime_status_cmd,
             state_list,
             package_rollback,
-            update_check
+            update_check,
+            composer_resolve,
+            runtime_stop,
+            runtime_restart,
+            logs_list
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

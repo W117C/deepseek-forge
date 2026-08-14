@@ -125,6 +125,33 @@ pub fn list_processes() -> Vec<ProcessSummary> {
         .collect()
 }
 
+/// Stop a process by pid (SIGTERM via Core; UI never kills directly).
+pub fn stop_process(pid: u32) -> Result<bool, ForgeError> {
+    let out = std::process::Command::new("kill")
+        .arg("-TERM")
+        .arg(pid.to_string())
+        .output()
+        .map_err(ForgeError::Io)?;
+    Ok(out.status.success())
+}
+
+/// Restart a recorded command line detached; returns the new pid when known.
+pub fn restart_process(command: &str) -> Result<Option<u32>, ForgeError> {
+    let out = std::process::Command::new("sh")
+        .arg("-c")
+        .arg(format!("nohup {} >/dev/null 2>&1 & echo $!", command))
+        .output()
+        .map_err(ForgeError::Io)?;
+    if !out.status.success() {
+        return Ok(None);
+    }
+    let pid = String::from_utf8_lossy(&out.stdout)
+        .trim()
+        .parse::<u32>()
+        .ok();
+    Ok(pid)
+}
+
 /// Observe the Harness and its runtime state (never starts/stops anything here).
 pub fn runtime_status(home_opt: Option<&Path>) -> Result<RuntimeStatus, ForgeError> {
     let home = dsh_home(home_opt);

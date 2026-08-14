@@ -16,11 +16,12 @@ use forge_core::import::analyze_source;
 use forge_core::installer::{
     install, install_catalog_plugin, rollback, InstallFailure, InstallRequest,
 };
+use forge_core::logutil::{append_install_log, list_install_logs};
 use forge_core::manifest::{
     load_legacy_agent_dir, load_legacy_agent_dir_strict, load_package_file,
 };
 use forge_core::registry::{LocalRegistry, PackageSummary, RegistryProvider};
-use forge_core::runtime::runtime_status;
+use forge_core::runtime::{restart_process, runtime_status, stop_process};
 use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
 use forge_core::snapshot::iso_utc_colon;
@@ -138,6 +139,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "runtime" => run_runtime(&args[1..]),
         "search" => run_search(&args[1..]),
         "update" => run_update(&args[1..]),
+        "logs" => run_logs(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -443,8 +445,20 @@ fn run_install(args: &[String]) -> Result<(), ForgeError> {
         smoke: f.get("smoke").is_some(),
     };
     match install(&req) {
-        Ok(r) => print_json(&r),
-        Err(fail) => print_install_failure(&fail),
+        Ok(r) => {
+            let _ = append_install_log(&r.manifest.id, &r.manifest.version, true, &r.steps, None);
+            print_json(&r)
+        }
+        Err(fail) => {
+            let _ = append_install_log(
+                "(unknown)",
+                "(unknown)",
+                false,
+                &fail.steps,
+                Some(&fail.code),
+            );
+            print_install_failure(&fail)
+        }
     }
 }
 
@@ -704,6 +718,7 @@ fn run_install_from_registry(args: &[String]) -> Result<(), ForgeError> {
     };
     match install(&req) {
         Ok(r) => {
+            let _ = append_install_log(id, &version, true, &r.steps, None);
             let out = serde_json::json!({
                 "result": r,
                 "registry": registry_path,
@@ -713,7 +728,10 @@ fn run_install_from_registry(args: &[String]) -> Result<(), ForgeError> {
             });
             print_json(&out)
         }
-        Err(fail) => print_install_failure(&fail),
+        Err(fail) => {
+            let _ = append_install_log(id, &version, false, &fail.steps, Some(&fail.code));
+            print_install_failure(&fail)
+        }
     }
 }
 
@@ -783,17 +801,53 @@ fn run_composer(args: &[String]) -> Result<(), ForgeError> {
 
 fn run_runtime(args: &[String]) -> Result<(), ForgeError> {
     let sub = args.first().ok_or_else(|| {
-        ForgeError::InvalidManifest("runtime requires a subcommand (status)".to_string())
+        ForgeError::InvalidManifest(
+            "runtime requires a subcommand (status|stop|restart)".to_string(),
+        )
     })?;
-    if sub != "status" {
-        return Err(ForgeError::InvalidManifest(format!(
+    match sub.as_str() {
+        "status" => {
+            let f = Flags::parse(&args[1..]);
+            let home = f.get("home").map(PathBuf::from);
+            print_json(&runtime_status(home.as_deref())?)
+        }
+        "stop" => {
+            let f = Flags::parse(&args[1..]);
+            let pid: u32 = f
+                .positional
+                .first()
+                .and_then(|p| p.parse().ok())
+                .ok_or_else(|| {
+                    ForgeError::InvalidManifest("runtime stop requires a numeric pid".to_string())
+                })?;
+            print_json(&serde_json::json!({ "ok": stop_process(pid)?, "pid": pid }))
+        }
+        "restart" => {
+            let f = Flags::parse(&args[1..]);
+            let command = f.positional.join(" ");
+            if command.trim().is_empty() {
+                return Err(ForgeError::InvalidManifest(
+                    "runtime restart requires the command line".to_string(),
+                ));
+            }
+            print_json(&serde_json::json!({ "pid": restart_process(&command)? }))
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
             "unknown runtime subcommand '{sub}'"
+        ))),
+    }
+}
+
+fn run_logs(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("logs requires a subcommand (list)".to_string())
+    })?;
+    if sub != "list" {
+        return Err(ForgeError::InvalidManifest(format!(
+            "unknown logs subcommand '{sub}'"
         )));
     }
-    let f = Flags::parse(&args[1..]);
-    let home = f.get("home").map(PathBuf::from);
-    let status = runtime_status(home.as_deref())?;
-    print_json(&status)
+    print_json(&list_install_logs())
 }
 
 fn run_search(args: &[String]) -> Result<(), ForgeError> {
@@ -866,6 +920,8 @@ USAGE:
   forge-core composer resolve (stdin: 组件 JSON 数组)
   forge-core runtime status [--home DIR]
   forge-core search QUERY [--registry PATH]
-  forge-core update check --registry PATH [--home DIR]"#
+  forge-core update check --registry PATH [--home DIR]
+  forge-core runtime stop PID | runtime restart COMMAND
+  forge-core logs list"#
     );
 }

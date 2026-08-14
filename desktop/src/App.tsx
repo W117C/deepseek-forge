@@ -5,11 +5,12 @@ import Dashboard from "./pages/Dashboard";
 import Import from "./pages/Import";
 import Placeholder from "./pages/Placeholder";
 import Agents from "./pages/Agents";
+import Composer from "./pages/Composer";
 import Processes from "./pages/Processes";
 import Sessions from "./pages/Sessions";
 import Updates from "./pages/Updates";
+import Logs from "./pages/Logs";
 import {
-  LogsPage,
   SecurityPage,
   SettingsPage,
   SourcesPage,
@@ -40,13 +41,10 @@ export default function App() {
             path="/plugins"
             element={<Placeholder title="My Plugins" phase="Phase 3" />}
           />
-          <Route
-            path="/bundles"
-            element={<Placeholder title="Bundles" phase="Phase 6" />}
-          />
+          <Route path="/bundles" element={<Composer />} />
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/processes" element={<Processes />} />
-          <Route path="/logs" element={<LogsPage />} />
+          <Route path="/logs" element={<Logs />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/sources" element={<SourcesPage />} />
           <Route path="/updates" element={<Updates />} />

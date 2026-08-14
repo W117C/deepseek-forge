@@ -188,3 +188,36 @@ export interface UpdateEntry {
 export function updateCheck(): Promise<UpdateEntry[]> {
   return call<UpdateEntry[]>("update_check");
 }
+
+/** Mirror of forge_core::composer::ResolveReport. */
+export interface ResolveReport {
+  order: string[];
+  conflicts: string[];
+  missing: string[];
+}
+
+export function composerResolve(ids: string[]): Promise<ResolveReport> {
+  return call<ResolveReport>("composer_resolve", { ids });
+}
+
+/** Mirror of forge_core::logutil::LogEntry. */
+export interface LogEntry {
+  ts: string;
+  id: string;
+  version: string;
+  ok: boolean;
+  steps: string[];
+  code: string | null;
+}
+
+export function logsList(): Promise<LogEntry[]> {
+  return call<LogEntry[]>("logs_list");
+}
+
+export function runtimeStop(pid: number): Promise<{ ok: boolean; pid: number }> {
+  return call<{ ok: boolean; pid: number }>("runtime_stop", { pid });
+}
+
+export function runtimeRestart(command: string): Promise<{ pid: number | null }> {
+  return call<{ pid: number | null }>("runtime_restart", { command });
+}
