@@ -12,14 +12,14 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { registryList, runtimeStatus, systemStatus, updateCheck } from "../ipc";
-import type { RegistrySummary, SystemStatus } from "../ipc";
+import { logsList, registryList, runtimeStatus, systemStatus, updateCheck } from "../ipc";
+import type { LogEntry, RegistrySummary, SystemStatus } from "../ipc";
 import { useI18n } from "../i18n";
 
 type LoadState =
   | { status: "loading" }
   | { status: "error"; message: string }
-  | { status: "ready"; system: SystemStatus; packages: RegistrySummary[]; outdated: number; sessions: number };
+  | { status: "ready"; system: SystemStatus; packages: RegistrySummary[]; outdated: number; sessions: number; activity: LogEntry[] };
 
 export default function Dashboard() {
   const { t } = useI18n();
@@ -32,14 +32,16 @@ export default function Dashboard() {
       registryList(),
       updateCheck().catch(() => []),
       runtimeStatus().catch(() => ({ sessionCount: 0 })),
+      logsList().catch(() => []),
     ])
-      .then(([system, packages, updates, runtime]) => {
+      .then(([system, packages, updates, runtime, logs]) => {
         if (!cancelled) {
           const outdated = Array.isArray(updates) ? updates.filter((u) => u.outdated).length : 0;
           const sessions = typeof runtime === "object" && runtime !== null && "sessionCount" in runtime
             ? Number((runtime as { sessionCount?: number }).sessionCount ?? 0)
             : 0;
-          setState({ status: "ready", system, packages, outdated, sessions });
+          const activity = Array.isArray(logs) ? logs.slice(0, 6) : [];
+          setState({ status: "ready", system, packages, outdated, sessions, activity });
         }
       })
       .catch((err: unknown) => {
@@ -75,7 +77,7 @@ export default function Dashboard() {
     );
   }
 
-  const { system, packages, outdated, sessions } = state;
+  const { system, packages, outdated, sessions, activity } = state;
 
   return (
     <div className="page">
@@ -125,6 +127,28 @@ export default function Dashboard() {
             body={sessions > 0 ? t("db.sessionsBody", { n: sessions }) : t("db.sessionsNone")}
           />
         </Link>
+      </section>
+
+      <section className="dashboard-section">
+        <h2 className="dashboard-section-title">{t("db.activity")}</h2>
+        {activity.length === 0 ? (
+          <div className="card empty-card">
+            <p className="empty-card-body">{t("db.noActivity")}</p>
+          </div>
+        ) : (
+          <div className="card">
+            {activity.map((e, i) => (
+              <div key={i} className="registry-row">
+                <span className="registry-k mono">{e.ts}</span>
+                <span className="registry-v">
+                  <span className="badge badge-community">{e.kind}</span>{" "}
+                  {e.id} v{e.version} — {e.ok ? t("lg.ok") : t("lg.failed")}
+                  {e.code ? " · " + e.code : ""}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

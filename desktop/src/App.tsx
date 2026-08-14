@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./layout/Sidebar";
 import Dashboard from "./pages/Dashboard";
@@ -18,10 +18,24 @@ import {
   SettingsPage,
   SourcesPage,
 } from "./pages/SystemPages";
+import CommandPalette from "./components/CommandPalette";
 
 export default function App() {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", "dark");
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
@@ -50,6 +64,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </div>
   );
 }

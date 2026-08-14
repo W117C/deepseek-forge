@@ -189,6 +189,10 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "mp.onlyInstalled": { zh: "只看已安装", en: "Installed only" },
   "mp.allPackages": { zh: "全部插件", en: "All packages" },
   "mp.scanned": { zh: "已扫描", en: "Scanned" },
+  "palette.placeholder": { zh: "输入命令或页面名称…", en: "Type a command or page name…" },
+  "palette.hint": { zh: "↑↓ 选择 · Enter 跳转 · Esc 关闭", en: "↑↓ select · Enter go · Esc close" },
+  "db.activity": { zh: "最近活动", en: "Recent activity" },
+  "db.noActivity": { zh: "暂无活动记录（安装/安全扫描后会出现）。", en: "No activity yet (appears after installs / security scans)." },
 };
 
 interface I18n {
