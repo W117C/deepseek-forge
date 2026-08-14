@@ -55,3 +55,9 @@ cd crates/forge-core && cargo test && cargo build --release
 for t in test/e2e*.mjs; do node "$t" || exit 1; done
 cd desktop && npm install && npm run build && npm run tauri build -- --debug --no-bundle
 ```
+
+## 6c. 最后三项增量（安全日志 / AI 接口 / D1 分发）
+
+- ① 安全扫描日志聚合：LogEntry 加 kind=install|security；安装管线（含阻断）落 ~/.deepseek-forge/logs/security/；Logs 页分节（commit 2ae3a6a，实测 verdict=pass score=99）
+- ② Adapter AI 供应商接口：provider_from_env(FORGE_AI_ENDPOINT/FORGE_AI_KEY) 纯函数；无配置回退 rules 且明示，绝不伪造 AI（commit ccc6bc0，测试 49/49）
+- ③ D1 npm 二进制分发：forge-core-bin.mjs 发布模式解析 node_modules/@deepseek-forge/bin/<platform>/；CI 三平台矩阵 + upload-artifact；runbook 更新（commit a5fd287，实测 PUBLISHED_MODE_OK；CI 无法本地执行如实记录）

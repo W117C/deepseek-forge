@@ -213,3 +213,11 @@ Model/Context 等展示字段以真实来源为准（dsh 版本、会话文件�
 | ④ Composer 图形 UI + resolve | ✅ | 52ecb5d |
 | ⑤ 进程 stop/restart（Core 执行） | ✅ | 52ecb5d |
 | ⑥ 安装日志落盘 + Logs 页 | ✅ | 52ecb5d |
+
+### 最后三项增量（完成）
+
+| 项 | 状态 | Commit |
+| --- | --- | --- |
+| ① 安全扫描日志聚合 | ✅ | 2ae3a6a |
+| ② Adapter AI 供应商接口（rules 回退明示） | ✅ | ccc6bc0 |
+| ③ D1 npm 二进制分发路径 + CI 矩阵 | ✅ | a5fd287 |
