@@ -25,13 +25,13 @@ registry IPC 全家、真实 Install（Rust 管线）、rollback、update check 
 | 3 | 真实 Registry 数据 ✅ | scripts/curate-ecosystem.mjs：从 deepseekdocs.com/ecosystem 内嵌 JSON 提取 listed 条目（真实 name/desc/repo/owner/category/stars），GitHub API 拉真实 license → 写入 ~/.deepseek-forge/registry/packages/*/package.json（forge.package.v1，source=github，upstream 完整 provenance，license 真实） |
 | 4 | Marketplace 页 ✅ | desktop Marketplace.tsx：真实 registry_list → 搜索 + 分类 + 排序（Popular=stars）+ 已安装过滤 + 卡片（name/desc/version/stars/license/category/security/install 状态，真实扫描结论） |
 | 5 | Plugin Detail ✅ | 详情页：全部元数据 + provenance + capabilities + 安全 + Install/Uninstall（收录式安装，诚实标注）+ used-by |
-| 6 | 真实 Install ✅ | IPC install_package(id)：registry 条目有 artifact → install-from-registry；无 artifact 的 GitHub 源 → 收录式安装（clone→scan→LICENSE 门禁→state 登记→日志），步骤流由 Core 返回并展示 |
+| 6 | 真实 Install ✅ | IPC install_package(id)：registry 条目有 artifact → install-from-registry；无 artifact 的 GitHub 源 → 收录式安装（clone→scan→LICENSE 门禁→state 登记→日志）；install-progress 事件（stderr NDJSON → Tauri event）实时驱动 UI 步骤（resolving/cloning/scanning/registering/installed） |
 | 7-8 | My Plugins / Uninstall ✅ | 真实 state_list + uninstall 确认弹窗 + used-by 拦截（dependents 反向依赖） |
 | 9 | Dependency Tracking ✅ | dependents 命令（state dependencies 声明 + Bundle components）+ UI 拦截卸载；import-github 登记 dependencies |
 | 10-11 | Bundle Composer + 装/卸 ✅ | bundle create/list/install/uninstall（Rust bin + IPC）；Composer 页名称输入/Create Bundle/Install All/Uninstall |
 | 12 | Updates ✅ | update check 纳入 plugin；update apply（plugin/imported 重新收录；artifact 走 install-from-registry）；Updates 页 Update/Update All |
 | 13 | Activity ✅ | Dashboard 最近活动（logs_list 真实聚合）+ 真实更新数/会话数 |
-| 14 | Security UX 🔄 | capabilities 人类化标签（中英）+ 扫描结论徽章已接入；风险徽章随扫描数据接入 |
+| 14 | Security UX ✅ | capabilities 人类化标签（中英）+ 扫描结论徽章 + 收录登记真实权限（network/filesystem/env 来自扫描）在详情页/安全页展示 |
 | 15 | Empty/Loading/Error ✅ | 全页面四态 + i18n（默认中文/可切英文）+ ⌘K 命令面板 + 设置页语言切换 |
 | 16-18 | 全量测试 + Desktop build + E2E 🔄 | cargo test 52/52 + e2e-updates 11/11 + e2e-smoke 4/4 + e2e-registry 25/25；全量 19 套件 Gate 由 CI 执行 |
 
