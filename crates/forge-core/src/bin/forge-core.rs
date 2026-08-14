@@ -21,7 +21,7 @@ use forge_core::manifest::{
     load_legacy_agent_dir, load_legacy_agent_dir_strict, load_package_file,
 };
 use forge_core::registry::{LocalRegistry, PackageSummary, RegistryProvider};
-use forge_core::runtime::{restart_process, runtime_status, stop_process};
+use forge_core::runtime::{restart_process, run_harness_captured, runtime_status, stop_process};
 use forge_core::security::{scan_agent_dir, scan_text_report};
 use forge_core::signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload};
 use forge_core::snapshot::iso_utc_colon;
@@ -832,6 +832,20 @@ fn run_runtime(args: &[String]) -> Result<(), ForgeError> {
             }
             print_json(&serde_json::json!({ "pid": restart_process(&command)? }))
         }
+        "run" => {
+            let f = Flags::parse(&args[1..]);
+            let profile = f.get("profile").ok_or_else(|| {
+                ForgeError::InvalidManifest("runtime run requires --profile".to_string())
+            })?;
+            let port = f.get("port").and_then(|p| p.parse::<u16>().ok());
+            let home = f
+                .get("home")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| dsh_home(None));
+            let bin = resolve_bin(f.get("bin"))?;
+            let (pid, log_file) = run_harness_captured(&bin, profile, port, &home)?;
+            print_json(&serde_json::json!({ "pid": pid, "logFile": log_file }))
+        }
         _ => Err(ForgeError::InvalidManifest(format!(
             "unknown runtime subcommand '{sub}'"
         ))),
@@ -921,7 +935,7 @@ USAGE:
   forge-core runtime status [--home DIR]
   forge-core search QUERY [--registry PATH]
   forge-core update check --registry PATH [--home DIR]
-  forge-core runtime stop PID | runtime restart COMMAND
+  forge-core runtime stop PID | runtime restart COMMAND | runtime run --profile NAME [--port N]
   forge-core logs list"#
     );
 }

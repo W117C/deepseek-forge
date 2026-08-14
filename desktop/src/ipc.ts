@@ -204,7 +204,7 @@ export function composerResolve(ids: string[]): Promise<ResolveReport> {
 export interface LogEntry {
   ts: string;
   id: string;
-  kind: "install" | "security";
+  kind: "install" | "security" | "harness";
   version: string;
   ok: boolean;
   steps: string[];

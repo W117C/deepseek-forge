@@ -33,7 +33,9 @@ pub use dsh::{
 pub use errors::{ErrorEnvelope, ForgeError};
 pub use events::{EventBus, ForgeEvent};
 pub use import::{analyze_dir, analyze_source, parse_github_url, RepositoryAnalysis};
-pub use logutil::{append_install_log, list_install_logs, logs_dir, LogEntry};
+pub use logutil::{
+    append_install_log, forge_root, list_install_logs, list_logs, logs_dir, LogEntry,
+};
 pub use manifest::{
     load_legacy_agent_dir, load_package_file, normalize_legacy_agent, parse_package_json,
     LEGACY_SCHEMA, SCHEMA_V1,
@@ -49,8 +51,8 @@ pub use registry::{
     RegistryProvider, SecurityMeta,
 };
 pub use runtime::{
-    list_processes, list_sessions, parse_ps_line, restart_process, runtime_status, stop_process,
-    ProcessSummary, RuntimeStatus, SessionSummary,
+    list_processes, list_sessions, parse_ps_line, restart_process, run_harness_captured,
+    runtime_status, stop_process, ProcessSummary, RuntimeStatus, SessionSummary,
 };
 pub use security::{scan_agent_dir, scan_text, scan_text_report, ScanReport, SecurityFinding};
 pub use signing::{canonical_payload, keygen, sha256hex, sign_payload, verify_payload, Keypair};

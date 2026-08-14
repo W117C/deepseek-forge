@@ -26,7 +26,7 @@ fn default_kind() -> String {
     "install".to_string()
 }
 
-fn log_root() -> PathBuf {
+pub fn forge_root() -> PathBuf {
     match std::env::var_os("FORGE_HOME") {
         Some(h) if !h.is_empty() => PathBuf::from(h),
         _ => match std::env::var_os("HOME") {
@@ -34,6 +34,10 @@ fn log_root() -> PathBuf {
             None => PathBuf::from(".deepseek-forge"),
         },
     }
+}
+
+fn log_root() -> PathBuf {
+    forge_root()
 }
 
 pub fn append_install_log(
@@ -99,6 +103,31 @@ pub fn append_security_log(
 pub fn list_logs() -> Vec<LogEntry> {
     let root = log_root().join("logs");
     let mut entries = Vec::new();
+    // harness：日志文件本身（无 JSONL 结构，按文件枚举）
+    let harness_dir = root.join("harness");
+    if let Ok(rd) = fs::read_dir(&harness_dir) {
+        for e in rd.flatten() {
+            let p = e.path();
+            if p.extension().and_then(|x| x.to_str()) != Some("log") {
+                continue;
+            }
+            let meta = fs::metadata(&p);
+            let size = meta.as_ref().map(|m| m.len()).unwrap_or(0);
+            let ts = p
+                .file_stem()
+                .map(|s| s.to_string_lossy().to_string())
+                .unwrap_or_default();
+            entries.push(LogEntry {
+                ts: ts.clone(),
+                id: ts.split('-').last().unwrap_or("harness").to_string(),
+                kind: "harness".to_string(),
+                version: "log".to_string(),
+                ok: true,
+                steps: vec![format!("{} bytes", size)],
+                code: Some(p.to_string_lossy().to_string()),
+            });
+        }
+    }
     for kind in ["install", "security"] {
         let dir = root.join(kind);
         if let Ok(rd) = fs::read_dir(&dir) {

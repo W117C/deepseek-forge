@@ -46,3 +46,8 @@ CLI 的安装/签名/安全经 lib 委托桥调用 forge-core Rust 二进制；n
 2. 发布时从 CI 下载三平台产物，打包为可选依赖包 @deepseek-forge/bin（目录结构 node_modules/@deepseek-forge/bin/<platform>/forge-core[.exe]）。
 3. lib/forge-core-bin.mjs 的解析优先级：FORGE_CORE_BIN → 仓库内 release/debug（开发）→ node_modules/@deepseek-forge/bin/<platform>/（发布）→ PATH。
 4. 当前仓库开发/CI 流程不受影响（e2e job 已前置 cargo build --release）。
+
+补充：@deepseek-forge/bin 骨架已就绪（packages/forge-bin/）。发布步骤：
+1. CI 下载三平台 artifact → bash packages/forge-bin/pack.sh <dir>
+2. cd packages/forge-bin && npm publish
+3. 根包 package.json 增加 optionalDependencies: { "@deepseek-forge/bin": "0.4.0" }（发布版）

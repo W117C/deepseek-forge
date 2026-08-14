@@ -5,7 +5,7 @@
 //! Model/context figures only appear when a real source provides them.
 
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use serde::Serialize;
 
@@ -150,6 +150,41 @@ pub fn restart_process(command: &str) -> Result<Option<u32>, ForgeError> {
         .parse::<u32>()
         .ok();
     Ok(pid)
+}
+
+/// Detached harness launch with stdout/stderr captured to a harness log
+/// (~/.deepseek-forge/logs/harness/<ts>-<profile>.log). Returns pid + log path.
+pub fn run_harness_captured(
+    bin: &str,
+    profile: &str,
+    port: Option<u16>,
+    home: &Path,
+) -> Result<(u32, PathBuf), ForgeError> {
+    let log_dir = crate::logutil::forge_root().join("logs").join("harness");
+    fs::create_dir_all(&log_dir).map_err(ForgeError::Io)?;
+    let log_file = log_dir.join(format!(
+        "{}-{}.log",
+        crate::snapshot::iso_utc_colon(),
+        profile
+    ));
+    let log = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file)
+        .map_err(ForgeError::Io)?;
+    use std::process::Stdio;
+    let mut cmd = std::process::Command::new(bin);
+    cmd.args(["--profile", profile]);
+    if let Some(p) = port {
+        cmd.args(["--port", &p.to_string()]);
+    }
+    let child = cmd
+        .env("DSH_HOME", home)
+        .stdout(Stdio::from(log.try_clone().map_err(ForgeError::Io)?))
+        .stderr(Stdio::from(log))
+        .spawn()
+        .map_err(ForgeError::Io)?;
+    Ok((child.id(), log_file))
 }
 
 /// Observe the Harness and its runtime state (never starts/stops anything here).
