@@ -52,15 +52,156 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "common.failed": { zh: "失败", en: "Failed" },
   "common.success": { zh: "成功", en: "Success" },
   "common.details": { zh: "详情", en: "Details" },
+  "updates.title": { zh: "更新", en: "Updates" },
+  "updates.subAvailable": { zh: "本地 Registry 中有 {n} 个可更新项。", en: "{n} update(s) available in the local registry." },
+  "updates.subNone": { zh: "本地 Registry 中没有可用的更新。", en: "No updates available in the local registry." },
+  "updates.update": { zh: "更新", en: "Update" },
+  "updates.updateAll": { zh: "全部更新", en: "Update All" },
+  "updates.updating": { zh: "更新中…", en: "Updating…" },
+  "updates.upToDate": { zh: "已是最新", en: "Up to date" },
+  "updates.available": { zh: "可更新", en: "Update available" },
+  "updates.nothingInstalled": { zh: "尚未安装任何内容", en: "Nothing installed" },
+  "updates.nothingBody": { zh: "已安装的包会在这里与本地 Registry 对比。", en: "Installed packages will be compared against the local registry here." },
+  "updates.applied": { zh: "已更新", en: "Updated" },
+  "plugins.subtitle": { zh: "已安装 / 已收录的插件（与 CLI 共享状态库）。", en: "Installed / imported plugins (shared state store with the CLI)." },
+  "plugins.emptyTitle": { zh: "还没有安装插件", en: "No plugins installed yet" },
+  "plugins.emptyBody1": { zh: "去市场看看", en: "Browse the marketplace" },
+  "plugins.emptyBody2": { zh: "，收录/安装你需要的开源能力。", en: " and import the open-source capabilities you need." },
+  "plugins.imported": { zh: "已收录（源码+扫描）", en: "Imported (source + scan)" },
+  "plugins.installed": { zh: "已安装", en: "Installed" },
+  "plugins.uninstall": { zh: "卸载", en: "Uninstall" },
+  "plugins.confirmUninstall": { zh: "确定卸载 {id}？该插件将从本地 Forge 环境移除登记。", en: "Uninstall {id}? Its registration will be removed from the local Forge environment." },
+  "plugins.blockedByDependents": { zh: "无法卸载：仍被以下依赖使用（先卸载或调整它们）", en: "Cannot uninstall: still used by these dependents (remove or adjust them first)" },
+  "plugins.usedBy": { zh: "被 {n} 项依赖", en: "Used by {n}" },
+  "plugins.score": { zh: "安全评分", en: "Security score" },
+  "pd.description": { zh: "描述", en: "Description" },
+  "pd.openSource": { zh: "由开源社区驱动", en: "Powered by Open Source" },
+  "pd.originalAuthor": { zh: "原作者", en: "Original Author" },
+  "pd.lastUpdated": { zh: "最近更新", en: "Last Updated" },
+  "pd.dependencies": { zh: "依赖", en: "Dependencies" },
+  "pd.noDeps": { zh: "无依赖。", en: "No dependencies." },
+  "pd.readme": { zh: "README / 变更日志", en: "README / Changelog" },
+  "pd.readmeEmpty": { zh: "收录条目暂未抓取 README；可点击上方 GitHub 链接查看原文。", en: "No README captured for this entry yet; open the GitHub link above." },
+  "pd.capsEmpty": { zh: "（收录条目未经适配，暂无能力声明）", en: "(Not yet adapted; no capability declaration.)" },
+  "pd.importedResult": { zh: "已收录 ✓ 流程：", en: "Imported ✓ steps:" },
+  "co.subtitle": { zh: "从本地 Registry 组合包，解析依赖图并一键安装。", en: "Combine packages from the local registry into an agent composition." },
+  "co.available": { zh: "可用组件", en: "Available" },
+  "co.empty": { zh: "本地 Registry 为空 —— 先收录一个项目。", en: "Local registry is empty — import a project first." },
+  "co.composition": { zh: "当前组合", en: "Composition" },
+  "co.selectHint": { zh: "在左侧选择包。", en: "Select packages on the left." },
+  "co.resolve": { zh: "解析依赖", en: "Resolve" },
+  "co.bundleNamePlaceholder": { zh: "组合名称（如 Research Stack）", en: "Bundle name (e.g. Research Stack)" },
+  "co.createBundle": { zh: "创建组合", en: "Create Bundle" },
+  "co.bundles": { zh: "我的组合", en: "Bundles" },
+  "co.installAll": { zh: "一键安装", en: "Install All" },
+  "co.confirmUninstall": { zh: "确定卸载组合 {id}？其组件登记将被移除（被其他组合引用的组件需单独处理）。", en: "Uninstall bundle {id}? Its component registrations will be removed (components referenced by other bundles need separate handling)." },
+  "co.dependencyGraph": { zh: "依赖图", en: "Dependency graph" },
+  "co.installNote": { zh: "组合产物安装走 Rust Kernel 完整管线（哈希→验签→扫描→快照→安装→健康）；图形化 Agent 构建器的组合落盘在后续接入。", en: "Bundle installs run the full Rust Kernel pipeline (hash → signature → scan → snapshot → install → health); the visual agent builder lands in a later step." },
+  "im.subtitle": { zh: "分析开源项目，评估其成为 Forge 包的可行性。全程不执行第三方代码。", en: "Analyze an open-source project before it becomes a Forge package. Nothing is executed." },
+  "im.placeholder": { zh: "https://github.com/owner/repo 或本地目录路径", en: "https://github.com/owner/repo or a local directory path" },
+  "im.analyze": { zh: "分析", en: "Analyze" },
+  "im.localHint": { zh: "分析会把源码克隆到本地缓存（不执行第三方代码）。", en: "Analysis clones source into a local cache (no third-party code is executed)." },
+  "im.risk": { zh: "风险", en: "Risk" },
+  "im.license": { zh: "许可", en: "License" },
+  "im.language": { zh: "语言", en: "Language" },
+  "im.entryPoint": { zh: "入口", en: "Entry point" },
+  "im.forgeCompat": { zh: "Forge 兼容", en: "Forge compatibility" },
+  "im.noLicense": { zh: "未检测到许可证。Forge 拒绝收录无许可代码（Principle 5）。", en: "No license detected. Forge refuses to package unlicensed code (Principle 5)." },
+  "im.capsSecurity": { zh: "能力与安全", en: "Capabilities & security" },
+  "im.networkRefs": { zh: "{n} 处网络引用", en: "{n} network reference(s)" },
+  "im.fsWrites": { zh: "{n} 处文件写入", en: "{n} filesystem write(s)" },
+  "im.envVars": { zh: "{n} 个环境变量", en: "{n} environment variable(s)" },
+  "im.dangerous": { zh: "{n} 条危险命令", en: "{n} dangerous command(s)" },
+  "im.secrets": { zh: "{n} 处密钥发现", en: "{n} secret finding(s)" },
+  "im.scanLine": { zh: "扫描：{score}/100（{verdict}，{files} 个文件）", en: "Scan: {score}/100 ({verdict}, {files} files)" },
+  "im.deps": { zh: "依赖（{n}）", en: "Dependencies ({n})" },
+  "im.createProposal": { zh: "生成适配方案", en: "Create Adapter Proposal" },
+  "im.rulesGen": { zh: "规则型生成器（非 AI），生成后必须人工审阅。", en: "Rule-based generator (not AI); human review required." },
+  "im.requiresReview": { zh: "需人工审阅（高风险/危险命令）", en: "Requires human review (high risk / dangerous commands)" },
+  "im.generateNote": { zh: "落地为文件：forge-core adapter generate <源> --out <目录>（骨架 install/configure/healthcheck 待人工补充后才会被使用）。", en: "Materialize with: forge-core adapter generate <source> --out <dir> (skeleton install/configure/healthcheck must be completed by a human before use)." },
+  "ag.loading": { zh: "正在加载已安装的 Agent…", en: "Loading installed agents…" },
+  "ag.subtitle": { zh: "已安装的包（与 CLI 通过 DSH 状态库共享）。", en: "Installed packages (shared with the CLI via the DSH state store)." },
+  "ag.emptyTitle": { zh: "尚未安装任何内容", en: "Nothing installed yet" },
+  "ag.emptyBody": { zh: "先收录项目或从本地 Registry 安装（CLI：agenthub install …）。", en: "Import a project or install from the local registry first (CLI: agenthub install …)." },
+  "ag.rollback": { zh: "回滚", en: "Rollback" },
+  "db.loading": { zh: "正在加载系统状态…", en: "Loading system status…" },
+  "db.loadFailed": { zh: "无法加载系统状态", en: "Could not load system status" },
+  "db.subtitle": { zh: "本地 Registry 与运行时状态。", en: "Local registry and runtime status." },
+  "db.coreVersion": { zh: "内核版本", en: "Core version" },
+  "db.coreVersionDetail": { zh: "Forge Core 内核版本", en: "Forge Core kernel version" },
+  "db.registryPackages": { zh: "Registry 包数", en: "Registry packages" },
+  "db.registryPackagesDetail": { zh: "本地 Registry 中可用（尚未安装）", en: "Available in the local registry (not installed yet)" },
+  "db.dshDetected": { zh: "DSH 检测", en: "DSH detected" },
+  "db.yes": { zh: "是", en: "Yes" },
+  "db.no": { zh: "否", en: "No" },
+  "db.dshDetailYes": { zh: "DeepSeek Harness CLI 可用", en: "DeepSeek Harness CLI is available" },
+  "db.dshDetailNo": { zh: "未找到 DeepSeek Harness CLI (dsh)", en: "DeepSeek Harness CLI (dsh) was not found" },
+  "db.registry": { zh: "Registry", en: "Registry" },
+  "db.path": { zh: "路径", en: "Path" },
+  "db.status": { zh: "状态", en: "Status" },
+  "db.available": { zh: "可用", en: "Available" },
+  "db.unavailable": { zh: "不可用", en: "Unavailable" },
+  "db.name": { zh: "名称", en: "Name" },
+  "db.registryMissing": { zh: "在 {path} 未找到 Registry。恢复方法：在该目录创建 Registry（registry.json + packages/），或将 FORGE_REGISTRY 环境变量指向已初始化的 Registry 目录。", en: "No registry found at {path}. To recover, create a registry there (a registry.json plus packages/) or point the FORGE_REGISTRY environment variable at an initialized registry directory." },
+  "db.updatesBody": { zh: "{n} 个包可更新。", en: "{n} package(s) can be updated." },
+  "db.updatesNone": { zh: "没有可用的更新。", en: "No updates available." },
+  "db.sessionsBody": { zh: "{n} 个会话。", en: "{n} session(s)." },
+  "db.sessionsNone": { zh: "暂无会话。", en: "No sessions yet." },
+  "se.loading": { zh: "正在加载运行时状态…", en: "Loading runtime status…" },
+  "se.subtitle": { zh: "DeepSeek Harness 运行时状态。", en: "DeepSeek Harness runtime status." },
+  "se.harness": { zh: "Harness", en: "Harness" },
+  "se.running": { zh: "运行中", en: "Running" },
+  "se.notFound": { zh: "未找到", en: "Not found" },
+  "se.sessions": { zh: "会话", en: "Sessions" },
+  "se.dshProcesses": { zh: "dsh 进程", en: "Dsh processes" },
+  "se.viaPs": { zh: "来自 ps 观测", en: "Observed via ps" },
+  "se.recentSessions": { zh: "最近会话", en: "Recent sessions" },
+  "se.noSessions": { zh: "暂无会话", en: "No sessions yet" },
+  "se.noSessionsBody": { zh: "在 DeepSeek Harness 中开始对话后，会话会出现在这里。", en: "Start a conversation in DeepSeek Harness and it will appear here." },
+  "pr.loading": { zh: "正在加载进程…", en: "Loading processes…" },
+  "pr.subtitle": { zh: "来自系统观测的 dsh 进程（无伪造条目）。", en: "dsh processes observed from the system (no fabricated entries)." },
+  "pr.emptyTitle": { zh: "没有 dsh 进程", en: "No dsh processes" },
+  "pr.emptyBody": { zh: "启动 DeepSeek Harness 后，其进程会出现在这里。", en: "Start DeepSeek Harness and its processes will appear here." },
+  "pr.restart": { zh: "重启", en: "Restart" },
+  "pr.stop": { zh: "停止", en: "Stop" },
+  "pr.note": { zh: "Stop/Restart 由 Rust Core 执行（kill -TERM / 分离重启），UI 不直接操作进程。", en: "Stop/Restart are performed by Rust Core (kill -TERM / detached restart); the UI never operates on processes directly." },
+  "lg.loading": { zh: "正在加载日志…", en: "Loading logs…" },
+  "lg.subtitle": { zh: "安装与安全扫描日志（只追加 JSONL）。", en: "Install and security-scan logs (append-only JSONL)." },
+  "lg.emptyTitle": { zh: "暂无安装日志", en: "No install logs yet" },
+  "lg.emptyBody": { zh: "每次 Forge 安装/更新都会写入一条记录。", en: "Each Forge install/update writes an entry here." },
+  "lg.ok": { zh: "成功", en: "ok" },
+  "lg.failed": { zh: "失败", en: "failed" },
+  "lg.verdict": { zh: "判定", en: "verdict" },
+  "sy.securitySubtitle": { zh: "已安装包：来自 Registry 支撑状态的信任与扫描评分。", en: "Installed packages: trust and scan score from the registry-backed state." },
+  "sy.noInstalledPackages": { zh: "没有已安装的包", en: "No installed packages" },
+  "sy.noInstalledBody": { zh: "安装一个包后，这里会显示其信任级别与扫描评分。", en: "Install a package to see its trust level and scan score here." },
+  "sy.trust": { zh: "信任", en: "trust" },
+  "sy.score": { zh: "评分", en: "score" },
+  "sy.securityNote": { zh: "安装时已执行：SHA256 + Ed25519 验签 + 静态扫描 + 信任门禁（详情见 CLI 安装输出）。", en: "At install time we run: SHA256 + Ed25519 signature check + static scan + trust gating (see CLI install output)." },
+  "sy.sourcesSubtitle": { zh: "Registry 提供者（Local-first）。", en: "Registry providers (Local-first)." },
+  "sy.loading": { zh: "加载中…", en: "Loading…" },
+  "sy.localRegistry": { zh: "本地 Registry", en: "Local Registry" },
+  "sy.gitNote": { zh: "Git Registry 与 HTTP/Private Registry 为后续阶段能力（协议已预留，不提前实现）。", en: "Git and HTTP/Private registries are later-stage capabilities (protocol reserved, not implemented early)." },
+  "sy.settingsSubtitle": { zh: "只显示有真实功能支撑的设置。", en: "Only settings backed by real functionality are shown." },
+  "sy.language": { zh: "语言", en: "Language" },
+  "sy.themeFixed": { zh: "主题当前固定为 dark（设计系统 token）。", en: "The theme is fixed to dark for now (design-system tokens)." },
+  "sy.moreSettingsLater": { zh: "其余设置项将随对应功能（默认 Registry、验证策略、日志级别）逐步开放。", en: "Other settings open up with their features (default registry, verification policy, log level)." },
+  "mp.onlyInstalled": { zh: "只看已安装", en: "Installed only" },
+  "mp.allPackages": { zh: "全部插件", en: "All packages" },
+  "mp.scanned": { zh: "已扫描", en: "Scanned" },
 };
 
 interface I18n {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string, vars?: Record<string, string | number>) => string;
 }
 
-const I18nContext = createContext<I18n>({ locale: "zh", setLocale: () => {}, t: (k) => k });
+const I18nContext = createContext<I18n>({
+  locale: "zh",
+  setLocale: () => {},
+  t: (k) => k,
+});
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
@@ -82,10 +223,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute("lang", locale);
   }, [locale]);
 
-  const t = (key: string) => {
+  const t = (key: string, vars?: Record<string, string | number>) => {
     const entry = DICT[key];
-    if (!entry) return key;
-    return locale === "zh" ? entry.zh : entry.en;
+    let text = entry ? (locale === "zh" ? entry.zh : entry.en) : key;
+    if (vars) {
+      for (const [k, v] of Object.entries(vars)) {
+        text = text.split("{" + k + "}").join(String(v));
+      }
+    }
+    return text;
   };
 
   return (

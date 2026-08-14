@@ -11,8 +11,10 @@ import {
   registryList,
 } from "../ipc";
 import type { RegistrySummary, ResolveReport } from "../ipc";
+import { useI18n } from "../i18n";
 
 export default function Composer() {
+  const { t } = useI18n();
   const [available, setAvailable] = useState<RegistrySummary[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
@@ -59,7 +61,7 @@ export default function Composer() {
   }
 
   async function uninstallBundle(id: string) {
-    if (!window.confirm("Uninstall bundle " + id + "?\n其组件登记将被移除（被其他组合引用的组件需单独处理）。")) return;
+    if (!window.confirm(t("co.confirmUninstall", { id }))) return;
     setBundleBusy("uninstall:" + id);
     setBundleErr(null);
     try {
@@ -105,8 +107,8 @@ export default function Composer() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Composer</h1>
-        <p className="page-sub">Combine packages from the local registry into an agent composition.</p>
+        <h1 className="page-heading">{t("nav.bundles")}</h1>
+        <p className="page-sub">{t("co.subtitle")}</p>
       </header>
 
       {err && (
@@ -118,8 +120,8 @@ export default function Composer() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div className="card">
-          <h2 className="dashboard-section-title">Available</h2>
-          {pool.length === 0 && <p className="sub">Local registry is empty — import a project first.</p>}
+          <h2 className="dashboard-section-title">{t("co.available")}</h2>
+          {pool.length === 0 && <p className="sub">{t("co.empty")}</p>}
           {pool.map((p) => (
             <button
               key={p.id}
@@ -135,8 +137,8 @@ export default function Composer() {
         </div>
 
         <div className="card">
-          <h2 className="dashboard-section-title">Composition</h2>
-          {selSummary.length === 0 && <p className="sub">Select packages on the left.</p>}
+          <h2 className="dashboard-section-title">{t("co.composition")}</h2>
+          {selSummary.length === 0 && <p className="sub">{t("co.selectHint")}</p>}
           {selSummary.map((p) => (
             <div key={p.id} className="registry-row">
               <span className="registry-k mono">{p.id}</span>
@@ -146,7 +148,7 @@ export default function Composer() {
           <div style={{ marginTop: 12 }}>
             <button className="btn btn-primary" onClick={() => void resolve()} disabled={busy || selSummary.length === 0}>
               {busy ? <LoaderCircle size={14} className="spin" /> : <Boxes size={14} />}
-              Resolve
+              {t("co.resolve")}
             </button>
           </div>
         </div>
@@ -156,7 +158,7 @@ export default function Composer() {
         <input
           className="input"
           style={{ flex: 1 }}
-          placeholder="Bundle 名称（如 Research Stack）"
+          placeholder={t("co.bundleNamePlaceholder")}
           value={bundleName}
           onChange={(e) => setBundleName(e.target.value)}
         />
@@ -166,13 +168,13 @@ export default function Composer() {
           disabled={bundleBusy === "create" || selSummary.length < 2}
         >
           {bundleBusy === "create" ? <LoaderCircle size={14} className="spin" /> : null}
-          Create Bundle
+          {t("co.createBundle")}
         </button>
       </div>
 
       {bundles.length > 0 && (
         <div className="card" style={{ marginTop: 12 }}>
-          <h2 className="dashboard-section-title">Bundles</h2>
+          <h2 className="dashboard-section-title">{t("co.bundles")}</h2>
           {bundles.map((b) => (
             <div key={b.id} className="registry-row" style={{ padding: "8px 0" }}>
               <span className="registry-k mono">{b.name}</span>
@@ -181,10 +183,10 @@ export default function Composer() {
               </span>
               <button className="btn btn-ghost" onClick={() => void installBundle(b.id)} disabled={bundleBusy !== null}>
                 {bundleBusy === "install:" + b.id ? <LoaderCircle size={14} className="spin" /> : null}
-                Install All
+                {t("co.installAll")}
               </button>
               <button className="btn btn-ghost" onClick={() => void uninstallBundle(b.id)} disabled={bundleBusy !== null}>
-                Uninstall
+                {t("plugins.uninstall")}
               </button>
             </div>
           ))}
@@ -195,7 +197,7 @@ export default function Composer() {
 
       {report && (
         <div className="card" style={{ marginTop: 16 }}>
-          <h2 className="dashboard-section-title">Dependency graph</h2>
+          <h2 className="dashboard-section-title">{t("co.dependencyGraph")}</h2>
           {report.conflicts.length > 0 && (
             <div className="field-error">
               {report.conflicts.map((c) => (
@@ -220,7 +222,7 @@ export default function Composer() {
             ))}
           </div>
           <p className="field-hint" style={{ marginTop: 10 }}>
-            组合产物安装走 Rust Kernel 完整管线（哈希→验签→扫描→快照→安装→健康）；图形化 Agent 构建器的组合落盘在后续接入。
+            {t("co.installNote")}
           </p>
         </div>
       )}

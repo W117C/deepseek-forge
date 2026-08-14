@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Github, LoaderCircle, ScanSearch, TriangleAlert } from "lucide-react";
 import { adapterPropose, importAnalyze } from "../ipc";
+import { useI18n } from "../i18n";
 import type { AdapterProposal, RepositoryAnalysis } from "../ipc";
 
 type State =
@@ -23,6 +24,7 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 export default function Import() {
+  const { t } = useI18n();
   const [source, setSource] = useState("");
   const [state, setState] = useState<State>({ status: "idle" });
   const [proposal, setProposal] = useState<AdapterProposal | null>(null);
@@ -61,10 +63,8 @@ export default function Import() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">GitHub Import</h1>
-        <p className="page-sub">
-          Analyze an open-source project before it becomes a Forge package. Nothing is executed.
-        </p>
+        <h1 className="page-heading">{t("nav.import")}</h1>
+        <p className="page-sub">{t("im.subtitle")}</p>
       </header>
 
       <div className="card import-form">
@@ -72,7 +72,7 @@ export default function Import() {
           <input
             className="input"
             style={{ flex: 1 }}
-            placeholder="https://github.com/owner/repo 或本地目录路径"
+            placeholder={t("im.placeholder")}
             value={source}
             onChange={(e) => setSource(e.target.value)}
             onKeyDown={(e) => {
@@ -81,12 +81,10 @@ export default function Import() {
           />
           <button className="btn btn-primary" onClick={() => void run()} disabled={state.status === "busy" || !source.trim()}>
             {state.status === "busy" ? <LoaderCircle size={15} className="spin" /> : <ScanSearch size={15} />}
-            Analyze
+            {t("im.analyze")}
           </button>
         </div>
-        <p className="field-hint">
-          当前为 Local-first 阶段：GitHub URL 需先克隆到 ~/.deepseek-forge/cache/repos/OWNER__REPO/。
-        </p>
+        <p className="field-hint">{t("im.localHint")}</p>
       </div>
 
       {state.status === "error" && (
@@ -103,39 +101,39 @@ export default function Import() {
             <span className="mono">{a.owner ? a.owner + "/" + a.repo : a.source}</span>
             <span className="badge badge-community">{TYPE_LABEL[a.packageType] ?? a.packageType}</span>
             <span className={"badge " + (a.securityRisk === "low" ? "badge-verified" : a.securityRisk === "high" ? "badge-blocked" : "badge-community")}>
-              Risk {a.securityRisk}
+              {t("im.risk")} {a.securityRisk}
             </span>
           </div>
 
           <div className="stat-grid" style={{ marginTop: 12 }}>
-            <Stat label="License" value={a.license ?? "—"} warn={a.licenseMissing} />
-            <Stat label="Language" value={a.language ?? "—"} />
-            <Stat label="Entry point" value={a.entryPoint ?? "—"} />
-            <Stat label="Forge compatibility" value={a.forgeCompatibility} />
+            <Stat label={t("im.license")} value={a.license ?? "—"} warn={a.licenseMissing} />
+            <Stat label={t("im.language")} value={a.language ?? "—"} />
+            <Stat label={t("im.entryPoint")} value={a.entryPoint ?? "—"} />
+            <Stat label={t("im.forgeCompat")} value={a.forgeCompatibility} />
           </div>
 
           {a.licenseMissing && (
             <div className="field-error" style={{ marginTop: 10 }}>
-              No license detected. Forge refuses to package unlicensed code (Principle 5).
+              {t("im.noLicense")}
             </div>
           )}
 
-          <h3 className="eyebrow" style={{ margin: "16px 0 8px" }}>Capabilities & security</h3>
+          <h3 className="eyebrow" style={{ margin: "16px 0 8px" }}>{t("im.capsSecurity")}</h3>
           <ul className="cap-list">
-            <li>{a.networkUsage.length} network reference(s)</li>
-            <li>{a.filesystemUsage.length} filesystem write(s)</li>
-            <li>{a.envVars.length} environment variable(s)</li>
-            <li>{a.dangerousCommands.length} dangerous command(s)</li>
-            <li>{a.secretsFound.length} secret finding(s)</li>
+            <li>{t("im.networkRefs", { n: a.networkUsage.length })}</li>
+            <li>{t("im.fsWrites", { n: a.filesystemUsage.length })}</li>
+            <li>{t("im.envVars", { n: a.envVars.length })}</li>
+            <li>{t("im.dangerous", { n: a.dangerousCommands.length })}</li>
+            <li>{t("im.secrets", { n: a.secretsFound.length })}</li>
             <li>
-              Scan: {a.scan.score}/100 ({a.scan.verdict}, {a.scan.files} files)
+              {t("im.scanLine", { score: a.scan.score, verdict: a.scan.verdict, files: a.scan.files })}
             </li>
           </ul>
 
           {a.dependencies.length > 0 && (
             <>
               <h3 className="eyebrow" style={{ margin: "16px 0 8px" }}>
-                Dependencies ({a.dependencies.length})
+                {t("im.deps", { n: a.dependencies.length })}
               </h3>
               <div className="mono" style={{ fontSize: 11.5, color: "var(--muted)" }}>
                 {a.dependencies.slice(0, 12).join(" · ")}
@@ -147,9 +145,9 @@ export default function Import() {
           <div style={{ marginTop: 16, display: "flex", gap: 10, alignItems: "center" }}>
             <button className="btn btn-primary" onClick={() => void proposeAdapter()} disabled={proposing}>
               {proposing ? <LoaderCircle size={15} className="spin" /> : null}
-              Create Adapter Proposal
+              {t("im.createProposal")}
             </button>
-            <span className="field-hint">规则型生成器（非 AI），生成后必须人工审阅。</span>
+            <span className="field-hint">{t("im.rulesGen")}</span>
           </div>
 
           {proposalErr && (
@@ -161,15 +159,13 @@ export default function Import() {
               <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
                 <span className="badge badge-community">{proposal.generator === "rules" ? "rules (非 AI)" : proposal.generator}</span>
                 {proposal.requiresHumanReview && (
-                  <span className="badge badge-blocked">需人工审阅（高风险/危险命令）</span>
+                  <span className="badge badge-blocked">{t("im.requiresReview")}</span>
                 )}
               </div>
               <pre className="mono" style={{ fontSize: 11, maxHeight: 320, overflow: "auto", background: "var(--bg-soft)", padding: 10, borderRadius: 6 }}>
                 {JSON.stringify(proposal.manifest, null, 2)}
               </pre>
-              <p className="field-hint">
-                落地为文件：forge-core adapter generate &lt;源&gt; --out &lt;目录&gt;（骨架 install/configure/healthcheck 待人工补充后才会被使用）。
-              </p>
+              <p className="field-hint">{t("im.generateNote")}</p>
             </div>
           )}
         </div>

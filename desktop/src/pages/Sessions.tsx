@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CircleCheck, CircleDashed, LoaderCircle, Terminal, TriangleAlert } from "lucide-react";
 import { runtimeStatus } from "../ipc";
+import { useI18n } from "../i18n";
 import type { RuntimeStatus } from "../ipc";
 
 type State =
@@ -11,6 +12,7 @@ type State =
   | { status: "ready"; runtime: RuntimeStatus };
 
 export default function Sessions() {
+  const { t } = useI18n();
   const [state, setState] = useState<State>({ status: "loading" });
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function Sessions() {
       <div className="page">
         <div className="dashboard-loading" role="status">
           <LoaderCircle size={16} className="spin" />
-          <span>Loading runtime status…</span>
+          <span>{t("se.loading")}</span>
         </div>
       </div>
     );
@@ -52,17 +54,17 @@ export default function Sessions() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Sessions</h1>
-        <p className="page-sub">DeepSeek Harness runtime status.</p>
+        <h1 className="page-heading">{t("nav.sessions")}</h1>
+        <p className="page-sub">{t("se.subtitle")}</p>
       </header>
 
       <section className="stat-grid">
         <div className="card stat-card">
           <div className="stat-card-head">
             {runtime.harnessDetected ? <CircleCheck size={15} /> : <CircleDashed size={15} />}
-            <span className="stat-card-label">Harness</span>
+            <span className="stat-card-label">{t("se.harness")}</span>
           </div>
-          <div className="stat-card-value">{runtime.harnessDetected ? "Running" : "Not found"}</div>
+          <div className="stat-card-value">{runtime.harnessDetected ? t("se.running") : t("se.notFound")}</div>
           <div className="stat-card-detail mono">
             {runtime.harnessVersion ?? "—"} · {runtime.harnessBin ?? ""}
           </div>
@@ -70,7 +72,7 @@ export default function Sessions() {
         <div className="card stat-card">
           <div className="stat-card-head">
             <Terminal size={15} />
-            <span className="stat-card-label">Sessions</span>
+            <span className="stat-card-label">{t("se.sessions")}</span>
           </div>
           <div className="stat-card-value">{runtime.sessionCount}</div>
           <div className="stat-card-detail mono">{runtime.sessionsDir}</div>
@@ -78,22 +80,22 @@ export default function Sessions() {
         <div className="card stat-card">
           <div className="stat-card-head">
             <Terminal size={15} />
-            <span className="stat-card-label">Dsh processes</span>
+            <span className="stat-card-label">{t("se.dshProcesses")}</span>
           </div>
           <div className="stat-card-value">{runtime.processes.length}</div>
-          <div className="stat-card-detail">Observed via ps</div>
+          <div className="stat-card-detail">{t("se.viaPs")}</div>
         </div>
       </section>
 
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Recent sessions</h2>
+        <h2 className="dashboard-section-title">{t("se.recentSessions")}</h2>
         {runtime.sessions.length === 0 ? (
           <div className="card empty-card">
             <div className="empty-card-head">
               <Terminal size={15} />
-              <span className="empty-card-title">No sessions yet</span>
+              <span className="empty-card-title">{t("se.noSessions")}</span>
             </div>
-            <p className="empty-card-body">Start a conversation in DeepSeek Harness and it will appear here.</p>
+            <p className="empty-card-body">{t("se.noSessionsBody")}</p>
           </div>
         ) : (
           <div className="card">

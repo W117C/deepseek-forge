@@ -32,9 +32,6 @@ pub fn check_updates(
         .unwrap_or_default();
     let mut entries = Vec::new();
     for (id, rec) in agents {
-        if rec.get("kind").and_then(|k| k.as_str()) == Some("plugin") {
-            continue;
-        }
         let installed = rec
             .get("version")
             .and_then(|v| v.as_str())
@@ -56,7 +53,8 @@ pub fn check_updates(
     Ok(entries)
 }
 
-fn semver_lt(a: &str, b: &str) -> bool {
+/// 宽松 semver 比较：两边都可解析才比较，否则视为无更新（诚实，不臆造版本序）。
+pub fn semver_lt(a: &str, b: &str) -> bool {
     let pa = semver::Version::parse(a.trim_start_matches('v'));
     let pb = semver::Version::parse(b.trim_start_matches('v'));
     match (pa, pb) {

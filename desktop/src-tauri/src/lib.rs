@@ -281,6 +281,25 @@ fn bundle_uninstall(id: String) -> Result<serde_json::Value, String> {
     ])
 }
 
+#[tauri::command]
+fn update_apply(id: String) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    run_forge(&[
+        "update".to_string(),
+        "apply".to_string(),
+        id,
+        "--registry".to_string(),
+        reg,
+        "--home".to_string(),
+        home_arg(),
+    ])
+}
+
+#[tauri::command]
+fn dependents_list(id: String) -> Result<serde_json::Value, String> {
+    run_forge(&["dependents".to_string(), id, "--home".to_string(), home_arg()])
+}
+
 /// 定位 forge-core（开发 target 优先，其次发布布局，最后 PATH）
 fn published_or_dev_bin() -> Option<String> {
     let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -371,7 +390,9 @@ pub fn run() {
             bundle_create,
             bundle_list,
             bundle_install,
-            bundle_uninstall
+            bundle_uninstall,
+            update_apply,
+            dependents_list
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

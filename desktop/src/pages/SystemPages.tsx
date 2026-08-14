@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Database, LoaderCircle, Settings, ShieldCheck, TriangleAlert } from "lucide-react";
 import { stateList, systemStatus } from "../ipc";
+import { useI18n } from "../i18n";
 import type { InstalledAgent, SystemStatus } from "../ipc";
 
 function useSystem() {
@@ -16,6 +17,7 @@ function useSystem() {
 }
 
 export function SecurityPage() {
+  const { t } = useI18n();
   const [agents, setAgents] = useState<Record<string, InstalledAgent> | null>(null);
   useEffect(() => {
     stateList()
@@ -26,13 +28,13 @@ export function SecurityPage() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Security</h1>
-        <p className="page-sub">Installed packages: trust and scan score from the registry-backed state.</p>
+        <h1 className="page-heading">{t("nav.security")}</h1>
+        <p className="page-sub">{t("sy.securitySubtitle")}</p>
       </header>
       {entries.length === 0 ? (
         <div className="card empty-card">
-          <div className="empty-card-head"><ShieldCheck size={15} /><span className="empty-card-title">No installed packages</span></div>
-          <p className="empty-card-body">Install a package to see its trust level and scan score here.</p>
+          <div className="empty-card-head"><ShieldCheck size={15} /><span className="empty-card-title">{t("sy.noInstalledPackages")}</span></div>
+          <p className="empty-card-body">{t("sy.noInstalledBody")}</p>
         </div>
       ) : (
         <div className="card">
@@ -40,13 +42,11 @@ export function SecurityPage() {
             <div key={id} className="registry-row">
               <span className="registry-k mono">{id}</span>
               <span className="registry-v">
-                trust <b>{a.trust ?? "?"}</b> · score <b>{a.score ?? "—"}</b>/100
+                {t("sy.trust")} <b>{a.trust ?? "?"}</b> · {t("sy.score")} <b>{a.score ?? "—"}</b>/100
               </span>
             </div>
           ))}
-          <p className="field-hint" style={{ marginTop: 10 }}>
-            安装时已执行：SHA256 + Ed25519 验签 + 静态扫描 + 信任门禁（详情见 CLI 安装输出）。
-          </p>
+          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.securityNote")}</p>
         </div>
       )}
     </div>
@@ -54,38 +54,37 @@ export function SecurityPage() {
 }
 
 export function SourcesPage() {
+  const { t } = useI18n();
   const { system, err } = useSystem();
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Sources</h1>
-        <p className="page-sub">Registry providers (Local-first).</p>
+        <h1 className="page-heading">{t("nav.sources")}</h1>
+        <p className="page-sub">{t("sy.sourcesSubtitle")}</p>
       </header>
       {err && (
         <div className="card error-state"><TriangleAlert size={18} className="err-icon" /><p>{err}</p></div>
       )}
       {!system && !err && (
-        <div className="dashboard-loading"><LoaderCircle size={16} className="spin" /><span>Loading…</span></div>
+        <div className="dashboard-loading"><LoaderCircle size={16} className="spin" /><span>{t("sy.loading")}</span></div>
       )}
       {system && (
         <div className="card">
           <div className="registry-row">
-            <span className="registry-k"><Database size={13} /> Local Registry</span>
+            <span className="registry-k"><Database size={13} /> {t("sy.localRegistry")}</span>
             <span className={"registry-v " + (system.registryAvailable ? "ok" : "warn")}>
-              {system.registryAvailable ? "Available" : "Unavailable"}
+              {system.registryAvailable ? t("db.available") : t("db.unavailable")}
             </span>
           </div>
           <div className="registry-row">
-            <span className="registry-k">Path</span>
+            <span className="registry-k">{t("db.path")}</span>
             <span className="registry-v mono">{system.registryPath}</span>
           </div>
           <div className="registry-row">
-            <span className="registry-k">Name</span>
+            <span className="registry-k">{t("db.name")}</span>
             <span className="registry-v">{system.registryName ?? "—"}</span>
           </div>
-          <p className="field-hint" style={{ marginTop: 10 }}>
-            Git Registry 与 HTTP/Private Registry 为后续阶段能力（协议已预留，不提前实现）。
-          </p>
+          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.gitNote")}</p>
         </div>
       )}
     </div>
@@ -93,16 +92,33 @@ export function SourcesPage() {
 }
 
 export function SettingsPage() {
+  const { t, locale, setLocale } = useI18n();
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Settings</h1>
-        <p className="page-sub">Only settings backed by real functionality are shown.</p>
+        <h1 className="page-heading">{t("nav.settings")}</h1>
+        <p className="page-sub">{t("sy.settingsSubtitle")}</p>
       </header>
-      <div className="card empty-card">
-        <div className="empty-card-head"><Settings size={15} /><span className="empty-card-title">No configurable settings yet</span></div>
-        <p className="empty-card-body">
-          主题当前固定为 dark（设计系统 token）；其余设置项将随对应功能（默认 Registry、验证策略、日志级别）逐步开放。
+      <div className="card">
+        <div className="registry-row">
+          <span className="registry-k"><Settings size={13} /> {t("sy.language")}</span>
+          <span className="registry-v">
+            <button
+              className={"btn " + (locale === "zh" ? "btn-primary" : "btn-ghost")}
+              onClick={() => setLocale("zh")}
+            >
+              中文
+            </button>{" "}
+            <button
+              className={"btn " + (locale === "en" ? "btn-primary" : "btn-ghost")}
+              onClick={() => setLocale("en")}
+            >
+              English
+            </button>
+          </span>
+        </div>
+        <p className="field-hint" style={{ marginTop: 10 }}>
+          {t("sy.themeFixed")} {t("sy.moreSettingsLater")}
         </p>
       </div>
     </div>

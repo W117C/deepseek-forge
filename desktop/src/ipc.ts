@@ -213,6 +213,35 @@ export function updateCheck(): Promise<UpdateEntry[]> {
   return call<UpdateEntry[]>("update_check");
 }
 
+/** Mirror of `forge-core update apply` output. */
+export interface UpdateApplyResult {
+  id: string;
+  updated: boolean;
+  from?: string;
+  to?: string;
+  kind?: string;
+  note?: string;
+  imported?: Record<string, unknown>;
+  install?: Record<string, unknown>;
+}
+
+export function updateApply(id: string): Promise<UpdateApplyResult> {
+  return call<UpdateApplyResult>("update_apply", { id });
+}
+
+/** Mirror of `forge-core dependents` output. */
+export interface DependentRef {
+  kind: "plugin" | "agent" | "bundle";
+  id: string;
+  requires: string;
+}
+
+export function dependentsList(
+  id: string
+): Promise<{ id: string; dependents: DependentRef[] }> {
+  return call<{ id: string; dependents: DependentRef[] }>("dependents_list", { id });
+}
+
 /** Mirror of forge_core::composer::ResolveReport. */
 export interface ResolveReport {
   order: string[];

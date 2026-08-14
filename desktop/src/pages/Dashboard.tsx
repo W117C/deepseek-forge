@@ -11,29 +11,40 @@ import {
   RefreshCw,
   TriangleAlert,
 } from "lucide-react";
-import { registryList, systemStatus } from "../ipc";
+import { Link } from "react-router-dom";
+import { registryList, runtimeStatus, systemStatus, updateCheck } from "../ipc";
 import type { RegistrySummary, SystemStatus } from "../ipc";
+import { useI18n } from "../i18n";
 
 type LoadState =
   | { status: "loading" }
   | { status: "error"; message: string }
-  | { status: "ready"; system: SystemStatus; packages: RegistrySummary[] };
+  | { status: "ready"; system: SystemStatus; packages: RegistrySummary[]; outdated: number; sessions: number };
 
 export default function Dashboard() {
+  const { t } = useI18n();
   const [state, setState] = useState<LoadState>({ status: "loading" });
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([systemStatus(), registryList()])
-      .then(([system, packages]) => {
-        if (!cancelled) setState({ status: "ready", system, packages });
+    Promise.all([
+      systemStatus(),
+      registryList(),
+      updateCheck().catch(() => []),
+      runtimeStatus().catch(() => ({ sessionCount: 0 })),
+    ])
+      .then(([system, packages, updates, runtime]) => {
+        if (!cancelled) {
+          const outdated = Array.isArray(updates) ? updates.filter((u) => u.outdated).length : 0;
+          const sessions = typeof runtime === "object" && runtime !== null && "sessionCount" in runtime
+            ? Number((runtime as { sessionCount?: number }).sessionCount ?? 0)
+            : 0;
+          setState({ status: "ready", system, packages, outdated, sessions });
+        }
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setState({
-            status: "error",
-            message: err instanceof Error ? err.message : String(err),
-          });
+          setState({ status: "error", message: err instanceof Error ? err.message : String(err) });
         }
       });
     return () => {
@@ -46,7 +57,7 @@ export default function Dashboard() {
       <div className="page">
         <div className="dashboard-loading" role="status">
           <LoaderCircle size={16} className="spin" />
-          <span>Loading system status…</span>
+          <span>{t("db.loading")}</span>
         </div>
       </div>
     );
@@ -57,59 +68,63 @@ export default function Dashboard() {
       <div className="page">
         <div className="error-state">
           <TriangleAlert size={22} className="err-icon" />
-          <h3>Could not load system status</h3>
+          <h3>{t("db.loadFailed")}</h3>
           <p>{state.message}</p>
         </div>
       </div>
     );
   }
 
-  const { system, packages } = state;
+  const { system, packages, outdated, sessions } = state;
 
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Dashboard</h1>
-        <p className="page-sub">Local registry and runtime status.</p>
+        <h1 className="page-heading">{t("nav.dashboard")}</h1>
+        <p className="page-sub">{t("db.subtitle")}</p>
       </header>
 
       <section className="stat-grid">
         <StatCard
           icon={Cpu}
-          label="Core version"
+          label={t("db.coreVersion")}
           value={system.coreVersion}
-          detail="Forge Core kernel version"
+          detail={t("db.coreVersionDetail")}
         />
         <StatCard
           icon={Database}
-          label="Registry packages"
+          label={t("db.registryPackages")}
           value={String(packages.length)}
-          detail="Available in the local registry (not installed yet)"
+          detail={t("db.registryPackagesDetail")}
         />
         <StatCard
           icon={system.dshDetected ? CircleCheck : CircleDashed}
-          label="DSH detected"
-          value={system.dshDetected ? "Yes" : "No"}
-          detail={
-            system.dshDetected
-              ? "DeepSeek Harness CLI is available"
-              : "DeepSeek Harness CLI (dsh) was not found"
-          }
+          label={t("db.dshDetected")}
+          value={system.dshDetected ? t("db.yes") : t("db.no")}
+          detail={system.dshDetected ? t("db.dshDetailYes") : t("db.dshDetailNo")}
         />
       </section>
 
       <section className="dashboard-section">
-        <h2 className="dashboard-section-title">Registry</h2>
+        <h2 className="dashboard-section-title">{t("db.registry")}</h2>
         <RegistryCard system={system} />
       </section>
 
       <section className="dashboard-grid">
-        <EmptyCard
-          icon={RefreshCw}
-          title="Updates"
-          body="No updates available yet."
-        />
-        <EmptyCard icon={Boxes} title="Recent sessions" body="No sessions yet." />
+        <Link to="/updates" style={{ textDecoration: "none" }}>
+          <EmptyCard
+            icon={RefreshCw}
+            title={t("nav.updates")}
+            body={outdated > 0 ? t("db.updatesBody", { n: outdated }) : t("db.updatesNone")}
+          />
+        </Link>
+        <Link to="/sessions" style={{ textDecoration: "none" }}>
+          <EmptyCard
+            icon={Boxes}
+            title={t("nav.sessions")}
+            body={sessions > 0 ? t("db.sessionsBody", { n: sessions }) : t("db.sessionsNone")}
+          />
+        </Link>
       </section>
     </div>
   );
@@ -139,37 +154,33 @@ function StatCard({
 }
 
 function RegistryCard({ system }: { system: SystemStatus }) {
+  const { t } = useI18n();
   return (
     <div className="card registry-card">
       <div className="registry-row">
-        <span className="registry-k">Path</span>
+        <span className="registry-k">{t("db.path")}</span>
         <span className="registry-v mono">{system.registryPath}</span>
       </div>
       <div className="registry-row">
-        <span className="registry-k">Status</span>
+        <span className="registry-k">{t("db.status")}</span>
         {system.registryAvailable ? (
           <span className="registry-v ok">
-            <CircleCheck size={14} /> Available
+            <CircleCheck size={14} /> {t("db.available")}
           </span>
         ) : (
           <span className="registry-v warn">
-            <CircleX size={14} /> Unavailable
+            <CircleX size={14} /> {t("db.unavailable")}
           </span>
         )}
       </div>
       {system.registryName ? (
         <div className="registry-row">
-          <span className="registry-k">Name</span>
+          <span className="registry-k">{t("db.name")}</span>
           <span className="registry-v">{system.registryName}</span>
         </div>
       ) : null}
       {!system.registryAvailable ? (
-        <p className="registry-error">
-          No registry found at {system.registryPath}. To recover, create a
-          registry there (a registry.json plus packages/) or point the
-          FORGE_REGISTRY environment variable at an initialized registry
-          directory.
-        </p>
+        <p className="registry-error">{t("db.registryMissing", { path: system.registryPath })}</p>
       ) : null}
     </div>
   );

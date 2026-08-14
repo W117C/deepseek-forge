@@ -18,6 +18,7 @@ export default function Marketplace() {
   const [cat, setCat] = useState("all");
   const [sort, setSort] = useState("popular");
   const [installing, setInstalling] = useState<InstallState | null>(null);
+  const [onlyInstalled, setOnlyInstalled] = useState(false);
 
   function load() {
     setErr(null);
@@ -57,12 +58,15 @@ export default function Marketplace() {
     if (cat !== "all") {
       list = list.filter((p) => p.type === cat);
     }
+    if (onlyInstalled) {
+      list = list.filter((p) => p.id in installed);
+    }
     const sorted = [...list];
     if (sort === "popular") sorted.sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
     else if (sort === "recent") sorted.sort((a, b) => a.id.localeCompare(b.id));
     else sorted.sort((a, b) => a.name.localeCompare(b.name));
     return sorted;
-  }, [packages, query, cat, sort]);
+  }, [packages, query, cat, sort, onlyInstalled, installed]);
 
   const cats = useMemo(() => {
     const set = new Set<string>();
@@ -92,7 +96,13 @@ export default function Marketplace() {
         </select>
       </div>
 
-      <div className="marketplace-cats" style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "12px 0" }}>
+      <div className="marketplace-cats" style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "12px 0", alignItems: "center" }}>
+        <button
+          className={"btn " + (onlyInstalled ? "btn-primary" : "btn-ghost")}
+          onClick={() => setOnlyInstalled((v) => !v)}
+        >
+          {onlyInstalled ? t("mp.onlyInstalled") : t("mp.allPackages")}
+        </button>
         {cats.map((c) => (
           <button
             key={c}
@@ -167,7 +177,11 @@ export default function Marketplace() {
                 <span className="registry-k">
                   <ShieldCheck size={13} /> {t("mp.security")}
                 </span>
-                <span className="registry-v">{t("mp.unscanned")}</span>
+                <span className="registry-v">
+                  {isInstalled && (installed[p.id] as { scanVerdict?: string })?.scanVerdict
+                    ? t("mp.scanned") + " · " + (installed[p.id] as { scanVerdict?: string }).scanVerdict
+                    : t("mp.unscanned")}
+                </span>
               </div>
 
               <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>

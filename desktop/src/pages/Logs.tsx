@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { LoaderCircle, ScrollText, TriangleAlert } from "lucide-react";
 import { logsList } from "../ipc";
+import { useI18n } from "../i18n";
 import type { LogEntry } from "../ipc";
 
 type State =
@@ -10,6 +11,7 @@ type State =
   | { status: "ready"; entries: LogEntry[] };
 
 export default function Logs() {
+  const { t } = useI18n();
   const [state, setState] = useState<State>({ status: "loading" });
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export default function Logs() {
       <div className="page">
         <div className="dashboard-loading" role="status">
           <LoaderCircle size={16} className="spin" />
-          <span>Loading logs…</span>
+          <span>{t("lg.loading")}</span>
         </div>
       </div>
     );
@@ -44,16 +46,16 @@ export default function Logs() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Logs</h1>
-        <p className="page-sub">Install and security-scan logs (append-only JSONL).</p>
+        <h1 className="page-heading">{t("nav.logs")}</h1>
+        <p className="page-sub">{t("lg.subtitle")}</p>
       </header>
       {state.entries.length === 0 ? (
         <div className="card empty-card">
           <div className="empty-card-head">
             <ScrollText size={15} />
-            <span className="empty-card-title">No install logs yet</span>
+            <span className="empty-card-title">{t("lg.emptyTitle")}</span>
           </div>
-          <p className="empty-card-body">Each Forge install/update writes an entry here.</p>
+          <p className="empty-card-body">{t("lg.emptyBody")}</p>
         </div>
       ) : (
         <div className="card">
@@ -62,8 +64,8 @@ export default function Logs() {
               <span className="registry-k mono">{e.ts}</span>
               <span className="registry-v">
                 <span className="badge badge-community">{e.kind}</span>{" "}
-                {e.id}{e.kind === "install" ? " v" + e.version : " verdict " + e.version} —{" "}
-                {e.ok ? "ok" : "failed"}
+                {e.id}{e.kind === "install" ? " v" + e.version : " " + t("lg.verdict") + " " + e.version} —{" "}
+                {e.ok ? t("lg.ok") : t("lg.failed")}
                 {e.code ? " · " + (e.kind === "security" ? "score " + e.code : e.code) : ""}
               </span>
             </div>

@@ -139,6 +139,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "runtime" => run_runtime(&args[1..]),
         "search" => run_search(&args[1..]),
         "update" => run_update(&args[1..]),
+        "dependents" => run_dependents(&args[1..]),
         "logs" => run_logs(&args[1..]),
         "bundle" => run_bundle(&args[1..]),
         _ => {
@@ -299,6 +300,18 @@ fn package_import_github(
         )));
     }
     // 登记安装状态（真实写入共享状态库）
+    let deps: serde_json::Map<String, serde_json::Value> = pkg
+        .dependencies
+        .iter()
+        .map(|d| {
+            (
+                d.package.clone(),
+                serde_json::Value::String(
+                    d.version.clone().unwrap_or_else(|| "any".to_string()),
+                ),
+            )
+        })
+        .collect();
     let mut state = load_state(home);
     state["agents"][id] = serde_json::json!({
         "kind": "plugin",
@@ -310,6 +323,7 @@ fn package_import_github(
         "scanVerdict": analysis.scan.verdict,
         "imported": true,
         "license": analysis.license,
+        "dependencies": deps,
         "permissions": { "network": [], "env": [] },
     });
     save_state(home, &state)?;
@@ -1172,23 +1186,163 @@ fn run_search(args: &[String]) -> Result<(), ForgeError> {
 
 fn run_update(args: &[String]) -> Result<(), ForgeError> {
     let sub = args.first().ok_or_else(|| {
-        ForgeError::InvalidManifest("update requires a subcommand (check)".to_string())
+        ForgeError::InvalidManifest("update requires a subcommand (check|apply)".to_string())
     })?;
-    if sub != "check" {
-        return Err(ForgeError::InvalidManifest(format!(
-            "unknown update subcommand '{sub}'"
-        )));
-    }
     let f = Flags::parse(&args[1..]);
     let registry = f.get("registry").map(PathBuf::from).ok_or_else(|| {
-        ForgeError::InvalidManifest("update check requires --registry".to_string())
+        ForgeError::InvalidManifest(format!("update {sub} requires --registry"))
     })?;
     let home = f
         .get("home")
         .map(PathBuf::from)
         .unwrap_or_else(|| dsh_home(None));
-    let entries = check_updates(&home, &LocalRegistry::open(registry))?;
-    print_json(&entries)
+    match sub.as_str() {
+        "check" => {
+            let entries = check_updates(&home, &LocalRegistry::open(registry))?;
+            print_json(&entries)
+        }
+        "apply" => {
+            // 真实更新：plugin/imported → 重新收录（克隆→扫描→登记新版本）；
+            // 带制品的 agent → 走 install-from-registry 完整管线（校验→快照→安装→健康，失败自动回滚）。
+            let id = f.positional.first().ok_or_else(|| {
+                ForgeError::InvalidManifest("update apply requires a package id".to_string())
+            })?;
+            let reg = LocalRegistry::open(registry.clone());
+            let state = load_state(&home);
+            let rec = state
+                .get("agents")
+                .and_then(|a| a.get(id))
+                .cloned()
+                .ok_or_else(|| ForgeError::PackageNotFound(format!("未安装：{id}")))?;
+            let kind = rec
+                .get("kind")
+                .and_then(|k| k.as_str())
+                .unwrap_or("agent")
+                .to_string();
+            let imported = rec.get("imported").and_then(|v| v.as_bool()).unwrap_or(false);
+            let installed = rec
+                .get("version")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            let pkg = reg.get_package(id)?;
+            if !forge_core::updater::semver_lt(&installed, &pkg.version) {
+                return print_json(&serde_json::json!({
+                    "id": id,
+                    "updated": false,
+                    "installed": installed,
+                    "latest": pkg.version,
+                    "note": "已是最新版本"
+                }));
+            }
+            if kind == "plugin" && imported {
+                let res = package_import_github(id, &registry, &home)?;
+                return print_json(&serde_json::json!({
+                    "id": id,
+                    "updated": true,
+                    "from": installed,
+                    "to": pkg.version,
+                    "kind": "plugin",
+                    "imported": res
+                }));
+            }
+            // artifact 包：子进程走与 CLI 相同的 install-from-registry（保留其错误信封语义）
+            let self_bin = std::env::current_exe().map_err(ForgeError::Io)?;
+            let out = std::process::Command::new(&self_bin)
+                .args([
+                    "install-from-registry",
+                    id,
+                    "--registry",
+                    &registry.to_string_lossy(),
+                    "--home",
+                    &home.to_string_lossy(),
+                ])
+                .output()
+                .map_err(ForgeError::Io)?;
+            if !out.status.success() {
+                let raw = String::from_utf8_lossy(&out.stderr);
+                let env: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|_| {
+                    serde_json::json!({ "code": "UPDATE_FAILED", "human": raw.trim() })
+                });
+                return Err(ForgeError::RuntimeFailed(
+                    env.get("human")
+                        .and_then(|h| h.as_str())
+                        .unwrap_or("安装失败（详见日志）")
+                        .to_string(),
+                ));
+            }
+            let inner: serde_json::Value =
+                serde_json::from_slice(&out.stdout).map_err(ForgeError::Json)?;
+            print_json(&serde_json::json!({
+                "id": id,
+                "updated": true,
+                "from": installed,
+                "to": pkg.version,
+                "kind": "agent",
+                "install": inner
+            }))
+        }
+        _ => Err(ForgeError::InvalidManifest(format!(
+            "unknown update subcommand '{sub}'"
+        ))),
+    }
+}
+
+/// STEP 9: 反向依赖追踪 —— 谁在使用这个包（已装插件的依赖声明 + 组合 Bundle）。
+/// 只读扫描 state.json 与 bundles 目录，不猜测、不编造。
+fn run_dependents(args: &[String]) -> Result<(), ForgeError> {
+    let f = Flags::parse(args);
+    let id = f.positional.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("dependents requires a package id".to_string())
+    })?;
+    let home = f
+        .get("home")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| dsh_home(None));
+    let mut out: Vec<serde_json::Value> = Vec::new();
+    let state = load_state(&home);
+    if let Some(agents) = state.get("agents").and_then(|a| a.as_object()) {
+        for (other, rec) in agents {
+            if other == id {
+                continue;
+            }
+            if let Some(deps) = rec.get("dependencies").and_then(|d| d.as_object()) {
+                if let Some(req) = deps.get(id) {
+                    out.push(serde_json::json!({
+                        "kind": rec.get("kind").and_then(|k| k.as_str()).unwrap_or("plugin"),
+                        "id": other,
+                        "requires": req.as_str().unwrap_or("any")
+                    }));
+                }
+            }
+        }
+    }
+    let bundles_dir = home.join(".deepseek-forge").join("bundles");
+    if bundles_dir.exists() {
+        for entry in fs::read_dir(&bundles_dir).map_err(ForgeError::Io)? {
+            let entry = entry.map_err(ForgeError::Io)?;
+            let bf = entry.path().join("bundle.json");
+            let Ok(text) = fs::read_to_string(&bf) else {
+                continue;
+            };
+            let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) else {
+                continue;
+            };
+            let comps: Vec<&str> = v
+                .get("components")
+                .and_then(|c| c.as_array())
+                .map(|a| a.iter().filter_map(|x| x.as_str()).collect())
+                .unwrap_or_default();
+            if comps.iter().any(|c| *c == id.as_str()) {
+                out.push(serde_json::json!({
+                    "kind": "bundle",
+                    "id": entry.file_name().to_string_lossy(),
+                    "requires": "any"
+                }));
+            }
+        }
+    }
+    print_json(&serde_json::json!({ "id": id, "dependents": out }))
 }
 
 fn print_usage() {
@@ -1218,7 +1372,8 @@ USAGE:
   forge-core composer resolve (stdin: 组件 JSON 数组)
   forge-core runtime status [--home DIR]
   forge-core search QUERY [--registry PATH]
-  forge-core update check --registry PATH [--home DIR]
+  forge-core update check|apply [ID] --registry PATH [--home DIR]
+  forge-core dependents ID [--home DIR]
   forge-core runtime stop PID | runtime restart COMMAND | runtime run --profile NAME [--port N]
   forge-core logs list"#
     );

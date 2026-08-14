@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Activity, LoaderCircle, TriangleAlert } from "lucide-react";
 import { runtimeRestart, runtimeStatus, runtimeStop } from "../ipc";
+import { useI18n } from "../i18n";
 import type { RuntimeStatus } from "../ipc";
 
 type State =
@@ -10,6 +11,7 @@ type State =
   | { status: "ready"; runtime: RuntimeStatus };
 
 export default function Processes() {
+  const { t } = useI18n();
   const [state, setState] = useState<State>({ status: "loading" });
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function Processes() {
       <div className="page">
         <div className="dashboard-loading" role="status">
           <LoaderCircle size={16} className="spin" />
-          <span>Loading processes…</span>
+          <span>{t("pr.loading")}</span>
         </div>
       </div>
     );
@@ -70,16 +72,16 @@ export default function Processes() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">Processes</h1>
-        <p className="page-sub">dsh processes observed from the system (no fabricated entries).</p>
+        <h1 className="page-heading">{t("nav.processes")}</h1>
+        <p className="page-sub">{t("pr.subtitle")}</p>
       </header>
       {runtime.processes.length === 0 ? (
         <div className="card empty-card">
           <div className="empty-card-head">
             <Activity size={15} />
-            <span className="empty-card-title">No dsh processes</span>
+            <span className="empty-card-title">{t("pr.emptyTitle")}</span>
           </div>
-          <p className="empty-card-body">Start DeepSeek Harness and its processes will appear here.</p>
+          <p className="empty-card-body">{t("pr.emptyBody")}</p>
         </div>
       ) : (
         <div className="card">
@@ -87,15 +89,13 @@ export default function Processes() {
             <div key={p.pid} className="registry-row">
               <span className="registry-k mono">{p.pid}</span>
               <span className="registry-v mono" style={{ flex: 1 }}>{p.command}</span>
-              <button className="btn btn-ghost" onClick={() => void restart(p.command)}>Restart</button>
-              <button className="btn btn-ghost" onClick={() => void stop(p.pid)}>Stop</button>
+              <button className="btn btn-ghost" onClick={() => void restart(p.command)}>{t("pr.restart")}</button>
+              <button className="btn btn-ghost" onClick={() => void stop(p.pid)}>{t("pr.stop")}</button>
             </div>
           ))}
         </div>
       )}
-      <p className="field-hint" style={{ marginTop: 12 }}>
-        Stop/Restart 由 Rust Core 执行（kill -TERM / 分离重启），UI 不直接操作进程。
-      </p>
+      <p className="field-hint" style={{ marginTop: 12 }}>{t("pr.note")}</p>
     </div>
   );
 }
