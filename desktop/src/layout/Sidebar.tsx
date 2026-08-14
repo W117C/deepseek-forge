@@ -35,7 +35,7 @@ const GROUPS: NavGroup[] = [
     title: "Discover",
     items: [
       { to: "/marketplace", label: "Marketplace", icon: Store, phase: "Phase 4" },
-      { to: "/import", label: "GitHub Import", icon: Github, phase: "Phase 4" },
+      { to: "/import", label: "GitHub Import", icon: Github, phase: "ready" },
     ],
   },
   {

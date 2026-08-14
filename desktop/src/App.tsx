@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./layout/Sidebar";
 import Dashboard from "./pages/Dashboard";
+import Import from "./pages/Import";
 import Placeholder from "./pages/Placeholder";
 
 export default function App() {
@@ -19,10 +20,7 @@ export default function App() {
             path="/marketplace"
             element={<Placeholder title="Marketplace" phase="Phase 4" />}
           />
-          <Route
-            path="/import"
-            element={<Placeholder title="GitHub Import" phase="Phase 4" />}
-          />
+          <Route path="/import" element={<Import />} />
           <Route
             path="/agents"
             element={<Placeholder title="My Agents" phase="Phase 6" />}

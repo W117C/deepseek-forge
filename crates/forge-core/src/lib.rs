@@ -3,6 +3,7 @@
 pub mod dsh;
 pub mod errors;
 pub mod events;
+pub mod import;
 pub mod installer;
 pub mod manifest;
 pub mod model;
@@ -19,6 +20,7 @@ pub use dsh::{
 };
 pub use errors::{ErrorEnvelope, ForgeError};
 pub use events::{EventBus, ForgeEvent};
+pub use import::{analyze_dir, analyze_source, parse_github_url, RepositoryAnalysis};
 pub use manifest::{
     load_legacy_agent_dir, load_package_file, normalize_legacy_agent, parse_package_json,
     LEGACY_SCHEMA, SCHEMA_V1,

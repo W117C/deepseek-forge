@@ -86,3 +86,44 @@ export function registryGetVersion(
 ): Promise<Record<string, unknown>> {
   return call<Record<string, unknown>>("registry_get_version", { id, version });
 }
+
+/** Mirror of forge_core::import::RepositoryAnalysis (serde camelCase). */
+export interface RepositoryAnalysis {
+  source: string;
+  owner: string | null;
+  repo: string | null;
+  language: string | null;
+  packageManagers: string[];
+  entryPoint: string | null;
+  readme: string | null;
+  license: string | null;
+  licenseMissing: boolean;
+  dependencies: string[];
+  executableFiles: string[];
+  installScripts: string[];
+  networkUsage: string[];
+  filesystemUsage: string[];
+  envVars: string[];
+  secretsFound: string[];
+  dangerousCommands: string[];
+  mcpDetected: boolean;
+  agentDetected: boolean;
+  skillDetected: boolean;
+  toolDetected: boolean;
+  packageType: string;
+  forgeCompatibility: string;
+  securityRisk: string;
+  scan: {
+    score: number;
+    verdict: string;
+    findings: unknown[];
+    high: number;
+    medium: number;
+    low: number;
+    files: number;
+  };
+}
+
+export function importAnalyze(source: string): Promise<RepositoryAnalysis> {
+  return call<RepositoryAnalysis>("import_analyze", { source });
+}

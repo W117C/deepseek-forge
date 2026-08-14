@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 
 use forge_core::errors::{ErrorEnvelope, ForgeError};
 use forge_core::events::EventBus;
+use forge_core::import::analyze_source;
 use forge_core::registry::{LocalRegistry, RegistryProvider};
 use serde::Serialize;
 
@@ -119,6 +120,12 @@ fn registry_get_version(
     registry().get_version(&id, &version).map_err(to_ipc_error)
 }
 
+/// Phase 4: analyze a local directory or a github URL (Local-first).
+#[tauri::command]
+fn import_analyze(source: String) -> Result<forge_core::import::RepositoryAnalysis, String> {
+    analyze_source(&source).map_err(to_ipc_error)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let bus = EventBus::new();
@@ -130,7 +137,8 @@ pub fn run() {
             registry_list,
             registry_info,
             registry_versions,
-            registry_get_version
+            registry_get_version,
+            import_analyze
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

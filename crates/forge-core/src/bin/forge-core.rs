@@ -10,6 +10,7 @@ use std::process::exit;
 
 use forge_core::dsh::{agenthub_store, dsh_home, locate_dsh};
 use forge_core::errors::{ErrorEnvelope, ForgeError};
+use forge_core::import::analyze_source;
 use forge_core::installer::{
     install, install_catalog_plugin, rollback, InstallFailure, InstallRequest,
 };
@@ -127,6 +128,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "rollback" | "uninstall" => run_rollback(&args[1..]),
         "catalog-plugin" => run_catalog_plugin(&args[1..]),
         "install-from-registry" => run_install_from_registry(&args[1..]),
+        "import" => run_import(&args[1..]),
         _ => {
             print_usage();
             Err(ForgeError::InvalidManifest(format!(
@@ -706,6 +708,24 @@ fn run_install_from_registry(args: &[String]) -> Result<(), ForgeError> {
     }
 }
 
+fn run_import(args: &[String]) -> Result<(), ForgeError> {
+    let sub = args.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("import requires a subcommand (analyze)".to_string())
+    })?;
+    if sub != "analyze" {
+        return Err(ForgeError::InvalidManifest(format!(
+            "unknown import subcommand '{sub}'"
+        )));
+    }
+    let source = args.get(1).ok_or_else(|| {
+        ForgeError::InvalidManifest(
+            "import analyze requires a source: a local directory or a github URL".to_string(),
+        )
+    })?;
+    let analysis = analyze_source(source)?;
+    print_json(&analysis)
+}
+
 fn print_usage() {
     eprintln!(
         r#"forge-core - DeepSeek Forge core (read-only)
@@ -726,6 +746,7 @@ USAGE:
   forge-core rollback ID --home DIR      (uninstall = rollback)
   forge-core catalog-plugin NAME --source SRC --home DIR [--bin PATH] [--profile NAME]
   forge-core registry import AGENT-DIR [--registry PATH]
-  forge-core install-from-registry ID --registry PATH --home DIR [--version V] [--profile NAME] [--trust LEVEL] [--bin PATH] [--smoke]"#
+  forge-core install-from-registry ID --registry PATH --home DIR [--version V] [--profile NAME] [--trust LEVEL] [--bin PATH] [--smoke]
+  forge-core import analyze DIR-OR-GITHUB-URL"#
     );
 }
