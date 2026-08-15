@@ -99,8 +99,23 @@ window.__ModuleLoader__.load({
       );
     }
 
+    /**
+     * 界面注册：安装后把看板注入 DSH Web 原有界面（侧边栏 workspaces hole）。
+     * 卸载时 bundle 移除，slots 随之注销——插件看板只随安装出现。
+     */
+    function apply(ctx) {
+      ctx.slots.inject("sidebar.workspaces", () =>
+        ctx.slots.register({
+          name: "sidebar.workspaces",
+          store: handle,
+          inject: () => ({ dataSources: handle.getSnapshot().providers || [] }),
+        }, MarketDataPanel)
+      );
+    }
+
     exports.MarketDataPanel = MarketDataPanel;
     exports.marketStore = marketStore; // 供会话 MCP/数据源写入
+    exports.apply = apply;
     exports.default = MarketDataPanel;
     module.exports = exports;
     return module.exports;
