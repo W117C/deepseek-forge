@@ -1,0 +1,37 @@
+schema: agenthub.dev/agent/v1
+id: data-analyst-combo
+name: 数据分析 Agent
+category: 数据 Data
+version: 0.1.0
+description: 数据分析 Agent：按 stars 精选社区高星组件组合而成（archify, vibe-skills）。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles: []
+  presets:
+    - id: data-analyst-combo
+      base: standard
+  skills:
+    - archify
+    - vibe-skills
+profile:
+  name: data-analyst-combo
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
+  patch: ./profile.patch.yml
+permissions:
+  network: []
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: []
+updatePolicy: notify
+trust: community

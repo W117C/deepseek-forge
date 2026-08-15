@@ -1,0 +1,30 @@
+[
+  {
+    "id": "deep-research-combo",
+    "name": "深度研究 Agent",
+    "slots": 2,
+    "components": [
+      "archify",
+      "brooks-lint"
+    ]
+  },
+  {
+    "id": "coding-agent-combo",
+    "name": "工程编码 Agent",
+    "slots": 3,
+    "components": [
+      "coding-tools-mcp",
+      "brooks-lint",
+      "archify"
+    ]
+  },
+  {
+    "id": "data-analyst-combo",
+    "name": "数据分析 Agent",
+    "slots": 2,
+    "components": [
+      "archify",
+      "vibe-skills"
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+schema: agenthub.dev/agent/v1
+id: coding-agent-combo
+name: 工程编码 Agent
+category: 开发 Development
+version: 0.1.0
+description: 工程编码 Agent：按 stars 精选社区高星组件组合而成（coding-tools-mcp, brooks-lint, archify）。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles: []
+  presets:
+    - id: coding-agent-combo
+      base: standard
+  skills:
+    - coding-tools-mcp
+    - brooks-lint
+    - archify
+profile:
+  name: coding-agent-combo
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
+  patch: ./profile.patch.yml
+permissions:
+  network: []
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: []
+updatePolicy: notify
+trust: community
