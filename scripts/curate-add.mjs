@@ -225,7 +225,7 @@ async function main() {
   if (doScan) {
     const bin = join(root, 'crates', 'forge-core', 'target', 'release', 'forge-core');
     for (const e of fresh) {
-      const id = slugOf(e.name || e.fullName.split('/')[1]);
+      const id = slugOf(repoName(e.fullName)); // 与 makePkg 的 id 一致（repo 短名）
       const pkgPath = join(outRoots[0], 'packages', id);
       try {
         const out = execFileSync(bin, ['scan', pkgPath, '--trust', 'community'], { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
