@@ -136,7 +136,13 @@ pub fn stop_process(pid: u32) -> Result<bool, ForgeError> {
 }
 
 /// Restart a recorded command line detached; returns the new pid when known.
+/// 安全：command 经 sh -c 执行，须拒绝 shell 元字符（IPC 入口可能被任意调用者触发）。
 pub fn restart_process(command: &str) -> Result<Option<u32>, ForgeError> {
+    if !is_safe_command(command) {
+        return Err(ForgeError::InvalidManifest(format!(
+            "restart 命令含不允许的 shell 元字符，已拒绝：{command}"
+        )));
+    }
     let out = std::process::Command::new("sh")
         .arg("-c")
         .arg(format!("nohup {} >/dev/null 2>&1 & echo $!", command))
@@ -150,6 +156,19 @@ pub fn restart_process(command: &str) -> Result<Option<u32>, ForgeError> {
         .parse::<u32>()
         .ok();
     Ok(pid)
+}
+
+/// dsh 命令行只允许安全字符：字母数字 + 空格与常见路径/参数符号。
+/// 拒绝 `; & | > < $ \` ( ) * ? [ ] { } ' "` 与空白类（防命令注入）。
+fn is_safe_command(command: &str) -> bool {
+    !command.is_empty()
+        && command.chars().all(|c| {
+            c.is_ascii_alphanumeric()
+                || matches!(
+                    c,
+                    ' ' | '/' | '-' | '_' | '.' | ':' | '=' | '@' | ',' | '+' | '~'
+                )
+        })
 }
 
 /// Detached harness launch with stdout/stderr captured to a harness log
