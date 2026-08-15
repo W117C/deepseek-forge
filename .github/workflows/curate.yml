@@ -7,6 +7,12 @@ on:
     - cron: '17 3 * * *'   # 每日 03:17 UTC（错峰）
   workflow_dispatch:        # 手动触发：Actions → Curate Registry → Run workflow
 
+# 并发保护：schedule 与手动触发可能同时运行，两个 run 同时 git add/push 会冲突。
+# 同一时间只允许一个 run 执行（后来的排队等待），避免 push 竞态。
+concurrency:
+  group: curate-registry
+  cancel-in-progress: false
+
 jobs:
   curate:
     name: 增量收录 curated-registry

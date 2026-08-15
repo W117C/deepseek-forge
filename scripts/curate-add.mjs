@@ -186,8 +186,26 @@ async function main() {
 
   // 2. 去重：跳过已收录（以 curated-registry/packages 现有 id 为准，repo 短名匹配）
   const existing = new Set(readdirSync(join(outRoots[0], 'packages')));
-  const fresh = entries.filter((e) => !existing.has(slugOf(repoName(e.fullName))));
+  let fresh = entries.filter((e) => !existing.has(slugOf(repoName(e.fullName))));
   console.log(`增量收录：${fresh.length} 个新插件（已收录 ${entries.length - fresh.length} 个跳过）`);
+
+  // 2.5 id 冲突检测：不同条目（同名 repo / monorepo 子目录）可能 slug 成同一 id，
+  // 后写覆盖先写会静默丢包——冲突组只保留第一个，其余跳过并显式警告（可用 OVERRIDES 精调）。
+  const seenId = new Map();
+  const dedup = [];
+  for (const e of fresh) {
+    const id = slugOf(repoName(e.fullName));
+    if (seenId.has(id)) {
+      console.log(`  ⚠ 跳过 id 冲突: ${e.fullName}（与 ${seenId.get(id)} 同 id '${id}'，保留前者）`);
+      continue;
+    }
+    seenId.set(id, e.fullName);
+    dedup.push(e);
+  }
+  if (dedup.length !== fresh.length) {
+    console.log(`  id 冲突去重后：${dedup.length} 个（丢弃 ${fresh.length - dedup.length} 个冲突条目）`);
+    fresh = dedup;
+  }
 
   // 3. 可选：GitHub 探测补全元数据（并发 5）
   const probed = new Map();
