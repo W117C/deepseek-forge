@@ -11,9 +11,9 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 
 两者均：Vercel 托管、Git 集成（推送 main 自动部署）、GitHub Actions 构建门槛（typecheck + 生产构建）。
 
-> 仓库：https://github.com/W117C/deepseek-forge ｜ CI：GitHub Actions（e2e 245 项 + 前端双构建）｜ 发布：GitHub Releases
+> 仓库：https://github.com/W117C/deepseek-forge ｜ CI：GitHub Actions（e2e 21 套 344 项 + 前端双构建）｜ 发布：GitHub Releases
 >
-> 状态：**v0.3.0 REAL MARKETPLACE（18 套 e2e 245/245 全绿）**——mock 依赖清零，Marketplace 前端走真实 Registry API；SQLite 数据层（schema/迁移/事务）+ Package/Version/Artifact 模型 + 统一状态机 + Publisher 模型 + forge/src/api 客户端层全部落地。
+> 状态：**v0.3.0 REAL MARKETPLACE（21 套 e2e 344/344 全绿）**——mock 依赖清零，Marketplace 前端走真实 Registry API；SQLite 数据层（schema/迁移/事务）+ Package/Version/Artifact 模型 + 统一状态机 + Publisher 模型 + forge/src/api 客户端层全部落地。
 > 见 [docs/v0.3-audit.md](docs/v0.3-audit.md)、[docs/v0.3-phase-a.md](docs/v0.3-phase-a.md)、[docs/v0.3-phase-b.md](docs/v0.3-phase-b.md)、[docs/v0.3-phase-c.md](docs/v0.3-phase-c.md)、[docs/v0.3-phase-d.md](docs/v0.3-phase-d.md)、[docs/release-notes-v0.3.0.md](docs/release-notes-v0.3.0.md)。
 > 复现：`for t in test/e2e*.mjs; do node $t; done`（隔离 DSH_HOME，不触碰真实 ~/.dsh）。
 
@@ -26,7 +26,7 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 - `forge/` —— **Marketplace 前端**（React 18 + TS + Vite，React Router，走真实 Registry API）
 - `landing/` —— **产品落地页**（React 18 + TS + Vite）
 - `desktop/` —— **Tauri 桌面端**（Rust + 前端；local-first Registry + 组合/配置/运行时管理）
-- `test/` —— 18 套隔离 e2e（`test/e2e*.mjs`，245 项）
+- `test/` —— 21 套隔离 e2e（`test/e2e*.mjs`，344 项）
 - `docs/` —— 设计/验证/部署文档（含 [npm 发布 runbook](docs/npm-publish-runbook.md)）
 
 ## 快速开始（本地闭环）
