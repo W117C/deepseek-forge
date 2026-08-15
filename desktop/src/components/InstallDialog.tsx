@@ -3,8 +3,8 @@
 // dependencies/security). Step 2: confirm → real installPackage IPC with a
 // live, event-driven pipeline. No fake steps, no instant "Installed".
 import { useCallback, useEffect, useState } from "react";
-import { Github, ShieldCheck } from "lucide-react";
-import { installPackage, registryInfo } from "../ipc";
+import { ExternalLink, Github, ShieldCheck } from "lucide-react";
+import { installPackage, openExternal, registryInfo } from "../ipc";
 import { useI18n } from "../i18n";
 import { Modal, useToast } from "./ui";
 import InstallProgress from "./InstallProgress";
@@ -181,6 +181,22 @@ export default function InstallDialog({
             <Github size={13} className="note-ico" />
             <span>
               {t("install.doneBody")} {repoShort && <span className="mono">{repoShort}</span>}
+            </span>
+          </div>
+        )}
+        {status === "done" && (
+          <div className="note" data-tone="ok" style={{ marginTop: 8, display: "flex", gap: 6, alignItems: "flex-start" }}>
+            <ShieldCheck size={13} className="note-ico" />
+            <span style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <span>{t("install.panelReady")}</span>
+              <button
+                className="btn btn-outline btn-sm"
+                style={{ alignSelf: "flex-start" }}
+                onClick={() => void openExternal("http://127.0.0.1:3999")}
+              >
+                <ExternalLink size={12} />
+                {t("install.openWeb")}
+              </button>
             </span>
           </div>
         )}

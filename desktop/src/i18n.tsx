@@ -321,6 +321,8 @@ const DICT: Record<string, { zh: string; en: string }> = {
   "install.failedTitle": { zh: "安装失败", en: "Installation failed" },
   "install.reviewNote": { zh: "确认包来源与安全信息后开始安装。", en: "Review the package source and security information before installing." },
   "install.dataSource": { zh: "数据源 Provider", en: "Data Source Provider" },
+  "install.panelReady": { zh: "专业面板已就绪——在 DSH Web 中查看看板（随安装展示，卸载后自动移除）", en: "Pro panel ready — view it in DSH Web (shown on install, removed on uninstall)" },
+  "install.openWeb": { zh: "打开 DSH Web", en: "Open DSH Web" },
   "install.progressNote": { zh: "Forge Core 逐阶段执行安装：", en: "Forge Core runs the installation step by step:" },
   "install.confirm": { zh: "安装", en: "Install" },
   "install.doneBody": { zh: "已完成安全扫描并登记到本地 Forge 环境。", en: "Security-scanned and registered in your local Forge environment." },
