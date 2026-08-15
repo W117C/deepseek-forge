@@ -1,0 +1,45 @@
+name: Curate Registry
+
+# 自动增量收录：从 awesome-dsh-plugin README 拉取插件列表，生成/更新 curated-registry。
+# 定时每日跑一次 + 手动触发；有新增包时用 GITHUB_TOKEN 探测元数据并自动提交。
+on:
+  schedule:
+    - cron: '17 3 * * *'   # 每日 03:17 UTC（错峰）
+  workflow_dispatch:        # 手动触发：Actions → Curate Registry → Run workflow
+
+jobs:
+  curate:
+    name: 增量收录 curated-registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write        # 自动提交推回 main 需要
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 增量收录（GITHUB_TOKEN 自动探测 stars/license/topics）
+        run: node scripts/curate-add.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 有变更则提交
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "无新增包，跳过提交"
+            exit 0
+          fi
+          git config user.name "forge-curate-bot"
+          git config user.email "forge-curate-bot@users.noreply.github.com"
+          git add curated-registry
+          git commit -m "chore(curated): 自动增量收录 awesome-dsh-plugin 生态插件
+
+Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>"
+          git push origin HEAD:main
+          echo "已提交并推送 $(git rev-parse --short HEAD)"
