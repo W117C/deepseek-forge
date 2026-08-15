@@ -1,0 +1,24 @@
+{
+  "name": "@agenthub/dsh-client-ui-data-viz",
+  "version": "0.1.0",
+  "description": "Data Analyst visualization dashboard panel (DSH Web client-ui): dataset summary, charts, analysis steps",
+  "type": "module",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./client": { "types": "./lib/types/client/index.d.ts", "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["lib", "cordis.patch.yml"],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ],
+      "platform": "web"
+    }
+  },
+  "license": "MIT"
+}

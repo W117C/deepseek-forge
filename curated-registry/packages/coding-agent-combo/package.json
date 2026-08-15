@@ -66,19 +66,31 @@
     "command": null,
     "config": {}
   },
-  "dependencies": [],
+  "dependencies": [
+    {
+      "package": "@agenthub/dsh-client-ui-code-review",
+      "version": "0.1.0",
+      "required": true
+    }
+  ],
   "runtime": {
     "engine": "deepseek-harness",
     "profile": {
       "name": "coding-agent-combo",
       "bundles": [
         "@deepseek-ai/dsh-base",
-        "@deepseek-ai/dsh-web-app"
+        "@deepseek-ai/dsh-web-app",
+        "@agenthub/dsh-client-ui-code-review"
       ],
       "patch": "./profile.patch.yml"
     },
     "components": {
-      "bundles": [],
+      "bundles": [
+        {
+          "package": "@agenthub/dsh-client-ui-code-review",
+          "version": "0.1.0"
+        }
+      ],
       "presets": [
         {
           "id": "coding-agent-combo",
