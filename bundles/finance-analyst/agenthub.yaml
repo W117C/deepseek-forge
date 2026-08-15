@@ -18,6 +18,8 @@ components:
   bundles:
     - package: "@agenthub/finance-core"
       version: "0.1.0"
+    - package: "@agenthub/dsh-client-ui-market-data"
+      version: "0.1.0"
   presets:
     - id: finance-analyst
       base: standard
@@ -26,7 +28,7 @@ components:
     - company-research
 profile:
   name: finance
-  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/finance-core"]
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/finance-core", "@agenthub/dsh-client-ui-market-data"]
   patch: ./profile.patch.yml
 permissions:
   network: ["localhost:3111"]

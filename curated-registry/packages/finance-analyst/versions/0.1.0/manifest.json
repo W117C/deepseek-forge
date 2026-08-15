@@ -75,6 +75,11 @@
       "package": "@agenthub/finance-core",
       "version": "0.1.0",
       "required": true
+    },
+    {
+      "package": "@agenthub/dsh-client-ui-market-data",
+      "version": "0.1.0",
+      "required": true
     }
   ],
   "runtime": {
@@ -84,7 +89,8 @@
       "bundles": [
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
-        "@agenthub/finance-core"
+        "@agenthub/finance-core",
+        "@agenthub/dsh-client-ui-market-data"
       ],
       "patch": "./profile.patch.yml"
     },
@@ -92,6 +98,10 @@
       "bundles": [
         {
           "package": "@agenthub/finance-core",
+          "version": "0.1.0"
+        },
+        {
+          "package": "@agenthub/dsh-client-ui-market-data",
           "version": "0.1.0"
         }
       ],

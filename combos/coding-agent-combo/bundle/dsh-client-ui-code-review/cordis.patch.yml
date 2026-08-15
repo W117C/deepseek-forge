@@ -1,0 +1,4 @@
+# @agenthub/dsh-client-ui-code-review —— 编码 Agent diff/工作区看板 bundle 层。
+# 挂载浏览器面板（dsh.client roster 扫描发现浏览器半部；本层只声明行）。
+- id: ui-code-review
+  name: '@agenthub/dsh-client-ui-code-review'

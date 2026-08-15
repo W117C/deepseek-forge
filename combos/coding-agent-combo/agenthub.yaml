@@ -15,7 +15,9 @@ compatibility:
   node: ">=22"
 platform: [darwin, linux]
 components:
-  bundles: []
+  bundles:
+    - package: "@agenthub/dsh-client-ui-code-review"
+      version: "0.1.0"
   presets:
     - id: coding-agent-combo
       base: standard
@@ -25,7 +27,7 @@ components:
     - archify
 profile:
   name: coding-agent-combo
-  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/dsh-client-ui-code-review"]
   patch: ./profile.patch.yml
 permissions:
   network: []

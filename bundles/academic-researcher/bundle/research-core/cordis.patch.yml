@@ -24,3 +24,7 @@
     # 会话级定时任务（文献追踪 / 定期综述）。
     - id: schedule
       name: '@deepseek-ai/dsh-schedule'
+
+    # 学术研究看板面板：DSH Web 浏览器面板（dsh.client roster 扫描挂载）。
+    - id: ui-research
+      name: '@agenthub/dsh-client-ui-research'

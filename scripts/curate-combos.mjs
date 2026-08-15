@@ -181,7 +181,26 @@ async function buildCombo(packages, combo) {
   }
   const skills = [...picked.map((p) => p.id), ...realSkills];
 
-  // agenthub.yaml：components.skills 引用已落盘的 SKILL.md；preset 提供领域 persona
+  // agenthub.yaml：components.skills 引用已落盘的 SKILL.md；preset 提供领域 persona；
+  // UI bundle：扫描 bundle/ 目录下已有子包（如 code-review-ui），保留其挂载（重跑不丢）。
+  const uiBundles = [];
+  const bundleRoot = join(dir, 'bundle');
+  if (existsSync(bundleRoot)) {
+    for (const sub of readdirSync(bundleRoot)) {
+      const pj = join(bundleRoot, sub, 'package.json');
+      if (existsSync(pj)) {
+        try {
+          const p = JSON.parse(readFileSync(pj, 'utf8'));
+          if (p.name) uiBundles.push({ name: p.name, version: p.version || '0.1.0' });
+        } catch { /* skip malformed */ }
+      }
+    }
+  }
+  const bundleYaml = uiBundles.length === 0
+    ? '  bundles: []'
+    : ['  bundles:'].concat(uiBundles.map((b) => `    - package: "${b.name}"\n      version: "${b.version}"`)).join('\n');
+  const profileBundles = ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app'].concat(uiBundles.map((b) => b.name));
+
   writeFileSync(join(dir, 'agenthub.yaml'), [
     'schema: agenthub.dev/agent/v1',
     'id: ' + combo.id,
@@ -200,7 +219,7 @@ async function buildCombo(packages, combo) {
     '  node: ">=22"',
     'platform: [darwin, linux]',
     'components:',
-    '  bundles: []',
+    bundleYaml,
     '  presets:',
     '    - id: ' + combo.id,
     '      base: standard',
@@ -208,7 +227,7 @@ async function buildCombo(packages, combo) {
     ...skills.map((s) => '    - ' + s),
     'profile:',
     '  name: ' + combo.id,
-    '  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]',
+    '  bundles: [' + profileBundles.map((b) => '"' + b + '"').join(', ') + ']',
     '  patch: ./profile.patch.yml',
     'permissions:',
     '  network: []',

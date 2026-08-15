@@ -18,6 +18,8 @@ components:
   bundles:
     - package: "@agenthub/research-core"
       version: "0.1.0"
+    - package: "@agenthub/dsh-client-ui-research"
+      version: "0.1.0"
   presets:
     - id: academic-researcher
       base: standard
@@ -26,7 +28,7 @@ components:
     - paper-analysis
 profile:
   name: research
-  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/research-core"]
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "@agenthub/research-core", "@agenthub/dsh-client-ui-research"]
   patch: ./profile.patch.yml
 permissions:
   network: ["localhost:3112"]

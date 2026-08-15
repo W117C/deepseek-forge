@@ -75,6 +75,11 @@
       "package": "@agenthub/research-core",
       "version": "0.1.0",
       "required": true
+    },
+    {
+      "package": "@agenthub/dsh-client-ui-research",
+      "version": "0.1.0",
+      "required": true
     }
   ],
   "runtime": {
@@ -84,7 +89,8 @@
       "bundles": [
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
-        "@agenthub/research-core"
+        "@agenthub/research-core",
+        "@agenthub/dsh-client-ui-research"
       ],
       "patch": "./profile.patch.yml"
     },
@@ -92,6 +98,10 @@
       "bundles": [
         {
           "package": "@agenthub/research-core",
+          "version": "0.1.0"
+        },
+        {
+          "package": "@agenthub/dsh-client-ui-research",
           "version": "0.1.0"
         }
       ],

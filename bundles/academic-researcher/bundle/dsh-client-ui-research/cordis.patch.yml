@@ -1,0 +1,4 @@
+# @agenthub/dsh-client-ui-research —— 学术研究员文献看板 bundle 层。
+# 挂载浏览器面板（dsh.client roster 扫描发现浏览器半部；本层只声明行）。
+- id: ui-research
+  name: '@agenthub/dsh-client-ui-research'
