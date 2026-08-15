@@ -173,8 +173,8 @@ async function main() {
   } else {
     const base = 'https://raw.githubusercontent.com/awesome-dsh-plugin/awesome-dsh-plugin/main/';
     const [en, zh] = await Promise.all([
-      fetch(base + 'README.md').then((r) => r.text()),
-      fetch(base + 'README.zh.md').then((r) => r.text()),
+      fetch(base + 'README.md', { signal: AbortSignal.timeout(15000) }).then((r) => r.text()),
+      fetch(base + 'README.zh.md', { signal: AbortSignal.timeout(15000) }).then((r) => r.text()),
     ]);
     enText = en; zhText = zh;
   }
