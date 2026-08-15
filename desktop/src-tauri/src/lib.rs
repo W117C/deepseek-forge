@@ -293,11 +293,19 @@ fn run_forge_stdin(args: &[String], input: &str) -> Result<serde_json::Value, St
 /// 标准化：adapter generate —— 生成 Forge 包骨架（install/configure/healthcheck 待人工补充）。
 #[tauri::command]
 fn adapter_generate(source: String) -> Result<serde_json::Value, String> {
+    // slug 只取路径最后一段并净化：拒绝 `..`/`.`，仅保留字母数字与 `-`，
+    // 防止恶意 source（如 `../../x`）逃逸 ~/.deepseek-forge/adapters/ 目录。
     let slug = source
         .split('/')
-        .filter(|x| !x.is_empty())
+        .filter(|x| !x.is_empty() && *x != ".." && *x != ".")
         .last()
         .map(|x| x.replace(".git", ""))
+        .map(|x| {
+            x.chars()
+                .filter(|c| c.is_ascii_alphanumeric() || *c == '-')
+                .collect::<String>()
+        })
+        .filter(|x| !x.is_empty())
         .unwrap_or_else(|| "adapter".to_string());
     let out = forge_core::dsh::dsh_home(None)
         .join(".deepseek-forge")
