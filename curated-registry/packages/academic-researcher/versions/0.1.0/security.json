@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "scan": "required",
+  "scannedAt": "2026-08-15T08:56:41.977Z",
+  "findings": [
+    {
+      "rule": "js-expr-canonical",
+      "level": "low",
+      "weight": 1,
+      "label": "官方平台判断惯用法（已白名单）",
+      "count": 2,
+      "file": "preset/academic-researcher/agent.cordis.yml"
+    }
+  ]
+}

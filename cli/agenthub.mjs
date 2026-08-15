@@ -14,7 +14,7 @@ import { keygen, signPayload, sha256hex, canonicalPayload } from '../lib/signing
 import { fetchAgent } from '../lib/registry-client.mjs';
 import { runForgeCoreJson } from '../lib/forge-core-bin.mjs';
 import { createRegistry } from '../lib/registry-server.mjs';
-import { createAgent, composeAgent } from '../lib/scaffold.mjs';
+import { createAgent, composeAgent, wrapPluginAsAgent } from '../lib/scaffold.mjs';
 
 const USAGE = `forge —— 一键把 DSH 变成专业 Agent（M2，bin 兼容别名 agenthub）
 
@@ -432,6 +432,22 @@ async function main() {
     console.log('下一步：');
     console.log('  node cli/agenthub.mjs install ' + r.outDir + ' --yes');
     console.log('  dsh --profile ' + id + '  （在会话里选择任一来源预设）');
+    return;
+  }
+
+  if (cmd === 'wrap') {
+    const plugin = f._[0];
+    const name = f._[1];
+    if (!plugin || !name) { console.log('用法: agenthub wrap <插件目录> <名称> [--category <领域>] [--publisher <id>] [--out <目录>]'); process.exit(2); }
+    const id = (f.id || name).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+    if (!id) { console.error('名称无法转为合法 id'); process.exit(1); }
+    const outDir = f.out ? resolve(f.out) : resolve(id + '-agent');
+    const publisher = f.publisher || 'my-org';
+    const r = wrapPluginAsAgent({ outDir, id, name, category: f.category || '专业 Agent', publisher, plugin: resolve(plugin), bin });
+    console.log('✓ 插件已包装为专业 Agent：' + r.outDir + '（plugin ' + r.plugin + '，preset ' + id + '）');
+    console.log('下一步：');
+    console.log('  node cli/agenthub.mjs install ' + r.outDir + ' --yes');
+    console.log('  dsh --profile ' + id + '  （自动挂载专业 preset）');
     return;
   }
 

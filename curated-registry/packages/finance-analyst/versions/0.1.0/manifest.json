@@ -1,0 +1,148 @@
+{
+  "id": "finance-analyst",
+  "name": "Finance Analyst",
+  "type": "agent",
+  "version": "0.1.0",
+  "description": "把 DeepSeek Harness 变成金融研究与决策支持 Agent。",
+  "category": "金融 Finance",
+  "tags": [],
+  "publisher": {
+    "id": "agenthub",
+    "name": "AgentHub"
+  },
+  "source": {
+    "type": "forge",
+    "repository": "https://github.com/W117C/deepseek-forge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": null,
+    "author": null,
+    "license": null,
+    "version": null,
+    "url": null,
+    "adapterVersion": null
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": "LICENSE"
+  },
+  "compatibility": {
+    "forge": null,
+    "dsh": {
+      "min": "0.1.0-rc.6",
+      "tested": [
+        "0.1.0-rc.6"
+      ]
+    },
+    "node": ">=22",
+    "platform": [
+      "darwin",
+      "linux"
+    ]
+  },
+  "capabilities": [
+    "network.http"
+  ],
+  "permissions": {
+    "network": [
+      "localhost:3111"
+    ],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "finance-analyst-0.1.0.tar.gz",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": "agenthub"
+  },
+  "entrypoint": {
+    "type": "harness-profile",
+    "profile": "finance",
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [
+    {
+      "package": "@agenthub/finance-core",
+      "version": "0.1.0",
+      "required": true
+    }
+  ],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "finance",
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "@agenthub/finance-core"
+      ],
+      "patch": "./profile.patch.yml"
+    },
+    "components": {
+      "bundles": [
+        {
+          "package": "@agenthub/finance-core",
+          "version": "0.1.0"
+        }
+      ],
+      "presets": [
+        {
+          "id": "finance-analyst",
+          "base": "standard"
+        }
+      ],
+      "skills": [
+        "financial-analysis",
+        "company-research"
+      ]
+    },
+    "health": [
+      {
+        "kind": "dump-config",
+        "expect-rows": [
+          "mcp-market-data",
+          "schedule"
+        ]
+      }
+    ]
+  },
+  "createdAt": null,
+  "updatedAt": null,
+  "dataSources": [
+    {
+      "id": "local-mcp",
+      "label": "本地自建 MCP（默认，无需凭据）",
+      "default": true,
+      "config": {
+        "serverName": "marketdata",
+        "transport": "streamable-http",
+        "url": "http://localhost:3111/mcp",
+        "failOnStartupError": false
+      }
+    },
+    {
+      "id": "tushare",
+      "label": "Tushare（需 TUSHARE_TOKEN，安装后编辑 profile patch 添加鉴权头）",
+      "config": {
+        "serverName": "marketdata",
+        "transport": "streamable-http",
+        "url": "http://localhost:3111/mcp",
+        "failOnStartupError": false
+      }
+    }
+  ],
+  "schema": "forge.package.v1",
+  "secrets": [],
+  "trust": "official",
+  "updatePolicy": "notify"
+}

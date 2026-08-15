@@ -1,0 +1,148 @@
+{
+  "id": "academic-researcher",
+  "name": "Academic Researcher",
+  "type": "agent",
+  "version": "0.1.0",
+  "description": "把 DeepSeek Harness 变成学术研究 Agent：文献检索与综述、论文分析、引文核验。",
+  "category": "学术 Academic",
+  "tags": [],
+  "publisher": {
+    "id": "agenthub",
+    "name": "AgentHub"
+  },
+  "source": {
+    "type": "forge",
+    "repository": "https://github.com/W117C/deepseek-forge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": null,
+    "author": null,
+    "license": null,
+    "version": null,
+    "url": null,
+    "adapterVersion": null
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": "LICENSE"
+  },
+  "compatibility": {
+    "forge": null,
+    "dsh": {
+      "min": "0.1.0-rc.6",
+      "tested": [
+        "0.1.0-rc.6"
+      ]
+    },
+    "node": ">=22",
+    "platform": [
+      "darwin",
+      "linux"
+    ]
+  },
+  "capabilities": [
+    "network.http"
+  ],
+  "permissions": {
+    "network": [
+      "localhost:3112"
+    ],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "academic-researcher-0.1.0.tar.gz",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": "agenthub"
+  },
+  "entrypoint": {
+    "type": "harness-profile",
+    "profile": "research",
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [
+    {
+      "package": "@agenthub/research-core",
+      "version": "0.1.0",
+      "required": true
+    }
+  ],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "research",
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "@agenthub/research-core"
+      ],
+      "patch": "./profile.patch.yml"
+    },
+    "components": {
+      "bundles": [
+        {
+          "package": "@agenthub/research-core",
+          "version": "0.1.0"
+        }
+      ],
+      "presets": [
+        {
+          "id": "academic-researcher",
+          "base": "standard"
+        }
+      ],
+      "skills": [
+        "literature-review",
+        "paper-analysis"
+      ]
+    },
+    "health": [
+      {
+        "kind": "dump-config",
+        "expect-rows": [
+          "mcp-papers",
+          "schedule"
+        ]
+      }
+    ]
+  },
+  "createdAt": null,
+  "updatedAt": null,
+  "dataSources": [
+    {
+      "id": "local-mcp",
+      "label": "本地自建 MCP（默认，无需凭据）",
+      "default": true,
+      "config": {
+        "serverName": "papers",
+        "transport": "streamable-http",
+        "url": "http://localhost:3112/mcp",
+        "failOnStartupError": false
+      }
+    },
+    {
+      "id": "arxiv",
+      "label": "arXiv / Semantic Scholar（免费公共 API）",
+      "config": {
+        "serverName": "papers",
+        "transport": "streamable-http",
+        "url": "http://localhost:3112/mcp",
+        "failOnStartupError": false
+      }
+    }
+  ],
+  "schema": "forge.package.v1",
+  "secrets": [],
+  "trust": "official",
+  "updatePolicy": "notify"
+}
