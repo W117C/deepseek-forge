@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-// 把官方 Agent bundles（bundles/ 下非 test-fixtures 目录）收录为 curated-registry 的
-// forge.package.v1 agent 类型包（type: agent / entrypoint: harness-profile / runtime.components）。
-// 产物 = forge-core registry import（Rust 归一化）生成的平面 package.json，与本地 registry 读取一致。
+// 把官方 Agent bundles（bundles/ 下非 test-fixtures 目录，或 --source 指定目录）收录为
+// curated-registry 的 forge.package.v1 agent 类型包（type: agent / harness-profile）。
+// 产物 = forge-core registry import（Rust 归一化）生成的平面 package.json + versions/ + cache，
+// 与本地 registry 读取一致；桌面 install-from-registry 可走十步安装管线。
+// 用法：node scripts/curate-agents.mjs [--source <目录>]（默认 bundles/）
 import { execFileSync } from 'node:child_process';
 import {
   copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync,
@@ -25,7 +27,9 @@ function copyRecursive(src, dest) {
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
-const bundlesDir = join(root, 'bundles');
+const argIdx = process.argv.indexOf('--source');
+const sourceArg = argIdx >= 0 ? process.argv[argIdx + 1] : null;
+const bundlesDir = sourceArg ? join(root, sourceArg) : join(root, 'bundles');
 const outRoot = join(root, 'curated-registry');
 
 const core = forgeCoreBin();
@@ -40,8 +44,8 @@ const dirs = readdirSync(bundlesDir, { withFileTypes: true })
   )
   .map((d) => d.name);
 
-if (dirs.length === 0) { console.error('bundles/ 下未找到 agent 目录'); process.exit(1); }
-console.log('agent bundles: ' + dirs.join(', '));
+if (dirs.length === 0) { console.error('未找到 agent 目录：' + bundlesDir); process.exit(1); }
+console.log('agent bundles (' + bundlesDir + '): ' + dirs.join(', '));
 
 const tmp = join(root, '.curate-agents-tmp');
 rmSync(tmp, { recursive: true, force: true });

@@ -22,6 +22,7 @@ components:
   skills:
     - archify
     - vibe-skills
+    - xlsx
 profile:
   name: data-analyst-combo
   bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]

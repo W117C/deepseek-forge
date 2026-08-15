@@ -34,6 +34,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 按真实 stars 重新生成组合包（stars ≥ 500 精选）
+        run: node scripts/curate-combos.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 收录组合包进 curated-registry（agent 类型 + 制品）
+        run: node scripts/curate-agents.mjs --source combos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 有变更则提交
         if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         run: |
@@ -43,7 +53,7 @@ jobs:
           fi
           git config user.name "forge-curate-bot"
           git config user.email "forge-curate-bot@users.noreply.github.com"
-          git add curated-registry
-          git commit -m "chore(curated): 自动增量收录 awesome-dsh-plugin 生态插件" -m "Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>"
+          git add curated-registry combos
+          git commit -m "chore(curated): 自动增量收录 + 按 stars 刷新组合包" -m "Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>"
           git push origin HEAD:main
           echo "已提交并推送 $(git rev-parse --short HEAD)"

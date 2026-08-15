@@ -22,6 +22,7 @@ components:
   skills:
     - archify
     - brooks-lint
+    - pdf
 profile:
   name: deep-research-combo
   bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
