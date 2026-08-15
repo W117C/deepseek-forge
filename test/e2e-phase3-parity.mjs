@@ -83,6 +83,15 @@ const stripTs = (s) => {
   return rest;
 };
 
+// P0-B 新增：剥离 default-preset / data-source 托管块与孤立 `[]` 行
+// （旧引擎不写这些块，且保留 `[]` 标量行；新引擎为 YAML 合法性移除 `[]`），
+// 仅比对其余 patch 内容。
+const stripManagedBlocks = (s) =>
+  s
+    .replace(/# --- agenthub default-preset \(begin\):[\s\S]*?# --- agenthub default-preset \(end\):[\s\S]*?\n/g, '')
+    .replace(/# --- agenthub data-source \(begin\):[\s\S]*?# --- agenthub data-source \(end\):[\s\S]*?\n/g, '')
+    .replace(/^\s*\[\]\s*\n/gm, '');
+
 async function compare(agentName, profile) {
   const agentDir = join(root, 'bundles', agentName);
   const oldHome = join(root, '.e2e-parity-old', agentName);
@@ -111,9 +120,16 @@ async function compare(agentName, profile) {
   const pn = JSON.parse(readFileSync(join(newHome, 'profiles', profile, 'package.json'), 'utf8'));
   check(agentName + ' profile.bundles 一致', JSON.stringify(po.dsh.profile.bundles) === JSON.stringify(pn.dsh.profile.bundles));
   check(agentName + ' profile.dependencies 一致', JSON.stringify(po.dependencies ?? {}) === JSON.stringify(pn.dependencies ?? {}));
-  check(agentName + ' cordis.patch.yml 一致',
-    readFileSync(join(oldHome, 'profiles', profile, 'cordis.patch.yml'), 'utf8') ===
-    readFileSync(join(newHome, 'profiles', profile, 'cordis.patch.yml'), 'utf8'));
+  check(agentName + ' cordis.patch.yml 一致（忽略 default-preset/data-source 托管块）',
+    stripManagedBlocks(readFileSync(join(oldHome, 'profiles', profile, 'cordis.patch.yml'), 'utf8')) ===
+    stripManagedBlocks(readFileSync(join(newHome, 'profiles', profile, 'cordis.patch.yml'), 'utf8')));
+  // P0-B：Rust 引擎应写入 profile 级默认 preset 托管块
+  const newPatch = readFileSync(join(newHome, 'profiles', profile, 'cordis.patch.yml'), 'utf8');
+  for (const pid of sNew?.presetIds ?? []) {
+    check(agentName + ' 默认 preset 托管块含 ' + pid,
+      newPatch.includes('# --- agenthub default-preset (begin)') &&
+      newPatch.includes('default: ' + pid));
+  }
 
   for (const pid of sNew?.presetIds ?? []) {
     check(agentName + ' preset/' + pid + ' 树一致',

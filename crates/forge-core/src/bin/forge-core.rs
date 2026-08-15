@@ -677,6 +677,7 @@ fn run_install(args: &[String]) -> Result<(), ForgeError> {
         profile_name: profile,
         trust: f.get("trust").map(String::from),
         smoke: f.get("smoke").is_some(),
+        data_source: f.get("data-source").map(String::from),
     };
     match install(&req) {
         Ok(r) => {
@@ -1000,6 +1001,7 @@ fn run_install_from_registry(args: &[String]) -> Result<(), ForgeError> {
         profile_name: profile,
         trust: f.get("trust").map(String::from),
         smoke: f.get("smoke").is_some(),
+        data_source: f.get("data-source").map(String::from),
     };
     match install(&req) {
         Ok(r) => {
@@ -1290,6 +1292,7 @@ trust: official\n",
                 profile_name: slug.clone(),
                 trust: Some("official".to_string()),
                 smoke: f.get("smoke").is_some(),
+                data_source: f.get("data-source").map(String::from),
             };
             match install(&req) {
                 Ok(r) => {

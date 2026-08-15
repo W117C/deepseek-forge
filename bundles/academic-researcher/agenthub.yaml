@@ -32,6 +32,24 @@ permissions:
   network: ["localhost:3112"]
   env: []
 secrets: []
+# P0-B：数据源 provider 声明。安装时选择（--data-source <id> 或交互），
+# 选中的 provider 以 disabled: false 写入 profile patch，装完即启用。
+dataSources:
+  - id: local-mcp
+    label: 本地自建 MCP（默认，无需凭据）
+    default: true
+    config:
+      serverName: papers
+      transport: streamable-http
+      url: 'http://localhost:3112/mcp'
+      failOnStartupError: false
+  - id: arxiv
+    label: arXiv / Semantic Scholar（免费公共 API）
+    config:
+      serverName: papers
+      transport: streamable-http
+      url: 'http://localhost:3112/mcp'
+      failOnStartupError: false
 health:
   - kind: dump-config
     expect-rows: [mcp-papers, schedule]

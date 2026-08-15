@@ -191,13 +191,24 @@ async function main() {
     console.log('安装 ' + manifest.name + ' v' + manifest.version + ' → profile "' + profileName + '"');
     console.log('DSH: ' + (bin ? bin + ' (' + dshVersion(bin) + ')' : '未找到'));
     console.log('DSH_HOME: ' + home);
+    // P0-B：数据源 provider 选择（--data-source <id> 或交互；--yes 非交互用 default/first）
+    let dataSource = f['data-source'];
+    const dataSources = Array.isArray(manifest.dataSources) ? manifest.dataSources : [];
+    if (dataSources.length > 0 && !dataSource && !f.yes && process.stdin.isTTY) {
+      console.log('数据源 provider 选择：');
+      dataSources.forEach((ds, i) => console.log(`  ${i + 1}) ${ds.id} — ${ds.label ?? ''}`));
+      const pick = await confirm('选择数据源 provider（默认 1）: ');
+      const idx = /^\d+$/.test(String(pick)) ? parseInt(pick, 10) - 1 : 0;
+      dataSource = dataSources[Math.max(0, Math.min(idx, dataSources.length - 1))]?.id;
+    }
+    if (dataSource) console.log('数据源 provider：' + dataSource);
     if (!f.yes) {
       const ok = await confirm(
         '将写入 profiles/' + profileName + '/、.agent-presets/、skills/，权限声明 ' +
         JSON.stringify(manifest.permissions ?? {}) + '，trust=' + (f.trust || registryTrust || manifest.trust) + '。确认安装？');
       if (!ok) { console.log('已取消。'); process.exit(0); }
     }
-    const result = install({ agentDir, home, bin, profileName, yes: f.yes, smoke: !!f.smoke, trust: f.trust || registryTrust });
+    const result = install({ agentDir, home, bin, profileName, yes: f.yes, smoke: !!f.smoke, trust: f.trust || registryTrust, dataSource });
     // 匿名安装上报（默认开；--no-telemetry 关闭；失败不影响安装结果）
     if (f.registry && !f['no-telemetry']) {
       try {

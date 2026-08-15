@@ -83,6 +83,8 @@ pub struct InstallRequest {
     pub profile_name: String,
     pub trust: Option<String>,
     pub smoke: bool,
+    /// P0-B：数据源 provider id（manifest dataSources 中声明）；None = 用 default/first
+    pub data_source: Option<String>,
 }
 
 fn remove_any(p: &Path) -> Result<(), ForgeError> {
@@ -265,12 +267,168 @@ pub fn merge_profile_patch(
     Ok(patch_path.to_path_buf())
 }
 
+/// P0-B：把 agent 的第一个 preset 写为 profile 级默认（agent-presets 行 config.default）。
+/// dsh 新会话未显式选择 preset 时即挂载该默认，用户全局 settings 默认仍优先（非破坏）。
+fn merge_default_preset(
+    patch_path: &Path,
+    agent_id: &str,
+    preset_id: &str,
+) -> Result<(), ForgeError> {
+    let begin = format!("# --- agenthub default-preset (begin): {agent_id} ---");
+    let end = format!("# --- agenthub default-preset (end): {agent_id} ---");
+    let mut content = fs::read_to_string(patch_path).unwrap_or_default();
+    let re = regex::Regex::new(&format!(
+        r"{}[\s\S]*?{}\n?",
+        regex::escape(&begin),
+        regex::escape(&end)
+    ))
+    .map_err(|e| ForgeError::InvalidManifest(format!("default-preset regex: {e}")))?;
+    content = re.replace_all(&content, "").to_string();
+
+    let block = format!(
+        "{begin}
+- id: agent-presets
+  config:
+    default: {preset_id}
+{end}
+"
+    );
+
+    // 既有无真实行（仅 `[]` 标量 + 注释）时：必须移除孤立的 `[]` 行，
+    // 否则 `[]` 文档后直接跟块序列 `- id:` 是非法 YAML（解析报
+    // "end of the stream or a document separator is expected"）。
+    let effective = content
+        .split('\n')
+        .filter(|l| !l.trim().is_empty() && !l.trim().starts_with('#'))
+        .map(|l| l.trim())
+        .collect::<Vec<_>>()
+        .join(
+            "
+",
+        );
+    let new_content = if effective.is_empty() || effective == "[]" {
+        let stripped = content
+            .split('\n')
+            .filter(|l| l.trim() != "[]")
+            .collect::<Vec<_>>()
+            .join(
+                "
+",
+            );
+        if stripped.trim().is_empty() {
+            block
+        } else {
+            format!("{}\n{block}", stripped.trim_end())
+        }
+    } else {
+        format!("{}\n{block}", content.trim_end())
+    };
+    fs::write(patch_path, new_content).map_err(ForgeError::Io)?;
+    Ok(())
+}
+
 fn manifest_trust(manifest: &Package) -> Option<String> {
     manifest
         .extra
         .get("trust")
         .and_then(|t| t.as_str())
         .map(|s| s.to_string())
+}
+
+/// P0-B：从 manifest 的 dataSources 声明中选择 provider，返回其配置（JSON 块）。
+/// 选择顺序：请求指定 id → default: true → 第一个。未声明返回 None（不启用数据源）。
+fn data_source_row(
+    manifest: &Package,
+    requested: Option<&str>,
+) -> Option<(String, serde_json::Value)> {
+    let ds = manifest.extra.get("dataSources")?.as_array()?;
+    let id_of = |d: &serde_json::Value| {
+        d.get("id")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string())
+    };
+    let selected = requested
+        .and_then(|want| ds.iter().find(|d| id_of(d).as_deref() == Some(want)))
+        .or_else(|| ds.iter().find(|d| id_of(d).as_deref() == Some("default")))
+        .or_else(|| {
+            ds.iter()
+                .find(|d| d.get("default").and_then(|v| v.as_bool()) == Some(true))
+        })
+        .or_else(|| ds.first());
+    let entry = selected?;
+    let id = id_of(entry)?;
+    let config = entry.get("config")?.clone();
+    Some((id, config))
+}
+
+/// P0-B：把启用的数据源行写入 profile patch 托管段（覆盖 bundle 层的 disabled: true）。
+fn merge_data_source_patch(
+    patch_path: &Path,
+    agent_id: &str,
+    ds_id: &str,
+    config: &serde_json::Value,
+) -> Result<(), ForgeError> {
+    let begin = format!("# --- agenthub data-source (begin): {agent_id} ---");
+    let end = format!("# --- agenthub data-source (end): {agent_id} ---");
+    let mut content = fs::read_to_string(patch_path).unwrap_or_default();
+    let re = regex::Regex::new(&format!(
+        r"{}[\s\S]*?{}\n?",
+        regex::escape(&begin),
+        regex::escape(&end)
+    ))
+    .map_err(|e| ForgeError::InvalidManifest(format!("data-source regex: {e}")))?;
+    content = re.replace_all(&content, "").to_string();
+
+    // 生成 `- id: <ds_id>` + disabled: false + config 的 YAML 行（4 空格缩进）
+    let cfg_lines = serde_yaml::to_string(config)
+        .map_err(|e| ForgeError::InvalidManifest(format!("data-source config: {e}")))?;
+    let cfg_indented = cfg_lines
+        .lines()
+        .map(|l| if l.is_empty() { String::new() } else { format!("    {l}") })
+        .collect::<Vec<_>>()
+        .join(
+            "
+",
+        );
+    let block = format!(
+        "{begin}
+- id: {ds_id}
+  disabled: false
+  config:
+{cfg_indented}
+{end}
+"
+    );
+
+    // 既有无真实行（仅 `[]` 标量 + 注释）时移除孤立 `[]`，保持合法块序列
+    let effective = content
+        .split('\n')
+        .filter(|l| !l.trim().is_empty() && !l.trim().starts_with('#'))
+        .map(|l| l.trim())
+        .collect::<Vec<_>>()
+        .join(
+            "
+",
+        );
+    let new_content = if effective.is_empty() || effective == "[]" {
+        let stripped = content
+            .split('\n')
+            .filter(|l| l.trim() != "[]")
+            .collect::<Vec<_>>()
+            .join(
+                "
+",
+            );
+        if stripped.trim().is_empty() {
+            block
+        } else {
+            format!("{}\n{block}", stripped.trim_end())
+        }
+    } else {
+        format!("{}\n{block}", content.trim_end())
+    };
+    fs::write(patch_path, new_content).map_err(ForgeError::Io)?;
+    Ok(())
 }
 
 /// Dump-config health check (Node dumpConfigCheck).
@@ -701,6 +859,24 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
                 &profile_dir(&req.home, &req.profile_name).join("cordis.patch.yml"),
                 &agent_id,
                 &rows_text,
+            )?;
+        }
+        // P0-B：有 preset 时写 profile 级默认，dsh 新会话自动以专业身份启动
+        if let Some(first_preset) = preset_ids.first() {
+            merge_default_preset(
+                &profile_dir(&req.home, &req.profile_name).join("cordis.patch.yml"),
+                &agent_id,
+                first_preset,
+            )?;
+        }
+        // P0-B：manifest 声明 dataSources 时，启用所选 provider 并写入 profile patch
+        // （覆盖 bundle 层的 disabled: true，装完即可用）
+        if let Some((ds_id, cfg)) = data_source_row(&manifest, req.data_source.as_deref()) {
+            merge_data_source_patch(
+                &profile_dir(&req.home, &req.profile_name).join("cordis.patch.yml"),
+                &agent_id,
+                &ds_id,
+                &cfg,
             )?;
         }
 
