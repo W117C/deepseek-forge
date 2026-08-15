@@ -9,8 +9,8 @@ use serde::Serialize;
 use serde_json::{json, Value};
 
 use crate::dsh::{
-    has_pnpm, init_profile, preset_dir, profile_dir, read_manifest, run_dsh, skills_dir,
-    write_manifest,
+    dsh_version, has_pnpm, init_profile, preset_dir, profile_dir, read_manifest, run_dsh,
+    skills_dir, write_manifest,
 };
 use crate::errors::ForgeError;
 use crate::logutil::append_security_log;
@@ -303,13 +303,23 @@ fn dump_config_check(
             Ok(re) => re.is_match(&out) || out.contains(&format!("id: {row_id}")),
             Err(_) => out.contains(&format!("id: {row_id}")),
         };
+        // 行存在但带 disabled: true → 提示级（不阻断，能力需在 profile patch 启用）
+        let disabled = if present {
+            let pos = out.find(&format!("- id: {row_id}")).unwrap_or(out.len());
+            let tail = &out[pos..out.len().min(pos + 800)];
+            tail.contains("disabled: true")
+        } else {
+            false
+        };
         checks.push(HealthCheckItem {
             name: format!("组合树含行 {row_id}"),
             ok: present,
-            detail: if present {
-                String::new()
-            } else {
+            detail: if !present {
                 "未找到".to_string()
+            } else if disabled {
+                "行存在但已禁用（能力未启用，可在 profile patch 中启用）".to_string()
+            } else {
+                String::new()
             },
         });
     }
@@ -319,6 +329,45 @@ fn dump_config_check(
         passed,
         checks,
         out,
+    }
+}
+
+/// Preset / skill 落地检查：验证安装器已把预设与技能写入 DSH_HOME。
+/// 阻断级——声明了 preset/skill 但文件缺失说明安装不完整；两者皆空时恒 PASS。
+fn preset_skill_check(home: &Path, preset_ids: &[String], skill_names: &[String]) -> HealthResult {
+    let mut checks = Vec::new();
+    for id in preset_ids {
+        let dir = preset_dir(home, id);
+        let ok = dir.join("agent.cordis.yml").exists();
+        checks.push(HealthCheckItem {
+            name: format!("预设 {id} 已安装"),
+            ok,
+            detail: if ok {
+                String::new()
+            } else {
+                format!("缺少 {}", dir.join("agent.cordis.yml").display())
+            },
+        });
+    }
+    for name in skill_names {
+        let dir = skills_dir(home, name);
+        let ok = dir.join("SKILL.md").exists();
+        checks.push(HealthCheckItem {
+            name: format!("技能 {name} 已安装"),
+            ok,
+            detail: if ok {
+                String::new()
+            } else {
+                format!("缺少 {}", dir.join("SKILL.md").display())
+            },
+        });
+    }
+    let passed = checks.iter().all(|c| c.ok);
+    HealthResult {
+        kind: "preset-skills".to_string(),
+        passed,
+        checks,
+        out: String::new(),
     }
 }
 
@@ -423,9 +472,14 @@ fn run_health(
     home: &Path,
     profile_name: &str,
     expect_rows: &[String],
+    preset_ids: &[String],
+    skill_names: &[String],
     smoke: bool,
 ) -> HealthReport {
     let mut results = vec![dump_config_check(bin, home, profile_name, expect_rows)];
+    if !preset_ids.is_empty() || !skill_names.is_empty() {
+        results.push(preset_skill_check(home, preset_ids, skill_names));
+    }
     if smoke {
         results.push(boot_smoke_check(bin, home, profile_name));
     }
@@ -461,7 +515,7 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
 
     // 1. compatibility
     steps.push("compatibility".to_string());
-    if let Err(e) = check_compatibility(&manifest) {
+    if let Err(e) = check_compatibility(&manifest, &req.bin) {
         return Err(InstallFailure::new(&e, steps, None));
     }
 
@@ -680,6 +734,8 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
             &req.home,
             &req.profile_name,
             &expect_rows,
+            &preset_ids,
+            &skill_names,
             req.smoke,
         );
 
@@ -710,7 +766,10 @@ pub fn install(req: &InstallRequest) -> Result<InstallResult, InstallFailure> {
     }
 }
 
-fn check_compatibility(manifest: &Package) -> Result<(), ForgeError> {
+/// 兼容性检查：Node 主版本 + 平台矩阵 + DSH 版本下限。
+/// 探测不到的项（无 node / dsh --version 不可解析）不阻断，保持向后兼容。
+fn check_compatibility(manifest: &Package, bin: &str) -> Result<(), ForgeError> {
+    // 1. Node 主版本（默认 >=20）
     let need = manifest
         .compatibility
         .node
@@ -729,7 +788,49 @@ fn check_compatibility(manifest: &Package) -> Result<(), ForgeError> {
             "Node {node_major} 不满足 {need}"
         )));
     }
+
+    // 2. 平台矩阵：platform 非空且不含当前平台 → 拒绝（"windows" 兼容 win32 写法）
+    if !manifest.compatibility.platform.is_empty() {
+        let cur = current_platform();
+        let ok = manifest.compatibility.platform.iter().any(|p| {
+            let p = p.to_ascii_lowercase();
+            p == cur || (cur == "win32" && p == "windows")
+        });
+        if !ok {
+            return Err(ForgeError::IncompatibleVersion(format!(
+                "当前平台 {cur} 不在包声明平台 [{}] 内",
+                manifest.compatibility.platform.join(", ")
+            )));
+        }
+    }
+
+    // 3. DSH 版本下限：dsh --version 可解析时校验；探测不到（无 dsh/格式未知）不阻断
+    if let Some(min_dsh) = &manifest.compatibility.dsh.min {
+        if let Some(v) = dsh_version(bin) {
+            let v_clean = v.trim().trim_start_matches('v');
+            let required = min_dsh.trim_start_matches('v');
+            if let (Ok(actual), Ok(req)) = (
+                semver::Version::parse(v_clean),
+                semver::Version::parse(required),
+            ) {
+                if actual < req {
+                    return Err(ForgeError::IncompatibleVersion(format!(
+                        "DSH {v_clean} 低于包要求的最低版本 {min_dsh}"
+                    )));
+                }
+            }
+        }
+    }
     Ok(())
+}
+
+/// 当前平台标识（与 bundle manifest 的 platform 字段约定一致：darwin/linux/win32）。
+fn current_platform() -> &'static str {
+    match std::env::consts::OS {
+        "macos" => "darwin",
+        "windows" => "win32",
+        other => other,
+    }
 }
 
 fn current_node_major() -> u32 {
