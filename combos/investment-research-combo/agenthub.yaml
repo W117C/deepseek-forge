@@ -1,0 +1,37 @@
+schema: agenthub.dev/agent/v1
+id: investment-research-combo
+name: 投资研究 Agent
+category: 金融 Finance
+version: 0.1.0
+description: 投资研究 Agent：按 stars 精选社区高星组件组合而成（vibe-skills, coding-tools-mcp）。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles: []
+  presets:
+    - id: investment-research-combo
+      base: standard
+  skills:
+    - vibe-skills
+    - coding-tools-mcp
+profile:
+  name: investment-research-combo
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
+  patch: ./profile.patch.yml
+permissions:
+  network: []
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: []
+updatePolicy: notify
+trust: community

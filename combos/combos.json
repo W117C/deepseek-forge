@@ -26,5 +26,32 @@
       "archify",
       "vibe-skills"
     ]
+  },
+  {
+    "id": "investment-research-combo",
+    "name": "投资研究 Agent",
+    "slots": 2,
+    "components": [
+      "vibe-skills",
+      "coding-tools-mcp"
+    ]
+  },
+  {
+    "id": "content-creator-combo",
+    "name": "内容生产 Agent",
+    "slots": 2,
+    "components": [
+      "archify",
+      "picgo-core"
+    ]
+  },
+  {
+    "id": "github-analyzer-combo",
+    "name": "GitHub 项目分析 Agent",
+    "slots": 2,
+    "components": [
+      "coding-tools-mcp",
+      "brooks-lint"
+    ]
   }
 ]

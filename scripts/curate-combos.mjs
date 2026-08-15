@@ -78,6 +78,39 @@ const COMBOS = [
       { role: '记忆与上下文', type: 'tool', cat: ['研究与知识', '生态与资源'] },
     ],
   },
+  {
+    id: 'investment-research-combo',
+    name: { zh: '投资研究 Agent', en: 'Investment Research Agent' },
+    category: '金融 Finance',
+    persona: '你是一名投资研究员。你擅长：公司基本面与估值分析、行业研究、风险识别。'
+      + ' 输出是研究与决策支持，不构成投资建议；每条判断附证据与数据来源；不执行交易。',
+    slots: [
+      { role: '研究分析', type: 'skill', cat: ['研究与知识', 'Agent 与自动化'] },
+      { role: '代码与模型', type: 'mcp', cat: ['Agent 与自动化', '开发与工程'] },
+    ],
+  },
+  {
+    id: 'content-creator-combo',
+    name: { zh: '内容生产 Agent', en: 'Content Creator Agent' },
+    category: '内容 Content',
+    persona: '你是一名内容创作者。你擅长：图文内容生产、视觉素材制作与配图、多平台适配。'
+      + ' 产出需符合目标平台规范；涉及事实断言需可溯源。',
+    slots: [
+      { role: '视觉与图像', type: 'skill', cat: ['视觉与图像'] },
+      { role: '图片工具', type: 'tool', cat: ['视觉与图像', '实用工具与其他'] },
+    ],
+  },
+  {
+    id: 'github-analyzer-combo',
+    name: { zh: 'GitHub 项目分析 Agent', en: 'GitHub Project Analyzer' },
+    category: '开发 Development',
+    persona: '你是一名开源项目分析师。你擅长：仓库结构与架构理解、代码质量审查、安全与许可评估。'
+      + ' 审查意见基于代码事实并引用文件与行号；不臆造 API 或指标。',
+    slots: [
+      { role: '代码能力', type: 'mcp', cat: ['Agent 与自动化', '开发与工程'] },
+      { role: '代码审查', type: 'skill', cat: ['开发与工程'] },
+    ],
+  },
 ];
 
 // 3. 槽位精选：按匹配规则筛包，stars 降序取第一个（stars ≥ MIN_STARS）

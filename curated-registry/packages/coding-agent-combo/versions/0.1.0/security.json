@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "scan": "required",
+  "scannedAt": "2026-08-15T10:39:34.763Z",
+  "findings": [
+    {
+      "rule": "network",
+      "level": "medium",
+      "weight": 10,
+      "label": "含外网 URL（本机回环除外）",
+      "count": 1,
+      "file": "skills/coding-tools-mcp/SKILL.md"
+    },
+    {
+      "rule": "network",
+      "level": "medium",
+      "weight": 10,
+      "label": "含外网 URL（本机回环除外）",
+      "count": 1,
+      "file": "skills/archify/SKILL.md"
+    },
+    {
+      "rule": "network",
+      "level": "medium",
+      "weight": 10,
+      "label": "含外网 URL（本机回环除外）",
+      "count": 1,
+      "file": "skills/brooks-lint/SKILL.md"
+    }
+  ]
+}

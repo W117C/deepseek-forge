@@ -1,0 +1,106 @@
+{
+  "id": "data-analyst-combo",
+  "name": "数据分析 Agent",
+  "type": "agent",
+  "version": "0.1.0",
+  "description": "数据分析 Agent：按 stars 精选社区高星组件组合而成（archify, vibe-skills）。",
+  "category": "数据 Data",
+  "tags": [],
+  "publisher": {
+    "id": "agenthub",
+    "name": "AgentHub"
+  },
+  "source": {
+    "type": "forge",
+    "repository": "https://github.com/W117C/deepseek-forge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": null,
+    "author": null,
+    "license": null,
+    "version": null,
+    "url": null,
+    "adapterVersion": null
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": null,
+    "dsh": {
+      "min": "0.1.0-rc.6",
+      "tested": [
+        "0.1.0-rc.6"
+      ]
+    },
+    "node": ">=22",
+    "platform": [
+      "darwin",
+      "linux"
+    ]
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "data-analyst-combo-0.1.0.tar.gz",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": "agenthub"
+  },
+  "entrypoint": {
+    "type": "harness-profile",
+    "profile": "data-analyst-combo",
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "data-analyst-combo",
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app"
+      ],
+      "patch": "./profile.patch.yml"
+    },
+    "components": {
+      "bundles": [],
+      "presets": [
+        {
+          "id": "data-analyst-combo",
+          "base": "standard"
+        }
+      ],
+      "skills": [
+        "archify",
+        "vibe-skills"
+      ]
+    },
+    "health": [
+      {
+        "kind": "dump-config",
+        "expect-rows": []
+      }
+    ]
+  },
+  "createdAt": null,
+  "updatedAt": null,
+  "schema": "forge.package.v1",
+  "secrets": [],
+  "trust": "community",
+  "updatePolicy": "notify"
+}

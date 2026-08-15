@@ -1,0 +1,14 @@
+{
+  "forge": null,
+  "dsh": {
+    "min": "0.1.0-rc.6",
+    "tested": [
+      "0.1.0-rc.6"
+    ]
+  },
+  "node": ">=22",
+  "platform": [
+    "darwin",
+    "linux"
+  ]
+}

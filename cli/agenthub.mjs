@@ -3,7 +3,8 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync, chmodSync, rmSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { dshHome, locateDsh, dshVersion, profileDir, agenthubStore, runDsh } from '../lib/dsh.mjs';
 import { install, rollback, installCatalogPlugin } from '../lib/installer.mjs';
 import { loadAgentManifest } from '../lib/manifest.mjs';
@@ -34,6 +35,11 @@ const USAGE = `forge —— 一键把 DSH 变成专业 Agent（M2，bin 兼容�
   forge publish <目录> --registry <url> [--home <dir>]
   forge registry <dir> [--port <n>] [--require-publisher-auth] [--operator-token <t>] [--artifact-secret <s> | --allow-insecure]  启动本地注册中心（foreground）
 `;
+
+// CLI 仓库根（combos/ 目录位于仓库内；npm 安装后由 package.json files 携带）
+function rootDir() {
+  return join(dirname(fileURLToPath(import.meta.url)), '..');
+}
 
 function flags(argv) {
   const f = { _: [] };
@@ -449,6 +455,41 @@ async function main() {
     console.log('  node cli/agenthub.mjs install ' + r.outDir + ' --yes');
     console.log('  dsh --profile ' + id + '  （自动挂载专业 preset）');
     return;
+  }
+
+  if (cmd === 'combos') {
+    const sub = f._[0];
+    const listPath = join(rootDir(), 'combos', 'combos.json');
+    const list = existsSync(listPath) ? JSON.parse(readFileSync(listPath, 'utf8')) : [];
+    if (!sub || sub === 'list') {
+      if (list.length === 0) { console.log('（暂无组合包。先运行 node scripts/curate-combos.mjs 生成）'); return; }
+      console.log('可用组合（按 stars 精选的高质量领域 Agent）：');
+      for (const c of list) {
+        console.log(`  ${c.id} —— ${c.name}（组件：${(c.components ?? []).join(', ') || '—'}）`);
+      }
+      console.log('\n一键安装：node cli/agenthub.mjs combos install <id> --yes');
+      return;
+    }
+    if (sub === 'install') {
+      const id = f._[1];
+      if (!id) { console.log('用法: agenthub combos install <组合 id> [--home <dir>] [--yes]'); process.exit(2); }
+      const comboDir = join(rootDir(), 'combos', id);
+      if (!existsSync(join(comboDir, 'agenthub.yaml'))) {
+        console.error('组合包不存在：' + id + '（可用：' + list.map((c) => c.id).join(', ') + '）');
+        process.exit(1);
+      }
+      console.log('安装组合 ' + id + '（走完整安全链：兼容→扫描→快照→安装→健康检查，失败自动回滚）');
+      const result = install({ agentDir: comboDir, home, bin, profileName: id, yes: f.yes ?? true, smoke: !!f.smoke });
+      console.log('✓ 组合安装完成。步骤：' + result.steps.join(' → '));
+      const h = result.health;
+      console.log('健康检查：' + (h.passed ? 'PASS' : 'FAIL'));
+      for (const r of h.results) {
+        for (const c of r.checks ?? []) console.log('    ' + (c.ok ? '✓' : '✗') + ' ' + c.name + (c.detail ? ' — ' + c.detail : ''));
+      }
+      console.log('\n下一步：dsh --profile ' + id + '  （已自动挂载专业预设 + 高星 skill）');
+      return;
+    }
+    console.log('用法: agenthub combos [list|install <id>]'); process.exit(2);
   }
 
   if (cmd === 'create') {

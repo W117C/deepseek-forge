@@ -1,0 +1,37 @@
+schema: agenthub.dev/agent/v1
+id: content-creator-combo
+name: 内容生产 Agent
+category: 内容 Content
+version: 0.1.0
+description: 内容生产 Agent：按 stars 精选社区高星组件组合而成（archify, picgo-core）。
+publisher:
+  id: agenthub
+  name: AgentHub
+runtime: deepseek-harness
+compatibility:
+  dsh:
+    min: "0.1.0-rc.6"
+    tested: ["0.1.0-rc.6"]
+  node: ">=22"
+platform: [darwin, linux]
+components:
+  bundles: []
+  presets:
+    - id: content-creator-combo
+      base: standard
+  skills:
+    - archify
+    - picgo-core
+profile:
+  name: content-creator-combo
+  bundles: ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app"]
+  patch: ./profile.patch.yml
+permissions:
+  network: []
+  env: []
+secrets: []
+health:
+  - kind: dump-config
+    expect-rows: []
+updatePolicy: notify
+trust: community
