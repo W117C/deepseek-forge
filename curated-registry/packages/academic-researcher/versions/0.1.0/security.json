@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "scan": "required",
-  "scannedAt": "2026-08-15T08:56:41.977Z",
+  "scannedAt": "2026-08-15T12:27:17.531Z",
   "findings": [
     {
       "rule": "js-expr-canonical",

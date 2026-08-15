@@ -7,9 +7,10 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
-  "files": ["cordis.patch.yml"],
+  "files": ["cordis.patch.yml", "client-ui-market-data"],
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
   "dependencies": {
+    "@agenthub/dsh-client-ui-market-data": "link:./client-ui-market-data",
     "@deepseek-ai/dsh-mcp-client": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-schedule": "^0.1.0-rc.6"
   },

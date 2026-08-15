@@ -25,3 +25,7 @@
     # 会话级定时任务（盯盘 / 定期简报），状态持久化在 Session 日志里。
     - id: schedule
       name: '@deepseek-ai/dsh-schedule'
+
+    # 金融数据看板面板：DSH Web 浏览器面板（dsh.client roster 扫描挂载）。
+    - id: ui-market-data
+      name: '@agenthub/dsh-client-ui-market-data'
