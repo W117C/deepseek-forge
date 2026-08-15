@@ -87,8 +87,11 @@ fn rules() -> Vec<Rule> {
             id: "secret",
             level: "high",
             weight: 25,
+            // password 分支的文档示例词（mypassword/userpassword/ownerpassword/…）
+            // 在 scan_text 的 secret 后处理中过滤（regex crate 不支持 look-around）。
+            // 正则需匹配到 `password=<值>` 的值部分，示例词才在匹配文本内可被过滤。
             re: regex::Regex::new(
-                r"sk-[A-Za-z0-9]{8,}|Bearer\s+[A-Za-z0-9._-]{12,}|password\s*[:=]|-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|(?:api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]",
+                r#"sk-[A-Za-z0-9]{8,}|Bearer\s+[A-Za-z0-9._-]{12,}|password\s*[:=]\s*["']?[A-Za-z0-9._-]{6,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|(?:api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]"#,
             )
             .unwrap(),
             label: "疑似硬编码密钥/口令",
@@ -144,6 +147,25 @@ pub fn scan_text(text: &str, label: &str) -> Vec<SecurityFinding> {
             count = matches
                 .iter()
                 .filter(|m| !is_loopback_url(m.as_str()))
+                .count();
+        }
+        if r.id == "secret" {
+            // 过滤文档示例口令（--password=mypassword / userpassword / ownerpassword 等）：
+            // 真实 skill 文档常含此类说明，误判会把可用组合阻断；真实密钥（sk-/AKIA/Bearer）不受影响。
+            const EXAMPLE_PASSWORDS: [&str; 6] = [
+                "mypassword",
+                "userpassword",
+                "ownerpassword",
+                "yourpassword",
+                "example",
+                "changeme",
+            ];
+            count = matches
+                .iter()
+                .filter(|m| {
+                    let s = m.as_str();
+                    !EXAMPLE_PASSWORDS.iter().any(|w| s.contains(w))
+                })
                 .count();
         }
         if count > 0 {

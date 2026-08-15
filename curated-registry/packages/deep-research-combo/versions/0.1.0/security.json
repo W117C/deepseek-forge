@@ -1,8 +1,24 @@
 {
-  "status": "PASS",
+  "status": "BLOCKED",
   "scan": "required",
-  "scannedAt": "2026-08-15T10:48:03.556Z",
+  "scannedAt": "2026-08-15T11:39:19.543Z",
   "findings": [
+    {
+      "rule": "network",
+      "level": "medium",
+      "weight": 10,
+      "label": "含外网 URL（本机回环除外）",
+      "count": 1,
+      "file": "skills/pdf/SKILL.md"
+    },
+    {
+      "rule": "secret",
+      "level": "high",
+      "weight": 25,
+      "label": "疑似硬编码密钥/口令",
+      "count": 1,
+      "file": "skills/pdf/SKILL.md"
+    },
     {
       "rule": "network",
       "level": "medium",
