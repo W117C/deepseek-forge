@@ -25,7 +25,7 @@ import {
   registryList,
   stateList,
 } from "../ipc";
-import type { RegistrySummary, ResolveReport } from "../ipc";
+import type { ComposeGenerateResult, RegistrySummary, ResolveReport } from "../ipc";
 import { useI18n } from "../i18n";
 import {
   EmptyState,
@@ -53,7 +53,7 @@ export default function Composer() {
   const [bundleBusy, setBundleBusy] = useState<string | null>(null);
   const [bundleErr, setBundleErr] = useState<unknown>(null);
   const [agentBusy, setAgentBusy] = useState(false);
-  const [agentResult, setAgentResult] = useState<Record<string, unknown> | null>(null);
+  const [agentResult, setAgentResult] = useState<ComposeGenerateResult | null>(null);
   const [agentErr, setAgentErr] = useState<unknown>(null);
   const [componentQuery, setComponentQuery] = useState("");
 
@@ -103,7 +103,7 @@ export default function Composer() {
     setAgentResult(null);
     try {
       const res = await composeGenerate(bundleName.trim(), selected);
-      setAgentResult(res as unknown as Record<string, unknown>);
+      setAgentResult(res);
       toast("success", t("co.agentGeneratedShort", { name: bundleName.trim() }));
     } catch (e) {
       setAgentErr(e);
@@ -276,6 +276,11 @@ export default function Composer() {
                         <div className="avail-name">{p.id}</div>
                         <div className="avail-meta">
                           {p.type} · v{p.versionLatest}
+                          {typeof p.stars === "number" && p.stars > 0 ? (
+                            <span className="avail-stars" title={t("mp.starsTitle")}>
+                              ★ {p.stars >= 1000 ? (p.stars / 1000).toFixed(1) + "k" : p.stars}
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                       {!isSel && (
@@ -437,6 +442,22 @@ export default function Composer() {
                   {t("nav.agents")} →
                 </Link>
               </span>
+              {agentResult.result?.health && (
+                <span
+                  className={"badge " + (agentResult.result.health.passed ? "badge-ok" : "badge-warn")}
+                  style={{ marginLeft: 8 }}
+                >
+                  {agentResult.result.health.passed ? "✓ 健康检查 PASS" : "✗ 健康检查 FAIL"}
+                </span>
+              )}
+              {agentResult.result?.steps && agentResult.result.steps.length > 0 && (
+                <div className="field-hint" style={{ marginTop: 6 }}>
+                  {agentResult.result.steps.join(" → ")}
+                </div>
+              )}
+              <div className="mono" style={{ marginTop: 8, fontSize: 12, color: "var(--accent)" }}>
+                dsh --profile {String(agentResult.profile ?? agentResult.agentId ?? "")}
+              </div>
             </div>
           )}
         </div>

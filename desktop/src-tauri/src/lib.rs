@@ -163,7 +163,7 @@ fn logs_list() -> Result<Vec<forge_core::logutil::LogEntry>, String> {
 /// STEP 6: 真实安装 —— 有 artifact 走 install-from-registry；GitHub 源走收录式
 /// 安装（克隆→扫描→状态登记，经 Core）。状态/结果全部由 Core 返回。
 #[tauri::command]
-fn install_package(app: AppHandle, id: String) -> Result<serde_json::Value, String> {
+fn install_package(app: AppHandle, id: String, data_source: Option<String>) -> Result<serde_json::Value, String> {
     let reg = registry();
     let pkg = reg.get_package(&id).map_err(to_ipc_error)?;
     let home = forge_core::dsh::dsh_home(None);
@@ -187,17 +187,20 @@ fn install_package(app: AppHandle, id: String) -> Result<serde_json::Value, Stri
     // 有 artifact：走与 CLI 相同的 install-from-registry 完整管线
     // （哈希→验签→解包→快照→安装→健康检查→状态登记 profile，失败自动回滚）
     let reg_root = registry().root().to_string_lossy().to_string();
-    run_forge_streaming(
-        &app,
-        &[
-            "install-from-registry".to_string(),
-            id.clone(),
-            "--registry".to_string(),
-            reg_root,
-            "--home".to_string(),
-            home.to_string_lossy().to_string(),
-        ],
-    )
+    let mut args = vec![
+        "install-from-registry".to_string(),
+        id.clone(),
+        "--registry".to_string(),
+        reg_root,
+        "--home".to_string(),
+        home.to_string_lossy().to_string(),
+    ];
+    // 数据源 provider 选择（P0-B：manifest 声明 dataSources 时透传选中 provider）
+    if let Some(ds) = data_source {
+        args.push("--data-source".to_string());
+        args.push(ds);
+    }
+    run_forge_streaming(&app, &args)
 }
 
 /// 通用 forge-core 调用：stdout JSON / stderr 错误信封。
@@ -318,6 +321,62 @@ fn adapter_generate(source: String) -> Result<serde_json::Value, String> {
         "--out".to_string(),
         out.to_string_lossy().to_string(),
     ])
+}
+
+/// 插件 → 专业 Agent 包装：把本地 DSH bundle 插件目录包装为标准 Agent（走 forge-core wrap 命令）。
+/// 输出到 ~/.deepseek-forge/wrapped/<id>，随后可一键安装（十步管线）。
+#[tauri::command]
+fn wrap_plugin(plugin_dir: String, name: String) -> Result<serde_json::Value, String> {
+    let id = name
+        .to_lowercase()
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+        .collect::<String>()
+        .split('-')
+        .filter(|s| !s.is_empty())
+        .collect::<Vec<_>>()
+        .join("-");
+    let id = if id.is_empty() { "wrapped-agent".to_string() } else { id };
+    let out = forge_core::dsh::dsh_home(None)
+        .join(".deepseek-forge")
+        .join("wrapped")
+        .join(&id);
+    let bin = locate_dsh_bin().unwrap_or_else(|| "dsh".to_string());
+    run_forge(&[
+        "wrap".to_string(),
+        plugin_dir,
+        name,
+        "--out".to_string(),
+        out.to_string_lossy().to_string(),
+        "--bin".to_string(),
+        bin,
+        "--category".to_string(),
+        "专业 Agent".to_string(),
+        "--publisher".to_string(),
+        "my-org".to_string(),
+    ])
+}
+
+fn locate_dsh_bin() -> Option<String> {
+    use std::path::Path;
+    if let Some(b) = std::env::var_os("AGENTHUB_DSH_BIN") {
+        let p = Path::new(&b);
+        if p.is_file() {
+            return Some(b.to_string_lossy().to_string());
+        }
+    }
+    if let Some(home) = std::env::var_os("HOME") {
+        let npx_root = Path::new(&home).join(".npm/_npx");
+        if let Ok(entries) = std::fs::read_dir(&npx_root) {
+            for entry in entries.flatten() {
+                let candidate = entry.path().join("node_modules/.bin/dsh");
+                if candidate.is_file() {
+                    return Some(candidate.to_string_lossy().to_string());
+                }
+            }
+        }
+    }
+    None
 }
 
 /// 适配闭环：读取 adapter 目录完成度（真实文件检查）。
@@ -745,6 +804,7 @@ pub fn run() {
             agent_config_set,
             adapter_generate,
             adapter_status,
+            wrap_plugin,
             registry_import_agent,
             open_external
         ])

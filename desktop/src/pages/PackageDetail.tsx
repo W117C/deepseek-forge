@@ -10,6 +10,7 @@ import {
   Github,
   Power,
   ShieldCheck,
+  Sparkles,
   Unplug,
 } from "lucide-react";
 import {
@@ -22,6 +23,7 @@ import {
   setPluginEnabled,
   updateApply,
   updateCheck,
+  wrapPlugin,
 } from "../ipc";
 import type { DependentRef } from "../ipc";
 import { useI18n } from "../i18n";
@@ -76,6 +78,26 @@ export default function PackageDetail() {
   const [err, setErr] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
   const [installTarget, setInstallTarget] = useState<InstallTarget | null>(null);
+  const [wrapping, setWrapping] = useState(false);
+
+  async function wrapAsAgent() {
+    if (!id || !installPath || !pkg) return;
+    setWrapping(true);
+    setErr(null);
+    try {
+      const res = await wrapPlugin(installPath, pkg.name || id);
+      toast(
+        "success",
+        t("pd.wrapDone", { name: pkg.name || id }),
+        String(res?.profile ?? res?.agentId ?? "")
+      );
+    } catch (e) {
+      setErr(e);
+      toast("error", t("pd.wrapFailed"), id);
+    } finally {
+      setWrapping(false);
+    }
+  }
 
   function load() {
     if (!id) return;
@@ -256,6 +278,23 @@ export default function PackageDetail() {
           {installed ? (
             <>
               <Status tone={enabled ? "on" : "off"} label={enabled ? t("pd.active") : t("plugins.disabled")} />
+              {installPath && pkg.type !== "agent" && (
+                <button
+                  className="btn btn-outline"
+                  onClick={() => void wrapAsAgent()}
+                  disabled={wrapping || busy}
+                  title={t("pd.wrapHint")}
+                >
+                  {wrapping ? (
+                    <InlineLoading label={t("pd.wrapping")} />
+                  ) : (
+                    <>
+                      <Sparkles size={13} />
+                      {t("pd.wrap")}
+                    </>
+                  )}
+                </button>
+              )}
               {outdated && (
                 <button className="btn btn-primary" onClick={() => void update()} disabled={updating || busy}>
                   {updating ? <InlineLoading label={t("updates.updating")} /> : t("updates.update") + " v" + outdated}
@@ -342,6 +381,51 @@ export default function PackageDetail() {
               </div>
               <p className="sub" style={{ lineHeight: 1.65, maxWidth: 680 }}>{pkg.description || "—"}</p>
             </div>
+            {(() => {
+              // 组合包（agent 类型）：展示真实组件（skills/presets/bundles）
+              const comps = (pkg as any)?.runtime?.components;
+              const skills = Array.isArray(comps?.skills) ? comps.skills : [];
+              const presets = Array.isArray(comps?.presets) ? comps.presets.map((p: any) => p?.id ?? String(p)) : [];
+              const bundles = Array.isArray(comps?.bundles) ? comps.bundles.map((b: any) => b?.package ?? String(b)) : [];
+              if (skills.length + presets.length + bundles.length === 0) return null;
+              return (
+                <div className="detail-sec">
+                  <div className="detail-sec-head">
+                    <span className="detail-sec-title">组合包组件</span>
+                  </div>
+                  {skills.length > 0 && (
+                    <div className="kv">
+                      <span className="kv-k">Skills（真实技能）</span>
+                      <span className="kv-v" style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {skills.map((s: string) => (
+                          <span key={s} className="chip">{s}</span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
+                  {presets.length > 0 && (
+                    <div className="kv">
+                      <span className="kv-k">Presets（专业预设）</span>
+                      <span className="kv-v" style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {presets.map((p: string) => (
+                          <span key={p} className="chip">{p}</span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
+                  {bundles.length > 0 && (
+                    <div className="kv">
+                      <span className="kv-k">Bundles（能力包）</span>
+                      <span className="kv-v" style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {bundles.map((b: string) => (
+                          <span key={b} className="chip">{b}</span>
+                        ))}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
             <div className="detail-sec">
               <div className="detail-sec-head">
                 <span className="detail-sec-title">{t("pd.compatibility")}</span>

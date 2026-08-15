@@ -161,6 +161,21 @@ pub fn has_pnpm() -> bool {
     run_captured(cmd, 15_000).status == Some(0)
 }
 
+/// DSH 内置 preset 根目录（Node `systemPresetsDir` 对应：config/agent-presets）。
+/// bin 通常位于 <dsh>/lib/bin.js，config 在 <dsh>/config/agent-presets。
+pub fn system_presets_dir(bin: &str) -> Option<PathBuf> {
+    let real = fs::canonicalize(bin).ok()?;
+    let dsh_root = real
+        .parent() // lib
+        .and_then(|p| p.parent()); // <dsh>
+    let presets = dsh_root?.join("config").join("agent-presets");
+    if presets.is_dir() {
+        Some(presets)
+    } else {
+        None
+    }
+}
+
 pub fn profile_dir(home: &Path, name: &str) -> PathBuf {
     home.join("profiles").join(name)
 }

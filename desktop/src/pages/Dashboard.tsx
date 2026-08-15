@@ -12,9 +12,11 @@ import {
   PackagePlus,
   RefreshCw,
   ShieldCheck,
+  Sparkles,
   TerminalSquare,
 } from "lucide-react";
 import {
+  installPackage,
   logsList,
   registryList,
   runtimeStatus,
@@ -24,7 +26,7 @@ import {
 } from "../ipc";
 import type { LogEntry, RegistrySummary, SystemStatus } from "../ipc";
 import { useI18n } from "../i18n";
-import { Badge, EmptyState, ErrorCard, RowSkeleton } from "../components/ui";
+import { Badge, EmptyState, ErrorCard, RowSkeleton, useToast } from "../components/ui";
 
 type LoadState =
   | { status: "loading" }
@@ -42,7 +44,29 @@ type LoadState =
 
 export default function Dashboard() {
   const { t } = useI18n();
+  const toast = useToast();
   const [state, setState] = useState<LoadState>({ status: "loading" });
+  const [installing, setInstalling] = useState<string | null>(null);
+
+  async function installCombo(id: string, name: string) {
+    setInstalling(id);
+    try {
+      await installPackage(id);
+      toast("success", t("toast.installed", { name }));
+      // 刷新状态（组合包安装后已安装计数变化）
+      registryList()
+        .then((packages) =>
+          setState((prev) =>
+            prev.status === "ready" ? { ...prev, packages } : prev
+          )
+        )
+        .catch(() => {});
+    } catch (e) {
+      toast("error", t("toast.installFailed"), e instanceof Error ? e.message : String(e));
+    } finally {
+      setInstalling(null);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -103,6 +127,8 @@ export default function Dashboard() {
   const greeting =
     hour < 12 ? t("db.greetingMorning") : hour < 18 ? t("db.greetingAfternoon") : t("db.greetingEvening");
   const securityClear = system.registryAvailable;
+  // 专业 Agent 组合包：agent 类型且 id 以 -combo 结尾（由 curate-combos 生成）
+  const combos = (packages ?? []).filter((p) => p.type === "agent" && p.id.endsWith("-combo"));
 
   return (
     <div className="page">
@@ -193,6 +219,46 @@ export default function Dashboard() {
           )}
         </div>
       </section>
+
+      {combos.length > 0 && (
+        <section>
+          <div className="sec-head">
+            <h2 className="sec-title">
+              <Sparkles size={14} style={{ verticalAlign: -2, marginRight: 4 }} />
+              {t("db.combos")}
+            </h2>
+            <span className="sec-count">{combos.length}</span>
+          </div>
+          <div className="combo-grid">
+            {combos.map((c) => (
+              <div key={c.id} className="card combo-card" style={{ padding: "12px 14px", gap: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Sparkles size={13} className="note-ico" />
+                  <span className="mono" style={{ fontWeight: 600 }}>
+                    {c.name || c.id}
+                  </span>
+                  {typeof c.stars === "number" && c.stars > 0 && (
+                    <span className="avail-stars" style={{ marginLeft: "auto" }}>
+                      ★ {c.stars >= 1000 ? (c.stars / 1000).toFixed(1) + "k" : c.stars}
+                    </span>
+                  )}
+                </div>
+                <p className="sub" style={{ margin: 0, fontSize: 12 }}>
+                  {(c.description ?? "").slice(0, 90)}
+                </p>
+                <button
+                  className="btn btn-primary btn-sm"
+                  style={{ alignSelf: "flex-start", marginTop: 4 }}
+                  onClick={() => void installCombo(c.id, c.name || c.id)}
+                  disabled={installing !== null}
+                >
+                  {installing === c.id ? "安装中…" : t("db.installCombo")}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section>
         <div className="sec-head">

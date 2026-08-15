@@ -1301,6 +1301,20 @@ a.pkg-name:hover {
   gap: 16px;
   align-items: start;
 }
+.combo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.combo-card {
+  display: flex;
+  flex-direction: column;
+}
+.avail-stars {
+  color: var(--warning, #d9a83b);
+  font-size: 11px;
+  white-space: nowrap;
+}
 .pane {
   display: flex;
   flex-direction: column;

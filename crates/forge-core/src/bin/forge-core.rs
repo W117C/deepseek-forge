@@ -135,6 +135,7 @@ fn run(args: &[String]) -> Result<(), ForgeError> {
         "catalog-plugin" => run_catalog_plugin(&args[1..]),
         "install-from-registry" => run_install_from_registry(&args[1..]),
         "import" => run_import(&args[1..]),
+        "wrap" => run_wrap(&args[1..]),
         "adapter" => run_adapter(&args[1..]),
         "composer" => run_composer(&args[1..]),
         "runtime" => run_runtime(&args[1..]),
@@ -1038,6 +1039,148 @@ fn run_import(args: &[String]) -> Result<(), ForgeError> {
     })?;
     let analysis = analyze_source(source)?;
     print_json(&analysis)
+}
+
+/// 插件 → 专业 Agent 包装（对齐 lib/scaffold.mjs wrapPluginAsAgent）：
+/// 读插件 bundle 目录 → 复制 bundle 实体 → 生成 agenthub.yaml + preset（standard persona 替换）。
+fn run_wrap(args: &[String]) -> Result<(), ForgeError> {
+    let f = Flags::parse(args);
+    let plugin_dir = f.positional.first().ok_or_else(|| {
+        ForgeError::InvalidManifest("wrap requires a plugin directory".to_string())
+    })?;
+    let name = f.positional.get(1).ok_or_else(|| {
+        ForgeError::InvalidManifest("wrap requires an agent name".to_string())
+    })?;
+    let out = f.get("out").map(PathBuf::from).ok_or_else(|| {
+        ForgeError::InvalidManifest("wrap requires --out DIR".to_string())
+    })?;
+    let bin = f.get("bin").unwrap_or("dsh").to_string();
+    let category = f.get("category").unwrap_or("专业 Agent").to_string();
+    let publisher = f.get("publisher").unwrap_or("my-org").to_string();
+
+    let plugin = Path::new(plugin_dir);
+    let pkg_json = plugin.join("package.json");
+    if !pkg_json.exists() {
+        return Err(ForgeError::InvalidManifest(format!(
+            "插件目录无效（需含 package.json）：{plugin_dir}"
+        )));
+    }
+    let pkg_text = fs::read_to_string(&pkg_json).map_err(ForgeError::Io)?;
+    let pkg: serde_json::Value = serde_json::from_str(&pkg_text).map_err(ForgeError::Json)?;
+    let pkg_name = pkg
+        .get("name")
+        .and_then(|n| n.as_str())
+        .ok_or_else(|| ForgeError::InvalidManifest("插件 package.json 缺少 name".to_string()))?
+        .to_string();
+    let pkg_version = pkg
+        .get("version")
+        .and_then(|v| v.as_str())
+        .unwrap_or("0.1.0")
+        .to_string();
+    let patch_rel = pkg
+        .get("dsh")
+        .and_then(|d| d.get("bundle"))
+        .and_then(|b| b.get("patch"))
+        .and_then(|p| p.as_str())
+        .ok_or_else(|| {
+            ForgeError::InvalidManifest("插件必须声明 dsh.bundle.patch".to_string())
+        })?;
+    if !plugin.join(patch_rel).exists() {
+        return Err(ForgeError::InvalidManifest(format!(
+            "插件 dsh.bundle.patch 文件不存在：{patch_rel}"
+        )));
+    }
+
+    // id：name → kebab-case（与 Node slug 对齐）
+    let id: String = name
+        .to_lowercase()
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+        .collect::<String>()
+        .split('-')
+        .filter(|s| !s.is_empty())
+        .collect::<Vec<_>>()
+        .join("-");
+    let id = if id.is_empty() { "wrapped-agent".to_string() } else { id };
+
+    // 复制插件 bundle 实体（installer 从 agent_dir/bundle/<last> 找 package.json）
+    let last = pkg_name.split('/').next_back().unwrap_or(&pkg_name);
+    let bundle_dst = out.join("bundle").join(last);
+    copy_dir_contents(plugin, &bundle_dst)?;
+
+    // agenthub.yaml
+    let yaml = format!(
+        "schema: agenthub.dev/agent/v1\n\
+         id: {id}\n\
+         name: {name}\n\
+         category: {category}\n\
+         version: 0.1.0\n\
+         description: {name}：由插件 {pkg_name} 包装而成的专业 Agent。\n\
+         publisher:\n  id: {publisher}\n  name: {publisher}\n\
+         runtime: deepseek-harness\n\
+         compatibility:\n  dsh:\n    min: \"0.1.0-rc.6\"\n    tested: [\"0.1.0-rc.6\"]\n  node: \">=22\"\n\
+         platform: [darwin, linux]\n\
+         components:\n  bundles:\n    - package: \"{pkg_name}\"\n      version: \"{pkg_version}\"\n  presets:\n    - id: {id}\n      base: standard\n  skills: []\n\
+         profile:\n  name: {id}\n  bundles: [\"@deepseek-ai/dsh-base\", \"@deepseek-ai/dsh-web-app\", \"{pkg_name}\"]\n  patch: ./profile.patch.yml\n\
+         permissions:\n  network: []\n  env: []\n\
+         secrets: []\n\
+         health:\n  - kind: dump-config\n    expect-rows: []\n\
+         updatePolicy: notify\n\
+         trust: community\n"
+    );
+    fs::write(out.join("agenthub.yaml"), yaml).map_err(ForgeError::Io)?;
+
+    // preset：复制 standard 组合并替换 persona（保证可挂载）
+    let std_preset = forge_core::dsh::system_presets_dir(&bin)
+        .ok_or_else(|| ForgeError::InvalidManifest("找不到 DSH 内置 preset 目录".to_string()))?
+        .join("standard")
+        .join("agent.cordis.yml");
+    if !std_preset.exists() {
+        return Err(ForgeError::InvalidManifest(format!(
+            "找不到官方 standard preset：{}",
+            std_preset.display()
+        )));
+    }
+    let std_text = fs::read_to_string(&std_preset).map_err(ForgeError::Io)?;
+    let persona = format!(
+        "      You are the {name} agent powered by the {{{{model}}}} model. Your working directory is {{{{cwd}}}}.\n\
+         \n      本 Agent 由插件 {pkg_name} 包装而成（TODO: 写领域人设与硬性规则）。"
+    );
+    let composed = std_text.replace(
+        "text: >-\n      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.",
+        &format!("text: |-\n{persona}"),
+    );
+    let pdir = out.join("preset").join(&id);
+    fs::create_dir_all(&pdir).map_err(ForgeError::Io)?;
+    fs::write(pdir.join("agent.cordis.yml"), composed).map_err(ForgeError::Io)?;
+    fs::write(
+        pdir.join("preset.yml"),
+        format!("name: {name}\ndescription: {name}：由插件 {pkg_name} 包装生成。\n"),
+    )
+    .map_err(ForgeError::Io)?;
+
+    fs::write(
+        out.join("profile.patch.yml"),
+        format!("# {id} 托管段（插件包装 Agent）。\n[]\n"),
+    )
+    .map_err(ForgeError::Io)?;
+    fs::write(
+        out.join("README.md"),
+        format!(
+            "# {name}\n\n由插件 {pkg_name} 包装生成的 Agent。\n\n安装：\n\n    node cli/agenthub.mjs install . --yes\n    dsh --profile {id}\n"
+        ),
+    )
+    .map_err(ForgeError::Io)?;
+
+    print_json(&serde_json::json!({
+        "outDir": out.to_string_lossy(),
+        "plugin": pkg_name,
+        "agentId": id,
+        "profile": id,
+        "bundles": 1,
+        "presets": 1,
+        "skills": 0,
+    }))
 }
 
 fn run_adapter(args: &[String]) -> Result<(), ForgeError> {

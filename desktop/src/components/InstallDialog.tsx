@@ -37,13 +37,16 @@ export default function InstallDialog({
     dependencies?: { package?: string; version?: string | null }[];
     security?: string;
     license?: string;
+    dataSources?: { id: string; label?: string; default?: boolean }[];
   } | null>(null);
+  const [dataSource, setDataSource] = useState<string | null>(null);
 
   useEffect(() => {
     if (!target) return;
     setStatus("confirm");
     setErr(null);
     setInfo(null);
+    setDataSource(null);
     registryInfo(target.id)
       .then((p) => {
         const pkg = p as Record<string, any>;
@@ -51,6 +54,7 @@ export default function InstallDialog({
           dependencies: Array.isArray(pkg.dependencies) ? pkg.dependencies : [],
           security: pkg.security?.status ?? undefined,
           license: pkg.license?.spdx ?? undefined,
+          dataSources: Array.isArray(pkg.dataSources) ? pkg.dataSources : [],
         });
       })
       .catch(() => setInfo({}));
@@ -61,7 +65,7 @@ export default function InstallDialog({
     setStatus("running");
     setErr(null);
     try {
-      await installPackage(target.id);
+      await installPackage(target.id, dataSource);
       setStatus("done");
       toast("success", t("toast.installed", { name: target.name }), t("toast.installedBody"));
       onFinished?.();
@@ -123,6 +127,39 @@ export default function InstallDialog({
             <span className="v">{t("mp.unscanned")}</span>
           )}
         </div>
+        {(info?.dataSources ?? []).length > 0 && (
+          <div className="sheet-kv" style={{ flexDirection: "column", alignItems: "stretch", gap: 6 }}>
+            <span className="k">{t("install.dataSource")}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {(info?.dataSources ?? []).map((ds) => (
+                <label
+                  key={ds.id}
+                  className={"ds-option" + (dataSource === ds.id ? " on" : "")}
+                  style={{
+                    display: "flex",
+                    gap: 6,
+                    alignItems: "center",
+                    padding: "4px 8px",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                    border: "1px solid var(--border)",
+                    background: dataSource === ds.id ? "var(--surface-2, rgba(255,255,255,0.04))" : "transparent",
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="data-source"
+                    checked={dataSource === ds.id}
+                    onChange={() => setDataSource(ds.id)}
+                  />
+                  <span className="v" style={{ fontSize: 12 }}>
+                    {ds.label ?? ds.id}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     ) : (
       <div className="install-sheet">

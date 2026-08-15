@@ -56,8 +56,8 @@ export interface RegistrySummary {
   repository?: string | null;
 }
 
-export function installPackage(id: string): Promise<Record<string, unknown>> {
-  return call<Record<string, unknown>>("install_package", { id });
+export function installPackage(id: string, dataSource?: string | null): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("install_package", { id, dataSource });
 }
 
 export function bundleCreate(name: string, ids: string[]): Promise<Record<string, unknown>> {
@@ -185,6 +185,11 @@ export function adapterGenerate(
   source: string
 ): Promise<{ ok: boolean; packageDir: string }> {
   return call<{ ok: boolean; packageDir: string }>("adapter_generate", { source });
+}
+
+/** 插件 → 专业 Agent 包装（走 forge-core wrap，输出到 ~/.deepseek-forge/wrapped/<id>）。 */
+export function wrapPlugin(pluginDir: string, name: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("wrap_plugin", { pluginDir, name });
 }
 
 /** Adapter completion: which hooks are filled + whether the final agent form is present. */
