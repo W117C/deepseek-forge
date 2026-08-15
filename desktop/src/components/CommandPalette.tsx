@@ -216,7 +216,8 @@ export default function CommandPalette({
               } else if (e.key === "Enter") {
                 e.preventDefault();
                 const item = flat[active];
-                if (item) pick(item);
+                // 安装进行中时跳过已被禁用的 install 项，避免重复触发并发安装
+                if (item && !(installBusy !== null && item.id.startsWith("install:"))) pick(item);
               } else if (e.key === "Escape") {
                 e.preventDefault();
                 onClose();
