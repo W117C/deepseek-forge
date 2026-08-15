@@ -1,29 +1,33 @@
+// Sidebar — FORGE / DISCOVER / WORKSPACE / RUNTIME / SYSTEM.
+// No development-phase markers. The Updates badge is the real outdated count.
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Languages } from "lucide-react";
-import { useI18n } from "../i18n";
 import type { LucideIcon } from "lucide-react";
 import {
   Activity,
   Bot,
   Database,
   Github,
+  Layers,
   LayoutDashboard,
-  Package,
-  Puzzle,
+  Plug,
   RefreshCw,
   ScrollText,
   Settings,
   ShieldCheck,
   Sparkles,
   Store,
-  Terminal,
+  TerminalSquare,
 } from "lucide-react";
+import { updateCheck } from "../ipc";
+import { useI18n } from "../i18n";
 
 interface NavItem {
   to: string;
   label: string;
   icon: LucideIcon;
-  phase: string;
+  end?: boolean;
 }
 
 interface NavGroup {
@@ -31,42 +35,47 @@ interface NavGroup {
   items: NavItem[];
 }
 
-// Sidebar groups per target-state §24.
 const GROUPS: NavGroup[] = [
+  {
+    title: "forge",
+    items: [{ to: "/", label: "dashboard", icon: LayoutDashboard, end: true }],
+  },
   {
     title: "discover",
     items: [
-      { to: "/marketplace", label: "marketplace", icon: Store, phase: "" },
-      { to: "/import", label: "import", icon: Github, phase: "" },
+      { to: "/marketplace", label: "marketplace", icon: Store },
+      { to: "/import", label: "import", icon: Github },
     ],
   },
   {
     title: "workspace",
     items: [
-      { to: "/agents", label: "agents", icon: Bot, phase: "" },
-      { to: "/skills", label: "skills", icon: Sparkles, phase: "" },
-      { to: "/plugins", label: "plugins", icon: Puzzle, phase: "" },
-      { to: "/bundles", label: "bundles", icon: Package, phase: "" },
+      { to: "/agents", label: "agents", icon: Bot },
+      { to: "/skills", label: "skills", icon: Sparkles },
+      { to: "/plugins", label: "plugins", icon: Plug },
+      { to: "/bundles", label: "bundles", icon: Layers },
     ],
   },
   {
     title: "runtime",
     items: [
-      { to: "/sessions", label: "sessions", icon: Terminal, phase: "" },
-      { to: "/processes", label: "processes", icon: Activity, phase: "" },
-      { to: "/logs", label: "logs", icon: ScrollText, phase: "" },
+      { to: "/sessions", label: "sessions", icon: TerminalSquare },
+      { to: "/processes", label: "processes", icon: Activity },
+      { to: "/logs", label: "logs", icon: ScrollText },
     ],
   },
   {
     title: "system",
     items: [
-      { to: "/security", label: "security", icon: ShieldCheck, phase: "" },
-      { to: "/sources", label: "sources", icon: Database, phase: "" },
-      { to: "/updates", label: "updates", icon: RefreshCw, phase: "" },
-      { to: "/settings", label: "settings", icon: Settings, phase: "" },
+      { to: "/security", label: "security", icon: ShieldCheck },
+      { to: "/sources", label: "sources", icon: Database },
+      { to: "/updates", label: "updates", icon: RefreshCw },
+      { to: "/settings", label: "settings", icon: Settings },
     ],
   },
 ];
+
+const APP_VERSION = "0.4.0";
 
 const linkClass = ({ isActive }: { isActive: boolean }): string =>
   "sidebar-link" + (isActive ? " is-active" : "");
@@ -74,8 +83,8 @@ const linkClass = ({ isActive }: { isActive: boolean }): string =>
 function ForgeMark() {
   return (
     <svg
-      width="24"
-      height="24"
+      width="22"
+      height="22"
       viewBox="0 0 32 32"
       fill="none"
       aria-hidden="true"
@@ -99,6 +108,24 @@ function ForgeMark() {
 
 export default function Sidebar() {
   const { t, locale, setLocale } = useI18n();
+  const [outdatedCount, setOutdatedCount] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    updateCheck()
+      .then((entries) => {
+        if (!cancelled) {
+          setOutdatedCount(entries.filter((e) => e.outdated).length);
+        }
+      })
+      .catch(() => {
+        /* registry unavailable — no badge */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -107,26 +134,33 @@ export default function Sidebar() {
           <span className="sidebar-brand-name">
             DeepSeek <em>Forge</em>
           </span>
-          <span className="sidebar-brand-sub">Desktop</span>
+          <span className="sidebar-brand-sub">Agent Package OS</span>
         </div>
       </div>
 
       <nav className="sidebar-nav" aria-label="Primary">
-        <NavLink to="/" end className={linkClass}>
-          <LayoutDashboard size={16} />
-          <span>{t("nav.dashboard")}</span>
-        </NavLink>
-
         {GROUPS.map((group) => (
           <div className="sidebar-group" key={group.title}>
-            <div className="sidebar-group-title">{t("nav." + group.title.toLowerCase())}</div>
+            <div className="sidebar-group-title">
+              {t("nav." + group.title.toLowerCase())}
+            </div>
             {group.items.map((item) => {
               const Icon = item.icon;
-              const label = t("nav." + item.label.toLowerCase().replace(/ /g, ""));
+              const label = t(
+                "nav." + item.label.toLowerCase().replace(/ /g, "")
+              );
               return (
-                <NavLink key={item.to} to={item.to} className={linkClass}>
-                  <Icon size={16} />
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  className={linkClass}
+                >
+                  <Icon size={15} />
                   <span>{label}</span>
+                  {item.to === "/updates" && outdatedCount > 0 && (
+                    <span className="sidebar-badge accent">{outdatedCount}</span>
+                  )}
                 </NavLink>
               );
             })}
@@ -134,16 +168,19 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-foot">
         <button
-          className="btn btn-ghost"
-          style={{ width: "100%", justifyContent: "flex-start", gap: 8 }}
+          className="sidebar-lang"
           onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
           aria-label="Switch language"
         >
-          <Languages size={14} />
-          {locale === "zh" ? "中文" : "English"}
+          <Languages size={13} />
+          {locale === "zh" ? "English" : "中文"}
         </button>
+        <div className="sidebar-version">
+          <span>{t("sidebar.version")}</span>
+          <span>v{APP_VERSION}</span>
+        </div>
       </div>
     </aside>
   );

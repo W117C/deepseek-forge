@@ -1,0 +1,93 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-open-in-vscode",
+  "name": "dsh-open-in-vscode",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Open DeepSeek Harness workspace directories in VS Code directly from the web GUI.",
+  "category": "开发与工程",
+  "tags": [
+    "dsh",
+    "dsh-plugin"
+  ],
+  "publisher": {
+    "id": "omdsh-dev",
+    "name": "omdsh-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/omdsh-dev/dsh-open-in-vscode",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/omdsh-dev/dsh-open-in-vscode",
+    "author": "omdsh-dev",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/omdsh-dev/dsh-open-in-vscode",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-open-in-vscode",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 39,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-13T16:13:51Z",
+    "topics": [
+      "dsh",
+      "dsh-plugin"
+    ],
+    "fullName": "omdsh-dev/dsh-open-in-vscode"
+  }
+}

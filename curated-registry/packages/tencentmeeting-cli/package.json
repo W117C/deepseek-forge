@@ -1,0 +1,99 @@
+{
+  "schema": "forge.package.v1",
+  "id": "tencentmeeting-cli",
+  "name": "tencentmeeting-cli",
+  "type": "tool",
+  "version": "0.1.0",
+  "description": "腾讯会议命令行工具（CLI），基于腾讯会议开放平台 OAuth2 授权，支持会议管理、录制管理、参会报告等功能。",
+  "category": "实用工具与其他",
+  "tags": [
+    "codebuddy",
+    "codebuddy-skill",
+    "dsh-plugin",
+    "workbuddy",
+    "workbuddy-skill"
+  ],
+  "publisher": {
+    "id": "TencentCloud",
+    "name": "TencentCloud"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/TencentCloud/tencentmeeting-cli",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/TencentCloud/tencentmeeting-cli",
+    "author": "TencentCloud",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/TencentCloud/tencentmeeting-cli",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "tencentmeeting-cli",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 216,
+    "language": "Go",
+    "pushedAt": "2026-08-07T13:47:15Z",
+    "topics": [
+      "codebuddy",
+      "codebuddy-skill",
+      "dsh-plugin",
+      "workbuddy",
+      "workbuddy-skill"
+    ],
+    "fullName": "TencentCloud/tencentmeeting-cli"
+  }
+}

@@ -42,7 +42,7 @@ if (!bin) { console.error('dsh not found'); process.exit(1); }
 
 // 1. 启动 Registry（in-process，ephemeral port）
 const regDir = join(TEST_HOME, 'registry-data');
-const reg = createRegistry({ dir: regDir });
+const reg = createRegistry({ dir: regDir, allowInsecure: true });
 const port = await reg.listen(0);
 const REG = 'http://127.0.0.1:' + port;
 check('Registry 启动', true, REG);
@@ -155,6 +155,39 @@ const rej = await (await fetch(REG + '/v1/review', { method: 'POST', headers: { 
 const pending2 = await (await fetch(REG + '/v1/pending')).json();
 const vsEvil = await (await fetch(REG + '/v1/agents/evil-agent/versions')).json();
 check('拒绝流：队列清空且 0.2.0 未上架', rej.approve === false && pending2.length === 0 && !vsEvil.some((v) => v.version === '0.2.0'), JSON.stringify({ rej, pending: pending2.length, versions: vsEvil.map((v) => v.version) }));
+
+// 13. B2 fail-closed：无 allowInsecure 时特权端点默认拒绝（503）
+const bare = createRegistry({ dir: join(TEST_HOME, 'registry-bare') });
+const barePort = await bare.listen(0);
+const BARE = 'http://127.0.0.1:' + barePort;
+const pb = await fetch(BARE + '/v1/publish', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({}) });
+check('裸 Registry 发布被拒（503 fail-closed）', pb.status === 503, 'status=' + pb.status);
+const rvb = await fetch(BARE + '/v1/review', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: 'x', version: '0', approve: true }) });
+check('裸 Registry 审核被拒（503 fail-closed）', rvb.status === 503, 'status=' + rvb.status);
+const sb = await fetch(BARE + '/v1/packages/x/status', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status: 'yanked' }) });
+check('裸 Registry 状态管理被拒（503 fail-closed）', sb.status === 503, 'status=' + sb.status);
+await bare.close();
+
+// 14. B1 manifest.id 路径遍历拒绝（400）；合法 id 仍可走到验签（403 签名无效而非 400）
+const trav = await fetch(REG + '/v1/publish', {
+  method: 'POST', headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ publisher: 'x', publicKey: 'x', manifest: { id: '../evil', version: '1.0.0', name: 'Evil' }, artifactSha256: '0'.repeat(64), artifactBase64: '', signature: '' }),
+});
+check('manifest.id 路径遍历被拒（400）', trav.status === 400, 'status=' + trav.status);
+const absId = await fetch(REG + '/v1/publish', {
+  method: 'POST', headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ publisher: 'x', publicKey: 'x', manifest: { id: '/abs/evil', version: '1.0.0', name: 'Evil' }, artifactSha256: '0'.repeat(64), artifactBase64: '', signature: '' }),
+});
+check('manifest.id 绝对路径被拒（400）', absId.status === 400, 'status=' + absId.status);
+const badSig = await fetch(REG + '/v1/publish', {
+  method: 'POST', headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ publisher: 'x', publicKey: 'x', manifest: { id: 'normal-id', version: '1.0.0', name: 'Normal' }, artifactSha256: '0'.repeat(64), artifactBase64: '', signature: 'bad' }),
+});
+check('合法 id 但签名无效 → 403（id 校验放行、继续验签）', badSig.status === 403, 'status=' + badSig.status);
+
+// 15. CLI registry 裸启被拒绝（B2 启动门禁）
+const cliBare = await run(['registry', join(TEST_HOME, 'registry-cli-bare')]);
+check('CLI 裸启 Registry 被拒（需安全配置或 --allow-insecure）', cliBare.status !== 0 && /安全配置/.test(cliBare.stdout + cliBare.stderr), (cliBare.stdout + cliBare.stderr).trim().split('\n')[0]);
 
 const failed = results.filter((x) => !x.ok);
 console.log('\n== e2e-registry: ' + (results.length - failed.length) + '/' + results.length + ' PASS ==');

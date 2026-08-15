@@ -57,12 +57,15 @@ function treeDigest(dir) {
 
 function snapRelStruct(snapRoot) {
   // 忽略 ts 目录名：只对比快照内部相对结构
+  // 忽略 COMPLETE 原子性标记：它是新引擎的安全修复元数据（快照原子提交），
+  // 与安装内容无关，其存在性由 Rust 单测 snapshot_writes_complete_marker 单独断言。
   const out = [];
   if (!existsSync(snapRoot)) return out;
   for (const ts of readdirSync(snapRoot)) {
     const walk = (d, rel) => {
       if (!existsSync(d)) return;
       for (const name of readdirSync(d)) {
+        if (name === 'COMPLETE') continue;
         const p = join(d, name);
         const r = rel ? rel + '/' + name : name;
         const st = statSync(p);

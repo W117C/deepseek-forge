@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "tokenbank",
+  "name": "tokenbank",
+  "type": "tool",
+  "version": "0.1.0",
+  "description": "Token Bank — the local LLM gateway that sits between your AI agents and every provider.  Know where tokens go · Spend less with smart routing to Ollama, Groq, GitHub Models · Earn by sharing idle quota on a community P2P network.  One-click onboarding for Cursor, Claude Code, Codex CLI, Gemini CLI — no agent changes. Full trace, seamless model swap",
+  "category": "生态与资源",
+  "tags": [
+    "agent",
+    "anthropic",
+    "claudecode",
+    "codex",
+    "cursor",
+    "dsh",
+    "dsh-plugin",
+    "llm",
+    "llm-gateway",
+    "llm-gateway-system",
+    "llm-proxy",
+    "llm-router",
+    "local",
+    "local-first",
+    "observability",
+    "openai",
+    "openclaw",
+    "token",
+    "token-usage",
+    "tokenhub"
+  ],
+  "publisher": {
+    "id": "wink-run",
+    "name": "wink-run"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/wink-run/tokenbank",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/wink-run/tokenbank",
+    "author": "wink-run",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/wink-run/tokenbank",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "tokenbank",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 71,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-14T08:24:51Z",
+    "topics": [
+      "agent",
+      "anthropic",
+      "claudecode",
+      "codex",
+      "cursor",
+      "dsh",
+      "dsh-plugin",
+      "llm",
+      "llm-gateway",
+      "llm-gateway-system",
+      "llm-proxy",
+      "llm-router",
+      "local",
+      "local-first",
+      "observability",
+      "openai",
+      "openclaw",
+      "token",
+      "token-usage",
+      "tokenhub"
+    ],
+    "fullName": "wink-run/tokenbank"
+  }
+}

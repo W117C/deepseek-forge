@@ -1,14 +1,39 @@
-// ⌘K 命令面板：真实导航（HashRouter）+ 语言切换。无 mock 数据。
+// ⌘K command palette — Forge's quick entry point.
+// Real navigation (HashRouter) + "install <query>" against the real registry.
+// Keyboard-first: ↑↓ navigate, Enter open, Esc close.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Command } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Activity,
+  Bot,
+  Command,
+  Database,
+  Github,
+  Languages,
+  Layers,
+  LayoutDashboard,
+  Plug,
+  RefreshCw,
+  ScrollText,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Store,
+  TerminalSquare,
+} from "lucide-react";
 import { installPackage, registryList } from "../ipc";
 import type { RegistrySummary } from "../ipc";
 import { useI18n } from "../i18n";
+import { Kbd, useToast } from "./ui";
 
 interface Item {
   id: string;
   label: string;
+  sub?: string;
+  icon: LucideIcon;
+  kbd?: string;
   action: () => void;
 }
 
@@ -20,43 +45,53 @@ export default function CommandPalette({
   onClose: () => void;
 }) {
   const { t, locale, setLocale } = useI18n();
+  const toast = useToast();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [active, setActive] = useState(0);
   const [matches, setMatches] = useState<RegistrySummary[]>([]);
-  const [installErr, setInstallErr] = useState<string | null>(null);
+  const [installBusy, setInstallBusy] = useState<string | null>(null);
 
-  const items: Item[] = useMemo(() => {
-    const pages: [string, string][] = [
-      ["nav.dashboard", "/"],
-      ["nav.marketplace", "/marketplace"],
-      ["nav.import", "/import"],
-      ["nav.agents", "/agents"],
-      ["nav.plugins", "/plugins"],
-      ["nav.bundles", "/bundles"],
-      ["nav.sessions", "/sessions"],
-      ["nav.processes", "/processes"],
-      ["nav.logs", "/logs"],
-      ["nav.security", "/security"],
-      ["nav.sources", "/sources"],
-      ["nav.updates", "/updates"],
-      ["nav.settings", "/settings"],
+  const navItems: Item[] = useMemo(() => {
+    const pages: { key: string; path: string; icon: LucideIcon; kbd?: string }[] = [
+      { key: "nav.dashboard", path: "/", icon: LayoutDashboard, kbd: "⌘1" },
+      { key: "nav.marketplace", path: "/marketplace", icon: Store, kbd: "⌘2" },
+      { key: "nav.import", path: "/import", icon: Github },
+      { key: "nav.agents", path: "/agents", icon: Bot, kbd: "⌘4" },
+      { key: "nav.skills", path: "/skills", icon: Sparkles },
+      { key: "nav.plugins", path: "/plugins", icon: Plug, kbd: "⌘3" },
+      { key: "nav.bundles", path: "/bundles", icon: Layers },
+      { key: "nav.sessions", path: "/sessions", icon: TerminalSquare },
+      { key: "nav.processes", path: "/processes", icon: Activity },
+      { key: "nav.logs", path: "/logs", icon: ScrollText },
+      { key: "nav.security", path: "/security", icon: ShieldCheck },
+      { key: "nav.sources", path: "/sources", icon: Database },
+      { key: "nav.updates", path: "/updates", icon: RefreshCw },
+      { key: "nav.settings", path: "/settings", icon: Settings },
     ];
-    const list: Item[] = pages.map(([key, path]) => ({
-      id: "nav:" + path,
-      label: t(key),
-      action: () => navigate(path),
+    return pages.map((p) => ({
+      id: "nav:" + p.path,
+      label: t(p.key),
+      icon: p.icon,
+      kbd: p.kbd,
+      action: () => navigate(p.path),
     }));
-    list.push({
-      id: "lang:" + (locale === "zh" ? "en" : "zh"),
-      label: (locale === "zh" ? "切换到 English / Switch to English" : "切换到中文 / Switch to 中文"),
-      action: () => setLocale(locale === "zh" ? "en" : "zh"),
-    });
-    return list;
-  }, [t, locale, setLocale, navigate]);
+  }, [t, navigate]);
 
-  // "install <query>" / "安装 <query>"：真实 Core API —— 检索 Registry 并一键收录安装。
+  const actionItems: Item[] = useMemo(() => {
+    return [
+      {
+        id: "lang:" + (locale === "zh" ? "en" : "zh"),
+        label: locale === "zh" ? "Switch to English" : "切换到中文",
+        sub: t("palette.langSub"),
+        icon: Languages,
+        action: () => setLocale(locale === "zh" ? "en" : "zh"),
+      },
+    ];
+  }, [locale, setLocale, t]);
+
+  // "install <query>" — real Core API: search registry and install.
   const installQuery = useMemo(() => {
     const m = query.trim().match(/^(?:install|安装)\s+(.+)$/i);
     return m ? m[1] : null;
@@ -92,30 +127,55 @@ export default function CommandPalette({
     () =>
       matches.map((p) => ({
         id: "install:" + p.id,
-        label: t("mp.install") + " " + p.name + "（" + p.id + "）",
+        label: p.name,
+        sub: p.type + " · v" + p.versionLatest + (p.license ? " · " + p.license : ""),
+        icon: Store,
         action: () => {
-          setInstallErr(null);
+          setInstallBusy(p.id);
           installPackage(p.id)
-            .then(() => navigate("/plugins/" + p.id))
-            .catch((e: unknown) =>
-              setInstallErr(e instanceof Error ? e.message : String(e))
-            );
+            .then(() => {
+              toast("success", t("toast.installed", { name: p.name }));
+              navigate("/plugins/" + p.id);
+            })
+            .catch((e: unknown) => {
+              const msg = e instanceof Error ? e.message : String(e);
+              toast("error", t("toast.installFailed"), p.name + " — " + msg);
+            })
+            .finally(() => setInstallBusy(null));
         },
       })),
-    [matches, t, navigate]
+    [matches, t, toast, navigate]
   );
 
-  const allItems = useMemo(
-    () => (installQuery ? [...installItems, ...items] : items),
-    [installItems, items, installQuery]
-  );
-
-  const filtered = useMemo(() => {
+  const groups: { label: string; items: Item[] }[] = useMemo(() => {
+    if (installQuery) {
+      return [
+        { label: t("palette.installResults"), items: installItems },
+        { label: t("palette.nav"), items: navItems },
+      ];
+    }
     const q = query.trim().toLowerCase();
-    if (!q) return allItems;
-    if (installQuery) return allItems;
-    return allItems.filter((i) => i.label.toLowerCase().includes(q));
-  }, [allItems, query, installQuery]);
+    if (!q) {
+      return [
+        { label: t("palette.nav"), items: navItems },
+        { label: t("palette.actions"), items: actionItems },
+      ];
+    }
+    return [
+      {
+        label: t("palette.nav"),
+        items: navItems.filter((i) => i.label.toLowerCase().includes(q)),
+      },
+      {
+        label: t("palette.actions"),
+        items: actionItems.filter((i) =>
+          (i.label + " " + (i.sub ?? "")).toLowerCase().includes(q)
+        ),
+      },
+    ];
+  }, [installQuery, installItems, navItems, actionItems, query, t]);
+
+  const flat = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
   useEffect(() => {
     if (open) {
@@ -137,44 +197,25 @@ export default function CommandPalette({
   }
 
   return (
-    <div
-      className="palette-overlay"
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        paddingTop: "16vh",
-      }}
-      onClick={onClose}
-    >
-      <div
-        className="card palette"
-        style={{ width: 520, maxWidth: "92vw", padding: 10 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 8px 10px" }}>
-          <Command size={15} style={{ color: "var(--muted)" }} />
+    <div className="palette-overlay" onClick={onClose}>
+      <div className="palette" onClick={(e) => e.stopPropagation()}>
+        <div className="palette-input-row">
+          <Command size={15} />
           <input
             ref={inputRef}
-            className="input"
-            style={{ flex: 1, border: "none", background: "transparent" }}
             placeholder={t("palette.placeholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") {
                 e.preventDefault();
-                setActive((a) => Math.min(a + 1, filtered.length - 1));
+                setActive((a) => Math.min(a + 1, flat.length - 1));
               } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 setActive((a) => Math.max(a - 1, 0));
               } else if (e.key === "Enter") {
                 e.preventDefault();
-                const item = filtered[active];
+                const item = flat[active];
                 if (item) pick(item);
               } else if (e.key === "Escape") {
                 e.preventDefault();
@@ -182,33 +223,65 @@ export default function CommandPalette({
               }
             }}
           />
+          <Kbd>Esc</Kbd>
         </div>
-        {installErr && (
-          <p className="field-error" style={{ padding: "8px 10px" }}>{installErr}</p>
-        )}
-        <div style={{ maxHeight: 320, overflow: "auto" }}>
-          {filtered.length === 0 && (
-            <p className="field-hint" style={{ padding: "8px 10px" }}>{t("mp.empty")}</p>
+        <div className="palette-results">
+          {flat.length === 0 && (
+            <div className="palette-empty">
+              <div>{t("palette.noResults")}</div>
+              <div style={{ marginTop: 6, fontFamily: "var(--font-mono)", fontSize: 11 }}>
+                install &lt;name&gt;
+              </div>
+            </div>
           )}
-          {filtered.map((item, i) => (
-            <button
-              key={item.id}
-              className="btn btn-ghost"
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "left",
-                marginBottom: 2,
-                background: i === active ? "var(--bg-soft)" : "transparent",
-              }}
-              onMouseEnter={() => setActive(i)}
-              onClick={() => pick(item)}
-            >
-              {item.label}
-            </button>
-          ))}
+          {groups.map((group) => {
+            const startIdx = groups
+              .slice(0, groups.indexOf(group))
+              .reduce((acc, g) => acc + g.items.length, 0);
+            if (group.items.length === 0) return null;
+            return (
+              <div key={group.label}>
+                <div className="palette-group-label">{group.label}</div>
+                {group.items.map((item, i) => {
+                  const idx = startIdx + i;
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      className={"palette-item" + (idx === active ? " active" : "")}
+                      disabled={installBusy !== null && item.id.startsWith("install:")}
+                      onMouseEnter={() => setActive(idx)}
+                      onClick={() => pick(item)}
+                    >
+                      <span className="pal-ico">
+                        {installBusy === item.id ? (
+                          <Search size={14} className="spin" />
+                        ) : (
+                          <Icon size={14} />
+                        )}
+                      </span>
+                      <span className="pal-label">{item.label}</span>
+                      {item.sub && <span className="pal-meta">{item.sub}</span>}
+                      {item.kbd && <span className="pal-kbd">{item.kbd}</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
-        <p className="field-hint" style={{ padding: "8px 10px 4px" }}>{t("palette.hint")}</p>
+        <div className="palette-foot">
+          <span>
+            <Kbd>↑↓</Kbd> {t("palette.select")}
+          </span>
+          <span>
+            <Kbd>↵</Kbd> {t("palette.open")}
+          </span>
+          <span>
+            <Kbd>esc</Kbd> {t("palette.close")}
+          </span>
+          <span style={{ marginLeft: "auto" }}>{t("palette.installHint")}</span>
+        </div>
       </div>
     </div>
   );

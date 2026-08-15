@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "open-design",
+  "name": "open-design",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding agent becomes the design engine: prototypes, landing pages, dashboards, slides, images & video — real files, HTML/PDF/PPTX/MP4 export. 🤖 Claude Code / Codex / Cursor / Gemini / OpenCode / Qwen & 20+ CLIs via BYOK.",
+  "category": "界面与体验",
+  "tags": [
+    "agent-skills",
+    "ai-agents",
+    "ai-design",
+    "byok",
+    "claude-code-for-design",
+    "claude-design",
+    "codex-design",
+    "coding-agents",
+    "cursor-design",
+    "deepseek-harness",
+    "design-systems",
+    "desktop-app",
+    "dsh",
+    "dsh-plugin",
+    "figma-alternative",
+    "hermes-agent",
+    "local-first",
+    "prototyping",
+    "ui-generator",
+    "vibe-coding"
+  ],
+  "publisher": {
+    "id": "nexu-io",
+    "name": "nexu-io"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/nexu-io/open-design",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/nexu-io/open-design",
+    "author": "nexu-io",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/nexu-io/open-design",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "open-design",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 86173,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T14:26:13Z",
+    "topics": [
+      "agent-skills",
+      "ai-agents",
+      "ai-design",
+      "byok",
+      "claude-code-for-design",
+      "claude-design",
+      "codex-design",
+      "coding-agents",
+      "cursor-design",
+      "deepseek-harness",
+      "design-systems",
+      "desktop-app",
+      "dsh",
+      "dsh-plugin",
+      "figma-alternative",
+      "hermes-agent",
+      "local-first",
+      "prototyping",
+      "ui-generator",
+      "vibe-coding"
+    ],
+    "fullName": "nexu-io/open-design"
+  }
+}

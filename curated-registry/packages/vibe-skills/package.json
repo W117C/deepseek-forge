@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "vibe-skills",
+  "name": "vibe-skills",
+  "type": "skill",
+  "version": "0.1.0",
+  "description": "VibeSkills is a general-purpose Skill that automatically routes local Skills and intelligently orchestrates harness workflows.",
+  "category": "Agent 与自动化",
+  "tags": [
+    "agent-framework",
+    "agent-skills",
+    "agentic-coding",
+    "ai-agents",
+    "ai-scientist",
+    "ai-skills",
+    "ai-workflow",
+    "automation",
+    "claude-code",
+    "codex",
+    "context-engineering",
+    "developer-tools",
+    "dsh-plugin",
+    "llm",
+    "multi-agent",
+    "prompt-engineering",
+    "skills",
+    "vibe-coding",
+    "vibecoding",
+    "workflow-automation"
+  ],
+  "publisher": {
+    "id": "foryourhealth111-pixel",
+    "name": "foryourhealth111-pixel"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/foryourhealth111-pixel/Vibe-Skills",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/foryourhealth111-pixel/Vibe-Skills",
+    "author": "foryourhealth111-pixel",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/foryourhealth111-pixel/Vibe-Skills",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "vibe-skills",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 2735,
+    "language": "Python",
+    "pushedAt": "2026-08-11T15:42:32Z",
+    "topics": [
+      "agent-framework",
+      "agent-skills",
+      "agentic-coding",
+      "ai-agents",
+      "ai-scientist",
+      "ai-skills",
+      "ai-workflow",
+      "automation",
+      "claude-code",
+      "codex",
+      "context-engineering",
+      "developer-tools",
+      "dsh-plugin",
+      "llm",
+      "multi-agent",
+      "prompt-engineering",
+      "skills",
+      "vibe-coding",
+      "vibecoding",
+      "workflow-automation"
+    ],
+    "fullName": "foryourhealth111-pixel/Vibe-Skills"
+  }
+}

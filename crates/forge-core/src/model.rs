@@ -31,20 +31,29 @@ pub enum SourceType {
 }
 
 /// Whether a security scan is required before install.
+/// "completed" = the scan already ran at curation/import time and its
+/// verdict is recorded in the same security block (ecosystem manifests).
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ScanRequirement {
     Required,
     Optional,
+    Completed,
 }
 
 /// Result of a security scan.
+/// Canonical form is SCREAMING_SNAKE_CASE; lowercase aliases accept the
+/// ecosystem/curated-registry spelling ("pass", "warning", …).
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SecurityStatus {
+    #[serde(alias = "pass")]
     Pass,
+    #[serde(alias = "warning")]
     Warning,
+    #[serde(alias = "blocked")]
     Blocked,
+    #[serde(alias = "unknown")]
     Unknown,
 }
 

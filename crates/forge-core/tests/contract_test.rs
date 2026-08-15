@@ -105,15 +105,17 @@ fn scans_official_bundle_without_blocking() {
 }
 
 #[test]
-fn blocks_high_risk_fixture_for_community_trust() {
+fn blocks_high_risk_fixture_for_any_trust() {
     let tmp = tempfile::tempdir().unwrap();
     std::fs::write(tmp.path().join("bad.yaml"), "!!js\neval(1)\n").unwrap();
     let report = scan_agent_dir(tmp.path(), "community").unwrap();
     assert_eq!(report.verdict, "block");
     assert!(report.high >= 1);
-    // official trust downgrades the same content to warn
+    // 高危发现一律 block——official/verified 不豁免（密钥被攻破时防线仍有效）
     let report = scan_agent_dir(tmp.path(), "official").unwrap();
-    assert_eq!(report.verdict, "warn");
+    assert_eq!(report.verdict, "block");
+    let report = scan_agent_dir(tmp.path(), "verified").unwrap();
+    assert_eq!(report.verdict, "block");
 }
 
 #[test]

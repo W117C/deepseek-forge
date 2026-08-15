@@ -16,23 +16,23 @@ import { runForgeCoreJson } from '../lib/forge-core-bin.mjs';
 import { createRegistry } from '../lib/registry-server.mjs';
 import { createAgent, composeAgent } from '../lib/scaffold.mjs';
 
-const USAGE = `agenthub —— 一键把 DSH 变成专业 Agent（M2）
+const USAGE = `forge —— 一键把 DSH 变成专业 Agent（M2，bin 兼容别名 agenthub）
 
 用法:
-  agenthub doctor                        环境自检
-  agenthub install <目录|id> [--registry <url>] [--version <v>] [--profile <name>] [--yes] [--smoke] [--trust <level>] [--home <dir>]
-  agenthub update <id> --registry <url> [--home <dir>] [--yes]
-  agenthub info <id> [--registry <url>] [--home <dir>]
-  agenthub ingest <json 文件或 url> --registry <url>
-  agenthub uninstall <id> [--home <dir>]
-  agenthub rollback <id> [--home <dir>]
-  agenthub list [--home <dir>]
-  agenthub health <id> [--smoke] [--home <dir>]
-  agenthub permissions <id> [--home <dir>]
-  agenthub security <目录> [--trust <level>]
-  agenthub keygen [--home <dir>]        生成发布者 ed25519 密钥对
-  agenthub publish <目录> --registry <url> [--home <dir>]
-  agenthub registry <dir> [--port <n>]  启动本地注册中心（foreground）
+  forge doctor                        环境自检
+  forge install <目录|id> [--registry <url>] [--version <v>] [--profile <name>] [--yes] [--smoke] [--trust <level>] [--home <dir>]
+  forge update <id> --registry <url> [--home <dir>] [--yes]
+  forge info <id> [--registry <url>] [--home <dir>]
+  forge ingest <json 文件或 url> --registry <url>
+  forge uninstall <id> [--home <dir>]
+  forge rollback <id> [--home <dir>]
+  forge list [--home <dir>]
+  forge health <id> [--smoke] [--home <dir>]
+  forge permissions <id> [--home <dir>]
+  forge security <目录> [--trust <level>]
+  forge keygen [--home <dir>]        生成发布者 ed25519 密钥对
+  forge publish <目录> --registry <url> [--home <dir>]
+  forge registry <dir> [--port <n>] [--require-publisher-auth] [--operator-token <t>] [--artifact-secret <s> | --allow-insecure]  启动本地注册中心（foreground）
 `;
 
 function flags(argv) {
@@ -456,14 +456,28 @@ async function main() {
   if (cmd === 'registry') {
     const dir = f._[0];
     if (!dir) { console.log(USAGE); process.exit(2); }
+    const op = f['operator-token'] || process.env.AGENTHUB_OPERATOR_TOKEN || null;
+    const art = f['artifact-secret'] || process.env.AGENTHUB_ARTIFACT_SECRET || null;
+    const pub = !!f['require-publisher-auth'];
+    const insecure = !!f['allow-insecure'];
+    // B2 安全门禁：无任何安全配置时拒绝裸启（特权端点默认 fail-closed）
+    if (!pub && !op && !art && !insecure) {
+      console.error('错误：Registry 需要至少一项安全配置才能启动（生产）：\n' +
+        '  --require-publisher-auth   启用发布鉴权（发布需令牌）\n' +
+        '  --operator-token <t>       运营鉴权令牌（审批 / 状态管理）\n' +
+        '  --artifact-secret <s>       制品签名 URL 防盗链密钥\n' +
+        '本地开发可显式加 --allow-insecure（特权端点仍会拒绝，除非同时传入）。');
+      process.exit(1);
+    }
     const reg = createRegistry({
       dir: resolve(dir),
-      requirePublisherAuth: !!f['require-publisher-auth'],
-      operatorToken: f['operator-token'] || process.env.AGENTHUB_OPERATOR_TOKEN || null,
-      artifactSecret: f['artifact-secret'] || process.env.AGENTHUB_ARTIFACT_SECRET || null,
+      requirePublisherAuth: pub,
+      operatorToken: op,
+      artifactSecret: art,
+      allowInsecure: insecure,
     });
     const port = await reg.listen(Number(f.port) || 0);
-    console.log('Registry 已启动：http://127.0.0.1:' + port + '（数据目录 ' + resolve(dir) + '，发布鉴权 ' + (!!f['require-publisher-auth'] ? '开' : '关') + '，运营鉴权 ' + ((f['operator-token'] || process.env.AGENTHUB_OPERATOR_TOKEN) ? '开' : '关') + '，防盗链 ' + ((f['artifact-secret'] || process.env.AGENTHUB_ARTIFACT_SECRET) ? '开' : '关') + '）');
+    console.log('Registry 已启动：http://127.0.0.1:' + port + '（数据目录 ' + resolve(dir) + '，发布鉴权 ' + (pub ? '开' : '关') + '，运营鉴权 ' + (op ? '开' : '关') + '，防盗链 ' + (art ? '开' : '关') + (insecure ? '，⚠ allowInsecure 开发模式' : '') + '）');
     return; // 进程常驻（事件循环由 server 保持）
   }
 

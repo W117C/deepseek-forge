@@ -1,0 +1,107 @@
+{
+  "schema": "forge.package.v1",
+  "id": "openguardrails",
+  "name": "openguardrails",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "The vendor-neutral protocol for AI agent safety & security — and the neutral benchmark that ranks the vendors.",
+  "category": "安全与隐私",
+  "tags": [
+    "agents",
+    "ai-safety",
+    "ai-security",
+    "dsh-plugin",
+    "guardrails",
+    "llm",
+    "prompt-injection",
+    "protocol",
+    "specification"
+  ],
+  "publisher": {
+    "id": "openguardrails",
+    "name": "openguardrails"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/openguardrails/openguardrails",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/openguardrails/openguardrails",
+    "author": "openguardrails",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/openguardrails/openguardrails",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "openguardrails",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 26,
+    "language": "Python",
+    "pushedAt": "2026-08-14T07:17:30Z",
+    "topics": [
+      "agents",
+      "ai-safety",
+      "ai-security",
+      "dsh-plugin",
+      "guardrails",
+      "llm",
+      "prompt-injection",
+      "protocol",
+      "specification"
+    ],
+    "fullName": "openguardrails/openguardrails"
+  }
+}

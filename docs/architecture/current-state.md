@@ -2,6 +2,10 @@
 
 > 依据新规范（Desktop-first / Local-first / Open Source First）§2 执行。**只读审计，未修改任何生产代码。**
 > 基线：git HEAD `cb368c8`（docs: v0.2.0 release notes）+ 未提交的 v0.3.0 工作树（16 modified / 1 deleted / 19 untracked）；远程 `https://github.com/W117C/deepseek-forge.git`。
+>
+> ⚠️ **历史快照（2026-08-14 审计时点）**：本文的「Stub / 必须重构 / TODO」章节已随 v0.3+ 落地大幅过时——
+> Rust 核心（crates/forge-core）、Tauri 桌面端（desktop/）、curated-registry 与 GitHub 导入管线均已实现；
+> 最新现状见 docs/optimization-audit.md 与 README。
 > 审计证据（本会话实测，见 §12）：全量 e2e 18 套 / 245 项 exit 0；`cd forge && npm run build` exit 0；`W117C/deepseek-forge-registry` 不存在（GitHub API 404）。
 > 结论先行：当前仓库是「Node ESM 零依赖核心 + 单文件 CLI + React Web 市场」的 Web/CLI 形态；**没有 Rust、没有 Tauri、没有 Package 七类型模型、没有 GitHub 导入管线、没有 Runtime**。新规范要求的 Forge Kernel（Rust）与 Import 管线为全新工作面；Installer/Security/Snapshot/Rollback/签名哈希/健康检查是现成且被 245 项 e2e 背书的资产，可作为 Rust Kernel 的行为契约与过渡期执行体。
 

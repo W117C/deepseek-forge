@@ -6,7 +6,7 @@
 ## 发布前检查
 
 - [ ] `node --version` ≥ 22（engines 声明）
-- [ ] CI 全绿（GitHub Actions：e2e 203 项 + landing/forge 构建）
+- [ ] CI 全绿（GitHub Actions：e2e 245 项 + landing/forge 构建）
 - [ ] 版本号：`package.json` version 与本次 tag（如 v0.2.0）一致
 - [ ] LICENSE 版权署名确认（当前 MIT / AgentHub contributors）
 - [ ] 打包内容自检：`npm pack --dry-run`，确认只含 cli/ lib/ bundles/ README/LICENSE
@@ -25,7 +25,7 @@ npm publish --access public
 
 # 4. 验证
 npm view agenthub version
-npx agenthub --help
+npx agenthub --help   # 或 npx forge --help（bin 别名）
 ```
 
 ## 后续（可选）自动化

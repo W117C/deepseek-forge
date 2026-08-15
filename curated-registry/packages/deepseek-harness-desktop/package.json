@@ -1,0 +1,99 @@
+{
+  "schema": "forge.package.v1",
+  "id": "deepseek-harness-desktop",
+  "name": "deepseek-harness-desktop",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "为 DeepSeek Harness 生态打造的现代化桌面端体验",
+  "category": "桌面客户端",
+  "tags": [
+    "deepseek",
+    "deepseek-harness",
+    "desktop",
+    "dsh",
+    "dsh-plugin"
+  ],
+  "publisher": {
+    "id": "anywhere-labs",
+    "name": "anywhere-labs"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/anywhere-labs/deepseek-harness-desktop",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/anywhere-labs/deepseek-harness-desktop",
+    "author": "anywhere-labs",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/anywhere-labs/deepseek-harness-desktop",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "deepseek-harness-desktop",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 1266,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T12:08:21Z",
+    "topics": [
+      "deepseek",
+      "deepseek-harness",
+      "desktop",
+      "dsh",
+      "dsh-plugin"
+    ],
+    "fullName": "anywhere-labs/deepseek-harness-desktop"
+  }
+}

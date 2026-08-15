@@ -35,7 +35,7 @@ if (!locateDsh()) { console.error('dsh not found'); process.exit(1); }
 
 // 1. 建库 + 发布
 const dataDir = join(TEST_HOME, 'registry-data');
-const reg1 = createRegistry({ dir: dataDir });
+const reg1 = createRegistry({ dir: dataDir, allowInsecure: true });
 const port1 = await reg1.listen(0);
 const REG1 = 'http://127.0.0.1:' + port1;
 await run(['keygen', '--home', TEST_HOME]);
@@ -53,7 +53,7 @@ const restore = spawnSync('bash', [join(root, 'scripts', 'restore.sh'), tarball,
 check('恢复脚本成功', restore.status === 0, (restore.stdout + restore.stderr).trim().split('\n').pop());
 
 // 3. 恢复后 Registry 完整可用
-const reg2 = createRegistry({ dir: dataDir });
+const reg2 = createRegistry({ dir: dataDir, allowInsecure: true });
 const port2 = await reg2.listen(0);
 const REG2 = 'http://127.0.0.1:' + port2;
 const list = await (await fetch(REG2 + '/v1/agents')).json();

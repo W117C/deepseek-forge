@@ -1,0 +1,123 @@
+{
+  "schema": "forge.package.v1",
+  "id": "mnemon",
+  "name": "mnemon",
+  "type": "tool",
+  "version": "0.1.0",
+  "description": "LLM-supervised persistent memory for AI agents — graph-based recall, cross-session knowledge, single binary. Works with DeepSeek Harness, Claude Code, OpenClaw, and any agent runtime.",
+  "category": "研究与知识",
+  "tags": [
+    "agent-framework",
+    "agent-memory",
+    "ai-agent",
+    "ai-tools",
+    "claude",
+    "claude-code",
+    "cli",
+    "context-window",
+    "dsh",
+    "dsh-plugin",
+    "knowledge-graph",
+    "llm-agent",
+    "llm-memory",
+    "llm-supervised",
+    "memory",
+    "openclaw",
+    "persistent-memory"
+  ],
+  "publisher": {
+    "id": "mnemon-dev",
+    "name": "mnemon-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/mnemon-dev/mnemon",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/mnemon-dev/mnemon",
+    "author": "mnemon-dev",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/mnemon-dev/mnemon",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "mnemon",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 430,
+    "language": "Go",
+    "pushedAt": "2026-08-14T13:41:23Z",
+    "topics": [
+      "agent-framework",
+      "agent-memory",
+      "ai-agent",
+      "ai-tools",
+      "claude",
+      "claude-code",
+      "cli",
+      "context-window",
+      "dsh",
+      "dsh-plugin",
+      "knowledge-graph",
+      "llm-agent",
+      "llm-memory",
+      "llm-supervised",
+      "memory",
+      "openclaw",
+      "persistent-memory"
+    ],
+    "fullName": "mnemon-dev/mnemon"
+  }
+}

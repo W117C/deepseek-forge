@@ -1,0 +1,93 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-notification",
+  "name": "dsh-notification",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Desktop notifications for DeepSeek Harness turn completions, with per-outcome controls and include/exclude keyword rules.",
+  "category": "消息与通知",
+  "tags": [
+    "dsh",
+    "dsh-plugin"
+  ],
+  "publisher": {
+    "id": "omdsh-dev",
+    "name": "omdsh-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/omdsh-dev/dsh-notification",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/omdsh-dev/dsh-notification",
+    "author": "omdsh-dev",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/omdsh-dev/dsh-notification",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-notification",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 38,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-13T15:28:50Z",
+    "topics": [
+      "dsh",
+      "dsh-plugin"
+    ],
+    "fullName": "omdsh-dev/dsh-notification"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "forge.package.v1",
+  "id": "petdex",
+  "name": "petdex",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "A public gallery of animated pets for Codex, Claude Code, DeepSeek Harness, Hermes, OpenCode, Gemini CLI, and more.",
+  "category": "趣味与娱乐",
+  "tags": [
+    "claude-code",
+    "clerk",
+    "cli",
+    "codex",
+    "developer-tools",
+    "drizzle-orm",
+    "dsh-plugin",
+    "mascot",
+    "neon",
+    "nextjs",
+    "pixel-art",
+    "postgres",
+    "react",
+    "sprites",
+    "tailwindcss",
+    "vercel"
+  ],
+  "publisher": {
+    "id": "crafter-station",
+    "name": "crafter-station"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/crafter-station/petdex",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/crafter-station/petdex",
+    "author": "crafter-station",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/crafter-station/petdex",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "petdex",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 3779,
+    "language": "TypeScript",
+    "pushedAt": "2026-08-14T11:41:27Z",
+    "topics": [
+      "claude-code",
+      "clerk",
+      "cli",
+      "codex",
+      "developer-tools",
+      "drizzle-orm",
+      "dsh-plugin",
+      "mascot",
+      "neon",
+      "nextjs",
+      "pixel-art",
+      "postgres",
+      "react",
+      "sprites",
+      "tailwindcss",
+      "vercel"
+    ],
+    "fullName": "crafter-station/petdex"
+  }
+}

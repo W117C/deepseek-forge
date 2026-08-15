@@ -1,19 +1,41 @@
-// STEP 5: Plugin Detail —— 完整 provenance（绝不伪装原创）+ 安装/卸载 + used-by 依赖追踪。
+// Package Detail — provenance, capabilities, dependencies, security, README.
+// Tabs: Overview / Capabilities / Dependencies / Security / README.
+// Header actions reflect the real installation state (Install sheet, Update,
+// Disable/Enable, Uninstall with dependent checks).
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Github, LoaderCircle, ShieldCheck, TriangleAlert, Unplug } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  Github,
+  Power,
+  ShieldCheck,
+  Unplug,
+} from "lucide-react";
 import {
   dependentsList,
-  installPackage,
+  openExternal,
   packageRollback,
   registryInfo,
+  registryVersions,
   stateList,
+  setPluginEnabled,
   updateApply,
   updateCheck,
 } from "../ipc";
 import type { DependentRef } from "../ipc";
 import { useI18n } from "../i18n";
-import InstallProgress from "../components/InstallProgress";
+import {
+  Badge,
+  ErrorCard,
+  InlineLoading,
+  RowSkeleton,
+  Status,
+  useDialog,
+  useToast,
+} from "../components/ui";
+import InstallDialog from "../components/InstallDialog";
+import type { InstallTarget } from "../components/InstallDialog";
 
 type Pkg = Record<string, any>;
 
@@ -27,54 +49,61 @@ const CAP_LABEL: Record<string, { zh: string; en: string }> = {
   "shell.execute": { zh: "Shell", en: "Shell" },
 };
 
+type Tab = "overview" | "capabilities" | "dependencies" | "security" | "readme";
+
+const TAB_KEYS: Record<Tab, string> = {
+  overview: "pd.tabs.overview",
+  capabilities: "pd.tabs.capabilities",
+  dependencies: "pd.tabs.dependencies",
+  security: "pd.tabs.security",
+  readme: "pd.tabs.readme",
+};
+
 export default function PackageDetail() {
   const { id } = useParams();
   const { t, locale } = useI18n();
+  const dialog = useDialog();
+  const toast = useToast();
+  const [tab, setTab] = useState<Tab>("overview");
   const [pkg, setPkg] = useState<Pkg | null>(null);
-  const [installed, setInstalled] = useState(false);
-  const [installedPerms, setInstalledPerms] = useState<{ network?: string[]; filesystem?: string[]; env?: string[] } | null>(null);
+  const [entry, setEntry] = useState<Record<string, any> | null>(null);
   const [installPath, setInstallPath] = useState<string | null>(null);
   const [outdated, setOutdated] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
+  const [toggling, setToggling] = useState(false);
   const [deps, setDeps] = useState<DependentRef[]>([]);
-  const [err, setErr] = useState<string | null>(null);
+  const [versions, setVersions] = useState<string[]>([]);
+  const [err, setErr] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<Record<string, unknown> | null>(null);
+  const [installTarget, setInstallTarget] = useState<InstallTarget | null>(null);
 
   function load() {
     if (!id) return;
     setErr(null);
-    Promise.all([registryInfo(id), stateList(), dependentsList(id).catch(() => null), updateCheck().catch(() => [])])
-      .then(([p, s, d, ups]) => {
+    Promise.all([
+      registryInfo(id),
+      stateList(),
+      dependentsList(id).catch(() => null),
+      updateCheck().catch(() => []),
+      registryVersions(id).catch(() => []),
+    ])
+      .then(([p, s, d, ups, vers]) => {
         setPkg(p);
-        setInstalled(id in (s.agents ?? {}));
+        const e = ((s.agents ?? {})[id] as Record<string, any>) ?? null;
+        setEntry(e);
         setDeps(d?.dependents ?? []);
-        const entry = (s.agents ?? {})[id] as
-          | { permissions?: { network?: string[]; filesystem?: string[]; env?: string[] }; installPath?: string; source?: string }
-          | undefined;
-        setInstalledPerms(entry?.permissions ?? null);
-        setInstallPath(entry?.installPath ?? (entry?.source ? String(entry.source) : null));
-        const u = Array.isArray(ups) ? ups.find((x) => x.id === id && x.outdated) : undefined;
+        setVersions(vers);
+        setInstallPath(
+          e?.installPath ?? (e?.source ? String(e.source) : null)
+        );
+        const u = Array.isArray(ups)
+          ? ups.find((x) => x.id === id && x.outdated)
+          : undefined;
         setOutdated(u ? u.latest : null);
       })
-      .catch((e: unknown) => setErr(e instanceof Error ? e.message : String(e)));
+      .catch((e: unknown) => setErr(e));
   }
   useEffect(load, [id]);
-
-  async function install() {
-    if (!id) return;
-    setBusy(true);
-    setErr(null);
-    try {
-      const res = await installPackage(id);
-      setResult(res);
-      load();
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
-    } finally {
-      setBusy(false);
-    }
-  }
 
   async function update() {
     if (!id) return;
@@ -83,33 +112,63 @@ export default function PackageDetail() {
     try {
       await updateApply(id);
       load();
+      toast("success", t("toast.updated", { name: id }), outdated ? "v" + outdated : undefined);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(e);
+      toast("error", t("toast.updateFailed"), id);
     } finally {
       setUpdating(false);
+    }
+  }
+
+  async function toggleEnabled() {
+    if (!id || !entry) return;
+    setToggling(true);
+    setErr(null);
+    const next = entry.enabled === false;
+    try {
+      await setPluginEnabled(id, next);
+      load();
+      toast(
+        "success",
+        next ? t("toast.enabled", { name: id }) : t("toast.disabled", { name: id })
+      );
+    } catch (e) {
+      setErr(e);
+      toast("error", t("common.failed"), id);
+    } finally {
+      setToggling(false);
     }
   }
 
   async function uninstall() {
     if (!id) return;
     if (deps.length > 0) {
-      window.alert(
-        t("plugins.blockedByDependents") +
-          "\n\n" +
-          deps
-            .map((u) => "• " + u.kind + " " + u.id + (u.requires ? " (" + u.requires + ")" : ""))
-            .join("\n")
-      );
+      await dialog.confirm({
+        title: t("dialog.uninstallBlockedTitle"),
+        body: t("plugins.blockedByDependents"),
+        list: deps.map((u) => u.kind + " " + u.id + (u.requires ? " (" + u.requires + ")" : "")),
+        confirmLabel: t("common.close"),
+        danger: false,
+      });
       return;
     }
-    if (!window.confirm(t("plugins.confirmUninstall", { id }))) return;
+    const ok = await dialog.confirm({
+      title: t("dialog.uninstallTitle", { id }),
+      body: t("plugins.confirmUninstall", { id }),
+      confirmLabel: t("plugins.uninstall"),
+      danger: true,
+    });
+    if (!ok) return;
     setBusy(true);
     setErr(null);
     try {
       await packageRollback(id);
+      toast("success", t("toast.uninstalled", { name: id }));
       load();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : String(e));
+      setErr(e);
+      toast("error", t("toast.uninstallFailed"), id);
     } finally {
       setBusy(false);
     }
@@ -118,21 +177,14 @@ export default function PackageDetail() {
   if (err && !pkg) {
     return (
       <div className="page">
-        <div className="error-state">
-          <TriangleAlert size={22} className="err-icon" />
-          <p>{err}</p>
-          <button className="btn btn-ghost" onClick={load}>{t("mp.retry")}</button>
-        </div>
+        <ErrorCard error={err} onRetry={load} title={t("mp.loadFailed")} />
       </div>
     );
   }
   if (!pkg) {
     return (
       <div className="page">
-        <div className="dashboard-loading">
-          <LoaderCircle size={16} className="spin" />
-          <span>{t("mp.loading")}</span>
-        </div>
+        <RowSkeleton rows={5} />
       </div>
     );
   }
@@ -145,202 +197,405 @@ export default function PackageDetail() {
   const extra = pkg.extra ?? {};
   const stars = extra.stars ?? null;
   const pushedAt = extra.pushedAt ?? null;
+  const repo = source.repository ?? null;
+  const repoShort = repo ? String(repo).replace("https://github.com/", "github.com/") : null;
+  const installed = entry !== null;
+  const enabled = entry?.enabled !== false;
+  const secStatus: string = pkg.security?.status ?? t("mp.unscanned");
   const capLabel = (c: string) => (CAP_LABEL[c] ? CAP_LABEL[c][locale] : c);
+  const isAgentLike = entry && (entry.kind === "agent" || entry.profile);
+
+  const tabs: Tab[] = ["overview", "capabilities", "dependencies", "security", "readme"];
 
   return (
     <div className="page">
-      <header className="page-header">
-        <div className="crumb">
-          <Link to="/marketplace" className="mono">← {t("nav.marketplace")}</Link>
-        </div>
-        <h1 className="page-heading" style={{ marginTop: 8 }}>{pkg.name}</h1>
-        <p className="page-sub">
-          {pkg.type} · v{pkg.version} {stars !== null ? "· ★ " + stars : ""}
-        </p>
-      </header>
-
-      <div className="card" style={{ display: "flex", gap: 12, alignItems: "center" }}>
-        {installed ? (
-          <>
-            <span className="badge badge-verified">{t("mp.installed")} ✓</span>
-            {outdated && (
-              <button className="btn btn-primary" onClick={() => void update()} disabled={updating || busy}>
-                {updating ? <LoaderCircle size={14} className="spin" /> : null}
-                {updating ? t("updates.updating") : t("updates.update") + " v" + outdated}
-              </button>
-            )}
-            <button className="btn btn-ghost" onClick={() => void uninstall()} disabled={busy}>
-              <Unplug size={14} /> {t("plugins.uninstall")}
-            </button>
-          </>
-        ) : (
-          <button className="btn btn-primary" onClick={() => void install()} disabled={busy}>
-            {busy ? <LoaderCircle size={14} className="spin" /> : null}
-            {busy ? t("mp.installing") : t("mp.install")}
-          </button>
-        )}
-        {busy && id && <InstallProgress targetId={id} />}
-        {result && (
-          <span className="field-hint">
-            {t("pd.importedResult")} {((result.steps as string[]) ?? []).join(" → ")}
-          </span>
-        )}
-        {deps.length > 0 && (
-          <span className="field-hint" style={{ color: "var(--warning, #e6a23c)" }}>
-            {t("plugins.usedBy", { n: deps.length })}
-          </span>
-        )}
-        {err && <span className="field-error">{err}</span>}
+      <div className="crumb">
+        <Link to="/marketplace">
+          <ArrowLeft size={12} />
+          {t("nav.marketplace")}
+        </Link>
       </div>
 
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.description")}</h2>
-        <div className="card"><p>{pkg.description || "—"}</p></div>
-      </section>
-
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.compatibility")}</h2>
-        <div className="card">
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.forge")}</span>
-            <span className="registry-v mono">{pkg.compatibility?.forge ?? "—"}</span>
+      <div className="detail-title-row">
+        <div>
+          <div className="detail-name">
+            {pkg.name}
+            <span className="detail-ver">v{pkg.version}</span>
           </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.dsh")}</span>
-            <span className="registry-v mono">
-              {pkg.compatibility?.dsh?.min
-                ? "min " + pkg.compatibility.dsh.min +
-                  (Array.isArray(pkg.compatibility.dsh.tested) && pkg.compatibility.dsh.tested.length > 0
-                    ? " · tested " + pkg.compatibility.dsh.tested.join(", ")
-                    : "")
-                : "—"}
-            </span>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.node")}</span>
-            <span className="registry-v mono">{pkg.compatibility?.node ?? "—"}</span>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.platform")}</span>
-            <span className="registry-v mono">
-              {Array.isArray(pkg.compatibility?.platform) && pkg.compatibility.platform.length > 0
-                ? pkg.compatibility.platform.join(", ")
-                : "—"}
-            </span>
-          </div>
-          {installPath && (
-            <div className="registry-row">
-              <span className="registry-k">{t("pd.installLocation")}</span>
-              <span className="registry-v mono">{installPath}</span>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.openSource")}</h2>
-        <div className="card">
-          <div className="registry-row">
-            <span className="registry-k"><Github size={13} /> {t("mp.source")}</span>
-            <a className="registry-v mono" href={source.repository ?? "#"} target="_blank" rel="noopener noreferrer">
-              {String(source.repository ?? "—").replace("https://github.com/", "github.com/")}
-            </a>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("mp.license")}</span>
-            <span className="registry-v">{license}</span>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.originalAuthor")}</span>
-            <span className="registry-v">{upstream.author ?? pkg.publisher?.id ?? "—"}</span>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("pd.lastUpdated")}</span>
-            <span className="registry-v mono">{pushedAt ?? "—"}</span>
-          </div>
-          <div className="registry-row">
-            <span className="registry-k"><ShieldCheck size={13} /> {t("mp.security")}</span>
-            <span className="registry-v">{pkg.security?.status ?? t("mp.unscanned")}</span>
+          <p className="detail-desc">{pkg.description || "—"}</p>
+          <div className="detail-meta">
+            {repoShort && (
+              <a
+                className="badge badge-community"
+                href={repo ?? "#"}
+                rel="noopener noreferrer"
+                style={{ textTransform: "none", letterSpacing: 0 }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (repo) void openExternal(String(repo));
+                }}
+              >
+                <Github size={11} />
+                {repoShort}
+              </a>
+            )}
+            <Badge tone="community">{license}</Badge>
+            <Badge tone="community">{pkg.type}</Badge>
+            {installed && (
+              <Badge tone={secStatus === "unscanned" ? "warning" : "verified"}>
+                {secStatus === "unscanned" ? t("mp.unscanned") : "✓ " + secStatus}
+              </Badge>
+            )}
+            {stars !== null && (
+              <span className="badge badge-community">★ {stars}</span>
+            )}
           </div>
         </div>
-      </section>
 
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("mp.capabilities")}</h2>
-        <div className="card">
-          {caps.length === 0 ? (
-            <p className="sub">{t("pd.capsEmpty")}</p>
-          ) : (
-            caps.map((c) => (
-              <span key={c} className="badge badge-community" style={{ marginRight: 8 }}>
-                {capLabel(c)}
-              </span>
-            ))
-          )}
-        </div>
-      </section>
-
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.permissions")}</h2>
-        <div className="card">
-          {!installedPerms ? (
-            <p className="sub">{t("pd.permissionsNone")}</p>
-          ) : (
+        <div className="detail-actions">
+          {installed ? (
             <>
-              <div className="registry-row">
-                <span className="registry-k">{t("pd.network")}</span>
-                <span className="registry-v mono">
-                  {(installedPerms.network ?? []).length > 0
-                    ? installedPerms.network?.slice(0, 8).join(", ")
-                    : t("sy.none")}
-                </span>
-              </div>
-              <div className="registry-row">
-                <span className="registry-k">{t("pd.filesystem")}</span>
-                <span className="registry-v mono">
-                  {(installedPerms.filesystem ?? []).length > 0
-                    ? installedPerms.filesystem?.slice(0, 8).join(", ")
-                    : t("sy.none")}
-                </span>
-              </div>
-              <div className="registry-row">
-                <span className="registry-k">{t("pd.env")}</span>
-                <span className="registry-v mono">
-                  {(installedPerms.env ?? []).length > 0
-                    ? installedPerms.env?.slice(0, 8).join(", ")
-                    : t("sy.none")}
-                </span>
-              </div>
-              <p className="field-hint" style={{ marginTop: 8 }}>
-                {t("pd.permissionsNote")}
-              </p>
+              <Status tone={enabled ? "on" : "off"} label={enabled ? t("pd.active") : t("plugins.disabled")} />
+              {outdated && (
+                <button className="btn btn-primary" onClick={() => void update()} disabled={updating || busy}>
+                  {updating ? <InlineLoading label={t("updates.updating")} /> : t("updates.update") + " v" + outdated}
+                </button>
+              )}
+              {repo && (
+                <a
+                  className="btn btn-outline"
+                  href={String(repo)}
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    void openExternal(String(repo));
+                  }}
+                >
+                  <ExternalLink size={13} />
+                  {t("pd.open")}
+                </a>
+              )}
+              {isAgentLike && (
+                <Link className="btn btn-outline" to="/agents">
+                  {t("pd.configure")}
+                </Link>
+              )}
+              <button className="btn btn-ghost" onClick={() => void toggleEnabled()} disabled={toggling || busy}>
+                <Power size={13} />
+                {enabled ? t("plugins.disable") : t("plugins.enable")}
+              </button>
+              <button className="btn btn-ghost" onClick={() => void uninstall()} disabled={busy}>
+                <Unplug size={13} />
+                {t("plugins.uninstall")}
+              </button>
             </>
-          )}
-        </div>
-      </section>
-
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.dependencies")}</h2>
-        <div className="card">
-          {depList.length === 0 ? (
-            <p className="sub">{t("pd.noDeps")}</p>
           ) : (
-            depList.map((d, i) => (
-              <div key={i} className="mono">
-                {d.package ?? "?"}
-                {d.version ? " (" + d.version + ")" : ""}
-              </div>
-            ))
+            <button
+              className="btn btn-primary"
+              disabled={busy}
+              onClick={() =>
+                setInstallTarget({
+                  id: pkg.id,
+                  name: pkg.name,
+                  version: String(pkg.version ?? ""),
+                  repository: repo,
+                  license: license === "—" ? null : license,
+                  capabilities: caps,
+                })
+              }
+            >
+              {busy ? <InlineLoading label={t("mp.installing")} /> : t("mp.install")}
+            </button>
           )}
         </div>
-      </section>
+      </div>
 
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("pd.readme")}</h2>
-        <div className="card empty-card">
-          <p className="empty-card-body">{t("pd.readmeEmpty")}</p>
+      {err ? (
+        <div style={{ marginTop: 16 }}>
+          <ErrorCard error={err} />
         </div>
-      </section>
+      ) : null}
+
+      <div className="detail-tabs">
+        <div className="tabs">
+          {tabs.map((tb) => (
+            <button
+              key={tb}
+              className={"tab" + (tab === tb ? " on" : "")}
+              onClick={() => setTab(tb)}
+            >
+              {t(TAB_KEYS[tb])}
+              {tb === "dependencies" && deps.length > 0 && (
+                <span className="tab-count">{deps.length}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="detail-panel">
+        {tab === "overview" && (
+          <div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.description")}</span>
+              </div>
+              <p className="sub" style={{ lineHeight: 1.65, maxWidth: 680 }}>{pkg.description || "—"}</p>
+            </div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.compatibility")}</span>
+              </div>
+              <div className="kv">
+                <span className="kv-k">{t("pd.forge")}</span>
+                <span className="kv-v mono">{pkg.compatibility?.forge ?? "—"}</span>
+              </div>
+              <div className="kv">
+                <span className="kv-k">{t("pd.dsh")}</span>
+                <span className="kv-v mono">
+                  {pkg.compatibility?.dsh?.min
+                    ? "min " +
+                      pkg.compatibility.dsh.min +
+                      (Array.isArray(pkg.compatibility.dsh.tested) &&
+                      pkg.compatibility.dsh.tested.length > 0
+                        ? " · tested " + pkg.compatibility.dsh.tested.join(", ")
+                        : "")
+                    : "—"}
+                </span>
+              </div>
+              <div className="kv">
+                <span className="kv-k">{t("pd.node")}</span>
+                <span className="kv-v mono">{pkg.compatibility?.node ?? "—"}</span>
+              </div>
+              <div className="kv">
+                <span className="kv-k">{t("pd.platform")}</span>
+                <span className="kv-v mono">
+                  {Array.isArray(pkg.compatibility?.platform) &&
+                  pkg.compatibility.platform.length > 0
+                    ? pkg.compatibility.platform.join(", ")
+                    : "—"}
+                </span>
+              </div>
+              {installPath && (
+                <div className="kv">
+                  <span className="kv-k">{t("pd.installLocation")}</span>
+                  <span className="kv-v mono">{installPath}</span>
+                </div>
+              )}
+              <div className="kv">
+                <span className="kv-k">{t("pd.originalAuthor")}</span>
+                <span className="kv-v">{upstream.author ?? pkg.publisher?.id ?? "—"}</span>
+              </div>
+              <div className="kv">
+                <span className="kv-k">{t("pd.lastUpdated")}</span>
+                <span className="kv-v mono">{pushedAt ?? "—"}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === "capabilities" && (
+          <div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("mp.capabilities")}</span>
+              </div>
+              {caps.length === 0 ? (
+                <p className="sub">{t("pd.capsEmpty")}</p>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {caps.map((c) => (
+                    <span key={c} className="chip">
+                      {capLabel(c)}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.permissions")}</span>
+              </div>
+              {!entry?.permissions ? (
+                <p className="sub">{t("pd.permissionsNone")}</p>
+              ) : (
+                <>
+                  <div className="kv">
+                    <span className="kv-k">{t("pd.network")}</span>
+                    <span className="kv-v mono">
+                      {(entry.permissions.network ?? []).length > 0
+                        ? entry.permissions.network.slice(0, 8).join(", ")
+                        : t("sy.none")}
+                    </span>
+                  </div>
+                  <div className="kv">
+                    <span className="kv-k">{t("pd.filesystem")}</span>
+                    <span className="kv-v mono">
+                      {(entry.permissions.filesystem ?? []).length > 0
+                        ? entry.permissions.filesystem.slice(0, 8).join(", ")
+                        : t("sy.none")}
+                    </span>
+                  </div>
+                  <div className="kv">
+                    <span className="kv-k">{t("pd.env")}</span>
+                    <span className="kv-v mono">
+                      {(entry.permissions.env ?? []).length > 0
+                        ? entry.permissions.env.slice(0, 8).join(", ")
+                        : t("sy.none")}
+                    </span>
+                  </div>
+                  <p className="field-hint">{t("pd.permissionsNote")}</p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === "dependencies" && (
+          <div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.dependencies")}</span>
+                <span className="sec-count">{depList.length}</span>
+              </div>
+              {depList.length === 0 ? (
+                <p className="sub">{t("pd.noDeps")}</p>
+              ) : (
+                <div className="list" style={{ borderRadius: 8 }}>
+                  {depList.map((d, i) => (
+                    <div key={i} className="list-row" style={{ gridTemplateColumns: "minmax(0,1fr) auto" }}>
+                      <span className="cell-title mono">{d.package ?? "?"}</span>
+                      <span className="kv-v mono" style={{ color: "var(--muted)" }}>
+                        {d.version ?? "—"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.usedBy")}</span>
+                <span className="sec-count">{deps.length}</span>
+              </div>
+              {deps.length === 0 ? (
+                <p className="sub">{t("pd.usedByNone")}</p>
+              ) : (
+                <div className="list" style={{ borderRadius: 8 }}>
+                  {deps.map((u, i) => (
+                    <div key={i} className="list-row" style={{ gridTemplateColumns: "72px minmax(0,1fr) auto" }}>
+                      <Badge tone="community">{u.kind}</Badge>
+                      <span className="cell-title mono">{u.id}</span>
+                      <span className="kv-v mono" style={{ color: "var(--muted)" }}>
+                        {u.requires}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === "security" && (
+          <div className="detail-sec">
+            <div className="detail-sec-head">
+              <span className="detail-sec-title">{t("mp.security")}</span>
+            </div>
+            <div className="kv">
+              <span className="kv-k">
+                <ShieldCheck size={12} />
+                {t("pd.securityStatus")}
+              </span>
+              <span className={"kv-v " + (secStatus === "unscanned" ? "warn" : "ok")}>
+                {secStatus}
+              </span>
+            </div>
+            {installed && (
+              <>
+                <div className="kv">
+                  <span className="kv-k">{t("pd.integrity")}</span>
+                  <span className="kv-v ok">{t("pd.verifiedValue")}</span>
+                </div>
+                <div className="kv">
+                  <span className="kv-k">{t("pd.signature")}</span>
+                  <span className="kv-v ok">{t("pd.verifiedValue")}</span>
+                </div>
+              </>
+            )}
+            {entry?.scanVerdict && (
+              <div className="kv">
+                <span className="kv-k">{t("mp.scanned")}</span>
+                <span className="kv-v">{String(entry.scanVerdict)}</span>
+              </div>
+            )}
+            {entry?.trust && (
+              <div className="kv">
+                <span className="kv-k">{t("sy.trust")}</span>
+                <span className="kv-v">{String(entry.trust)}</span>
+              </div>
+            )}
+            {entry?.score !== undefined && (
+              <div className="kv">
+                <span className="kv-k">{t("sy.score")}</span>
+                <span className="kv-v">{String(entry.score)}/100</span>
+              </div>
+            )}
+            <p className="field-hint" style={{ marginTop: 8 }}>
+              {t("sy.securityNote")}
+            </p>
+          </div>
+        )}
+
+        {tab === "readme" && (
+          <div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.readme")}</span>
+              </div>
+              <p className="sub">{t("pd.readmeEmpty")}</p>
+              {repoShort && (
+                <a
+                  className="btn btn-outline btn-sm"
+                  style={{ marginTop: 12 }}
+                  href={String(repo)}
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (repo) void openExternal(String(repo));
+                  }}
+                >
+                  <Github size={12} />
+                  {t("pd.readmeOpen")} <ExternalLink size={11} />
+                </a>
+              )}
+            </div>
+            <div className="detail-sec">
+              <div className="detail-sec-head">
+                <span className="detail-sec-title">{t("pd.versions")}</span>
+                <span className="sec-count">{versions.length}</span>
+              </div>
+              {versions.length === 0 ? (
+                <p className="sub">{t("pd.noVersions")}</p>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {versions.map((v) => (
+                    <span key={v} className={"chip" + (v === pkg.version ? " is-current" : "")}>
+                      {v === pkg.version ? "v" + v + " · " + t("pd.current") : "v" + v}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <InstallDialog
+        target={installTarget}
+        onClose={() => setInstallTarget(null)}
+        onFinished={load}
+      />
     </div>
   );
 }

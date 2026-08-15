@@ -13,6 +13,24 @@ export interface ErrorEnvelope {
   recovery: string;
 }
 
+/**
+ * Structured error surfaced to the UI. The desktop shell renders
+ * "what happened → why → what to do" from these fields instead of
+ * one opaque string.
+ */
+export class ForgeError extends Error {
+  readonly code?: string;
+  readonly technical?: string;
+  readonly recovery?: string;
+  constructor(message: string, env?: ErrorEnvelope) {
+    super(message);
+    this.name = "ForgeError";
+    this.code = env?.code;
+    this.technical = env?.technical;
+    this.recovery = env?.recovery;
+  }
+}
+
 /** Mirror of the Rust `SystemStatus` payload (serde camelCase). */
 export interface SystemStatus {
   coreVersion: string;
@@ -65,8 +83,9 @@ function toError(err: unknown): Error {
     try {
       const env = JSON.parse(err) as ErrorEnvelope;
       if (env && typeof env.code === "string" && typeof env.human === "string") {
-        return new Error(
-          (`${env.human} (${env.code}) ${env.recovery ?? ""}`).trim()
+        return new ForgeError(
+          (`${env.human} (${env.code})`).trim(),
+          env
         );
       }
     } catch {
@@ -166,6 +185,25 @@ export function adapterGenerate(
   source: string
 ): Promise<{ ok: boolean; packageDir: string }> {
   return call<{ ok: boolean; packageDir: string }>("adapter_generate", { source });
+}
+
+/** Adapter completion: which hooks are filled + whether the final agent form is present. */
+export interface AdapterStatus {
+  dir: string;
+  exists: boolean;
+  hooks: { name: string; filled: boolean }[];
+  hooksFilled: number;
+  hooksTotal: number;
+  agentForm: boolean;
+}
+
+export function adapterStatus(dir: string): Promise<AdapterStatus> {
+  return call<AdapterStatus>("adapter_status", { dir });
+}
+
+/** Register a finished agent directory into the local registry (real pipeline). */
+export function registryImportAgent(dir: string): Promise<Record<string, unknown>> {
+  return call<Record<string, unknown>>("registry_import_agent", { dir });
 }
 
 export function adapterPropose(source: string): Promise<AdapterProposal> {
@@ -350,6 +388,20 @@ export function logsList(): Promise<LogEntry[]> {
 
 export function runtimeStop(pid: number): Promise<{ ok: boolean; pid: number }> {
   return call<{ ok: boolean; pid: number }>("runtime_stop", { pid });
+}
+
+/**
+ * Open an external http(s) link in the system default browser.
+ * Tauri's WebView blocks cross-origin navigation, so this goes through the
+ * Rust `open_external` command; outside Tauri (plain browser preview) it
+ * falls back to a normal new-tab popup.
+ */
+export async function openExternal(url: string): Promise<void> {
+  try {
+    await invoke<void>("open_external", { url });
+  } catch {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 }
 
 export function runtimeRestart(command: string): Promise<{ pid: number | null }> {

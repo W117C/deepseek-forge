@@ -102,8 +102,8 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "scan": { "enum": ["required", "optional"] },
-        "status": { "enum": ["PASS", "WARNING", "BLOCKED", "UNKNOWN"] },
+        "scan": { "enum": ["required", "optional", "completed"] },
+        "status": { "enum": ["PASS", "WARNING", "BLOCKED", "UNKNOWN", "pass", "warning", "blocked", "unknown"] },
         "scannedAt": { "type": "string" },
         "findings": { "type": "array" }
       }

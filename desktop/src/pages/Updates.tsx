@@ -1,18 +1,27 @@
-// STEP 12: Updates —— 真实更新执行（update apply 经 Rust Kernel：
-// plugin/imported → 重新收录新版本；artifact 包 → install-from-registry 管线，失败自动回滚）。
+// Updates — real update execution (validate → snapshot → install → health;
+// automatic rollback on failure) via the Rust Kernel.
 import { useEffect, useState } from "react";
-import { LoaderCircle, RefreshCw, TriangleAlert } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, RefreshCw } from "lucide-react";
 import { packageRollback, updateApply, updateCheck } from "../ipc";
 import type { UpdateEntry } from "../ipc";
 import { useI18n } from "../i18n";
+import {
+  EmptyState,
+  ErrorCard,
+  InlineLoading,
+  RowSkeleton,
+  useToast,
+} from "../components/ui";
 
 type State =
   | { status: "loading" }
-  | { status: "error"; message: string }
+  | { status: "error"; message: unknown }
   | { status: "ready"; entries: UpdateEntry[] };
 
 export default function Updates() {
   const { t } = useI18n();
+  const toast = useToast();
   const [state, setState] = useState<State>({ status: "loading" });
   const [busy, setBusy] = useState<string | null>(null);
   const [rowError, setRowError] = useState<Record<string, string>>({});
@@ -21,9 +30,7 @@ export default function Updates() {
     setState({ status: "loading" });
     updateCheck()
       .then((entries) => setState({ status: "ready", entries }))
-      .catch((err: unknown) =>
-        setState({ status: "error", message: err instanceof Error ? err.message : String(err) })
-      );
+      .catch((err: unknown) => setState({ status: "error", message: err }));
   }
 
   useEffect(load, []);
@@ -37,9 +44,14 @@ export default function Updates() {
     });
     try {
       await updateApply(id);
+      toast("success", t("toast.updated", { name: id }));
       load();
     } catch (err) {
-      setRowError((prev) => ({ ...prev, [id]: err instanceof Error ? err.message : String(err) }));
+      setRowError((prev) => ({
+        ...prev,
+        [id]: err instanceof Error ? err.message : String(err),
+      }));
+      toast("error", t("toast.updateFailed"), id);
     } finally {
       setBusy(null);
     }
@@ -49,6 +61,7 @@ export default function Updates() {
     setBusy("rollback:" + id);
     try {
       await packageRollback(id);
+      toast("warning", t("toast.rolledBack", { name: id }));
       load();
     } catch (err) {
       setRowError((prev) => ({
@@ -69,108 +82,142 @@ export default function Updates() {
   if (state.status === "loading") {
     return (
       <div className="page">
-        <div className="dashboard-loading" role="status">
-          <LoaderCircle size={16} className="spin" />
-          <span>{t("updates.updating")}</span>
-        </div>
+        <RowSkeleton rows={5} />
       </div>
     );
   }
   if (state.status === "error") {
     return (
       <div className="page">
-        <div className="error-state">
-          <TriangleAlert size={22} className="err-icon" />
-          <p>{state.message}</p>
-        </div>
+        <ErrorCard error={state.message} onRetry={load} title={t("updates.title")} />
       </div>
     );
   }
 
   const outdated = state.entries.filter((e) => e.outdated);
-  const sub =
-    outdated.length > 0
-      ? t("updates.subAvailable", { n: outdated.length })
-      : t("updates.subNone");
 
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">{t("updates.title")}</h1>
-        <p className="page-sub">{sub}</p>
+        <div>
+          <h1 className="page-heading">{t("updates.title")}</h1>
+          <p className="page-sub">
+            {outdated.length > 0
+              ? t("updates.subAvailable", { n: outdated.length })
+              : t("updates.subNone")}
+          </p>
+        </div>
+        {outdated.length > 0 && (
+          <div className="page-actions">
+            <button
+              className="btn btn-primary"
+              onClick={() => void applyAll(outdated.map((e) => e.id))}
+              disabled={busy !== null}
+            >
+              {busy !== null ? (
+                <InlineLoading label={t("updates.updating")} />
+              ) : (
+                <>
+                  <RefreshCw size={13} />
+                  {t("updates.updateAll")}
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </header>
 
-      {outdated.length > 0 && (
-        <button
-          className="btn"
-          style={{ marginBottom: 12 }}
-          onClick={() => void applyAll(outdated.map((e) => e.id))}
-          disabled={busy !== null}
-        >
-          {busy !== null ? <LoaderCircle size={14} className="spin" /> : <RefreshCw size={14} />}
-          {t("updates.updateAll")}
-        </button>
-      )}
-
       {state.entries.length === 0 ? (
-        <div className="card empty-card">
-          <div className="empty-card-head">
-            <RefreshCw size={15} />
-            <span className="empty-card-title">{t("updates.nothingInstalled")}</span>
-          </div>
-          <p className="empty-card-body">{t("updates.nothingBody")}</p>
-        </div>
+        <EmptyState
+          icon={RefreshCw}
+          title={t("updates.nothingInstalled")}
+          body={t("updates.nothingBody")}
+        />
       ) : (
-        <div className="card">
+        <div className="list">
+          <div
+            className="list-head"
+            style={{ gridTemplateColumns: "minmax(0,1fr) 170px 110px auto" }}
+          >
+            <span className="col-label">{t("plugins.package")}</span>
+            <span className="col-label">{t("updates.version")}</span>
+            <span className="col-label">{t("db.status")}</span>
+            <span className="col-label" style={{ textAlign: "right" }}>
+              {t("plugins.actions")}
+            </span>
+          </div>
           {state.entries.map((e) => (
-            <div key={e.id} className="registry-row">
-              <span className="registry-k mono">{e.id}</span>
-              <span className="registry-v">
-                v{e.installed} → v{e.latest || "—"}
-                {e.outdated
-                  ? " · " + t("updates.available")
-                  : " · " + t("updates.upToDate")}
-              </span>
-              {e.outdated && (
-                <button
-                  className="btn btn-ghost"
-                  onClick={() => void applyOne(e.id)}
-                  disabled={busy !== null}
-                >
-                  {busy === e.id ? (
-                    <LoaderCircle size={14} className="spin" />
-                  ) : (
-                    <RefreshCw size={14} />
+            <div
+              key={e.id}
+              className="list-row"
+              style={{ gridTemplateColumns: "minmax(0,1fr) 170px 110px auto" }}
+            >
+              <div className="cell">
+                <Link to={"/plugins/" + e.id} className="cell-title mono">{e.id}</Link>
+              </div>
+              <div className="cell">
+                <span className="mono" style={{ fontSize: 11.5, color: "var(--foreground-2)" }}>
+                  v{e.installed}
+                  {e.outdated && (
+                    <>
+                      {" "}
+                      <ArrowRight size={11} style={{ verticalAlign: "-1px" }} />{" "}
+                      <span style={{ color: "var(--accent)" }}>v{e.latest}</span>
+                    </>
                   )}
-                  {busy === e.id ? t("updates.updating") : t("updates.update")}
-                </button>
-              )}
+                </span>
+              </div>
+              <div className="cell">
+                {e.outdated ? (
+                  <span className="badge badge-warning">{t("updates.available")}</span>
+                ) : (
+                  <span className="badge badge-verified">{t("updates.upToDate")}</span>
+                )}
+              </div>
+              <div className="cell-actions">
+                {e.outdated && (
+                  <button
+                    className="btn btn-outline btn-sm"
+                    onClick={() => void applyOne(e.id)}
+                    disabled={busy !== null}
+                  >
+                    {busy === e.id ? (
+                      <InlineLoading label={t("updates.updating")} />
+                    ) : (
+                      <>
+                        <RefreshCw size={12} />
+                        {t("updates.update")}
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
           {Object.entries(rowError).map(([id, msg]) => (
-            <div key={id} className="registry-row">
-              <p className="field-hint" style={{ color: "var(--danger, #ff6b6b)" }}>
+            <div key={"err-" + id} className="list-row" style={{ gridTemplateColumns: "1fr auto", background: "var(--danger-soft)" }}>
+              <span className="field-error" style={{ marginTop: 0 }}>
                 {id}: {msg}
-              </p>
+              </span>
               <button
-                className="btn btn-ghost"
+                className="btn btn-ghost btn-sm"
                 onClick={() => void rollbackToSnapshot(id)}
                 disabled={busy !== null}
               >
                 {busy === "rollback:" + id ? (
-                  <LoaderCircle size={14} className="spin" />
+                  <InlineLoading label={t("ag.rollback")} />
                 ) : (
-                  <RefreshCw size={14} />
+                  t("ag.rollback")
                 )}
-                {t("ag.rollback")}
               </button>
             </div>
           ))}
-          <p className="field-hint" style={{ marginTop: 10 }}>
-            更新 = 校验 → 快照 → 安装 → 健康检查；失败自动回滚到旧版本。
-          </p>
         </div>
       )}
+
+      <p className="field-hint" style={{ marginTop: 12 }}>
+        {t("updates.pipelineNote")}
+      </p>
     </div>
   );
 }

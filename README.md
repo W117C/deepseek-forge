@@ -19,11 +19,13 @@ DeepSeek Harness Agent Bundle Marketplace —— 把通用 DeepSeek Harness 一�
 
 ## 目录结构
 
-- `cli/agenthub.mjs` —— 零依赖 CLI（install/uninstall/rollback/list/health/permissions/security/doctor/registry/publish/keygen/compose）
-- `lib/` —— dsh 适配层 / 安装器 / 安全扫描 / 健康检查 / manifest 解析 / Registry / Web UI
+- `cli/agenthub.mjs` —— CLI（install/uninstall/rollback/list/health/permissions/security/doctor/registry/publish/keygen/compose），重活委托 `crates/forge-core` Rust 引擎
+- `crates/forge-core/` —— Rust 核心引擎（签名/哈希、静态安全扫描、安装器/快照回滚、本地 Registry、组合），跨三平台预构建二进制分发
+- `lib/` —— Node 委托桥（forge-core-bin）+ dsh 适配层 / Registry HTTP 服务 / Web UI / manifest 解析
 - `bundles/` —— 领域 Agent：`finance-analyst`、`academic-researcher`（manifest + bundle + preset + skills）
-- `forge/` —— **Marketplace 前端**（React 18 + TS + Vite，React Router，无后端原型）
+- `forge/` —— **Marketplace 前端**（React 18 + TS + Vite，React Router，走真实 Registry API）
 - `landing/` —— **产品落地页**（React 18 + TS + Vite）
+- `desktop/` —— **Tauri 桌面端**（Rust + 前端；local-first Registry + 组合/配置/运行时管理）
 - `test/` —— 18 套隔离 e2e（`test/e2e*.mjs`，245 项）
 - `docs/` —— 设计/验证/部署文档（含 [npm 发布 runbook](docs/npm-publish-runbook.md)）
 
@@ -46,11 +48,14 @@ dsh --profile research    # Academic Researcher
 ## Registry（安全分发）
 
 ```sh
-node cli/agenthub.mjs registry ./.reg &           # 启动本地注册中心
+# 本地开发（显式 allow-insecure；生产必须配置鉴权开关，见下）
+node cli/agenthub.mjs registry ./.reg --allow-insecure &
 node cli/agenthub.mjs keygen                       # 生成发布者 ed25519 密钥
 node cli/agenthub.mjs publish ./bundles/finance-analyst --registry http://127.0.0.1:PORT
 node cli/agenthub.mjs install finance-analyst --registry http://127.0.0.1:PORT --yes
 ```
+
+> **安全门禁**：Registry 启动必须至少提供一项安全配置（`--require-publisher-auth` / `--operator-token` / `--artifact-secret`）或显式 `--allow-insecure`，否则拒绝启动。未配置鉴权时，发布/审核/状态管理端点默认拒绝（503）；生产公网部署请三项全配。
 
 远端安装前客户端强制验哈希 + 验 ed25519 签名，任何不匹配即阻断安装（防篡改，见 test/e2e-registry.mjs）。
 

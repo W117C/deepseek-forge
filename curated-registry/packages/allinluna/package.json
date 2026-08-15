@@ -1,0 +1,115 @@
+{
+  "schema": "forge.package.v1",
+  "id": "allinluna",
+  "name": "allinluna",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Resource-aware multi-agent orchestration for Codex and DeepSeek Harness (All in Flash DSH plugin)",
+  "category": "Agent 与自动化",
+  "tags": [
+    "agent-orchestration",
+    "agent-skills",
+    "ai-agents",
+    "allinflash",
+    "codex",
+    "deepseek",
+    "deepseek-harness",
+    "developer-tools",
+    "dsh",
+    "dsh-plugin",
+    "luna",
+    "multi-agent",
+    "orchestration"
+  ],
+  "publisher": {
+    "id": "zenx0x",
+    "name": "zenx0x"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/zenx0x/allinluna",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/zenx0x/allinluna",
+    "author": "zenx0x",
+    "license": "Apache-2.0",
+    "version": null,
+    "url": "https://github.com/zenx0x/allinluna",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "allinluna",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 25,
+    "language": "Python",
+    "pushedAt": "2026-08-14T01:42:33Z",
+    "topics": [
+      "agent-orchestration",
+      "agent-skills",
+      "ai-agents",
+      "allinflash",
+      "codex",
+      "deepseek",
+      "deepseek-harness",
+      "developer-tools",
+      "dsh",
+      "dsh-plugin",
+      "luna",
+      "multi-agent",
+      "orchestration"
+    ],
+    "fullName": "zenx0x/allinluna"
+  }
+}

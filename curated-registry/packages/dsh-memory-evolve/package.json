@@ -1,0 +1,95 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-memory-evolve",
+  "name": "dsh-memory-evolve",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "为 DeepSeek Harness 带来「跨会话长期记忆 + 后台自我进化」能力的纯插件实现：五轨记忆 · git 分支感知 · 回合内自我审查 · 技能自我进化与技能管理器 · 四轨待办 · COI 调度 · 会话广播 · 会话搜索 · 提示词管理器 · 临时信息便签——零核心修改、零运行时依赖，随装随用、卸载即净。",
+  "category": "研究与知识",
+  "tags": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin"
+  ],
+  "publisher": {
+    "id": "csyangwen",
+    "name": "csyangwen"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/csyangwen/dsh-memory-evolve",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/csyangwen/dsh-memory-evolve",
+    "author": "csyangwen",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/csyangwen/dsh-memory-evolve",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-memory-evolve",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 50,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-14T13:55:48Z",
+    "topics": [
+      "deepseek-harness",
+      "dsh",
+      "dsh-plugin"
+    ],
+    "fullName": "csyangwen/dsh-memory-evolve"
+  }
+}

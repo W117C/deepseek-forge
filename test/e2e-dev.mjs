@@ -53,7 +53,7 @@ check('状态记录 trust=community', loadState(TEST_HOME).agents['travel-planne
 
 // 3. 发布（非官方发布者 → 审核队列）
 await run(['keygen', '--home', TEST_HOME]);
-const reg = createRegistry({ dir: join(TEST_HOME, 'registry-data') });
+const reg = createRegistry({ dir: join(TEST_HOME, 'registry-data'), allowInsecure: true });
 const port = await reg.listen(0);
 const REG = 'http://127.0.0.1:' + port;
 const p1 = await run(['publish', agentDir, '--registry', REG, '--home', TEST_HOME]);

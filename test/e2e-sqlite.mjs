@@ -36,7 +36,7 @@ mkdirSync(TEST_HOME, { recursive: true });
 if (!locateDsh()) { console.error('dsh not found'); process.exit(1); }
 
 const dataDir = join(TEST_HOME, 'registry-data');
-const reg1 = createRegistry({ dir: dataDir });
+const reg1 = createRegistry({ dir: dataDir, allowInsecure: true });
 const port1 = await reg1.listen(0);
 const REG1 = 'http://127.0.0.1:' + port1;
 await run(['keygen', '--home', TEST_HOME]);
@@ -74,7 +74,7 @@ sdb.close();
 
 // 4. 重启持久化（关 → 开 → 数据完整）
 await reg1.close();
-const reg2 = createRegistry({ dir: dataDir });
+const reg2 = createRegistry({ dir: dataDir, allowInsecure: true });
 const port2 = await reg2.listen(0);
 const REG2 = 'http://127.0.0.1:' + port2;
 const list2 = await (await fetch(REG2 + '/v1/agents')).json();
@@ -94,7 +94,7 @@ writeFileSync(join(legacyDir, 'registry.json'), JSON.stringify({
   agents: { 'legacy-agent': { id: 'legacy-agent', name: 'Legacy', publisher: 'legacypub', trust: 'community', score: 80, installs: 7, ratings: { sum: 12, count: 3 }, manifest: { version: '0.1.0', description: 'legacy' }, versions: {} } },
   catalog: [], pending: [], publisherTokens: { legacypub: 'raw-token-legacy' },
 }));
-const reg3 = createRegistry({ dir: legacyDir });
+const reg3 = createRegistry({ dir: legacyDir, allowInsecure: true });
 check('旧 JSON 已迁移（改名 .migrated）', existsSync(join(legacyDir, 'registry.json.migrated')) && !existsSync(join(legacyDir, 'registry.json')));
 const port3 = await reg3.listen(0);
 const list3 = await (await fetch('http://127.0.0.1:' + port3 + '/v1/agents')).json();

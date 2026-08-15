@@ -21,5 +21,9 @@ pub fn save_state(home: &Path, state: &serde_json::Value) -> Result<(), ForgeErr
     let dir = agenthub_store(home);
     fs::create_dir_all(&dir).map_err(ForgeError::Io)?;
     let text = serde_json::to_string_pretty(state).map_err(ForgeError::Json)?;
-    fs::write(dir.join("state.json"), format!("{text}\n")).map_err(ForgeError::Io)
+    // 原子写：先写同目录临时文件再 rename，避免进程崩溃/并发读读到半截文件。
+    let final_path = dir.join("state.json");
+    let tmp_path = dir.join("state.json.tmp");
+    fs::write(&tmp_path, format!("{text}\n")).map_err(ForgeError::Io)?;
+    fs::rename(&tmp_path, &final_path).map_err(ForgeError::Io)
 }

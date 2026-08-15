@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# IDE/Agent 会话状态（不入库）
+.mimosa/
+
+# 桌面端本地预览/截图产物（不入库）
+desktop/.preview/
+
 # Node
 node_modules/
 npm-debug.log*

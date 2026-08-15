@@ -79,7 +79,7 @@ const e3 = await (await postInstall('test-event-2')).json();
 check('安装上报幂等（重复 eventId 不重复计数）', e1.installs === 1 && e2.duplicate === true && e2.installs === 1 && e3.installs === 2, JSON.stringify({ e1, e2, e3 }));
 
 // 7. 签名 URL（防盗链）：artifactSecret 下无签名 403、有效签名 200、篡改 403
-const reg2 = createRegistry({ dir: join(TEST_HOME, 'registry-signed'), artifactSecret: 'test-secret' });
+const reg2 = createRegistry({ dir: join(TEST_HOME, 'registry-signed'), artifactSecret: 'test-secret', allowInsecure: true });
 const port2 = await reg2.listen(0);
 const REG2 = 'http://127.0.0.1:' + port2;
 await run(['publish', financeDir, '--registry', REG2, '--home', TEST_HOME]);

@@ -1,0 +1,107 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-turn-rewind",
+  "name": "dsh-turn-rewind",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "deepseek harness对话和代码状态回退插件 | DSH — rewind conversation and workspace state, powered by a persistent Change Ledger",
+  "category": "开发与工程",
+  "tags": [
+    "agent-rewind",
+    "cordis-plugin",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "marisa-plugin",
+    "restore-point",
+    "turn-rewind",
+    "workspace-safety"
+  ],
+  "publisher": {
+    "id": "Anionex",
+    "name": "Anionex"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Anionex/dsh-turn-rewind",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Anionex/dsh-turn-rewind",
+    "author": "Anionex",
+    "license": "BSD-3-Clause",
+    "version": null,
+    "url": "https://github.com/Anionex/dsh-turn-rewind",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-turn-rewind",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 36,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-14T14:59:21Z",
+    "topics": [
+      "agent-rewind",
+      "cordis-plugin",
+      "deepseek-harness",
+      "dsh",
+      "dsh-plugin",
+      "marisa-plugin",
+      "restore-point",
+      "turn-rewind",
+      "workspace-safety"
+    ],
+    "fullName": "Anionex/dsh-turn-rewind"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "forge.package.v1",
+  "id": "iosdev",
+  "name": "iosdev",
+  "type": "skill",
+  "version": "0.1.0",
+  "description": "ios app 开发 skill",
+  "category": "实用工具与其他",
+  "tags": [
+    "app",
+    "apple",
+    "apple-intelligence",
+    "apple-watch",
+    "dsh-plugin",
+    "dsh-plugins",
+    "ios",
+    "mac",
+    "macos",
+    "swift"
+  ],
+  "publisher": {
+    "id": "kuangre123",
+    "name": "kuangre123"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/kuangre123/iosdev",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/kuangre123/iosdev",
+    "author": "kuangre123",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/kuangre123/iosdev",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "iosdev",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 24,
+    "language": null,
+    "pushedAt": "2026-01-09T06:03:17Z",
+    "topics": [
+      "app",
+      "apple",
+      "apple-intelligence",
+      "apple-watch",
+      "dsh-plugin",
+      "dsh-plugins",
+      "ios",
+      "mac",
+      "macos",
+      "swift"
+    ],
+    "fullName": "kuangre123/iosdev"
+  }
+}

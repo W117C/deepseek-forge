@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Sidebar from "./layout/Sidebar";
+import Titlebar from "./layout/Titlebar";
 import Dashboard from "./pages/Dashboard";
 import Import from "./pages/Import";
-import Placeholder from "./pages/Placeholder";
+import Skills from "./pages/Skills";
 import Agents from "./pages/Agents";
 import Composer from "./pages/Composer";
 import Marketplace from "./pages/Marketplace";
@@ -19,54 +20,79 @@ import {
   SourcesPage,
 } from "./pages/SystemPages";
 import CommandPalette from "./components/CommandPalette";
-import { useI18n } from "./i18n";
+import { DialogProvider, ToastProvider } from "./components/ui";
 
 export default function App() {
-  const { t } = useI18n();
+  const navigate = useNavigate();
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", "dark");
+    // Native macOS traffic lights overlay the webview under Tauri's Overlay
+    // titlebar; on other platforms we draw the decorative dots ourselves.
+    const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform ?? "");
+    document.body.classList.toggle("is-mac", isMac);
   }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      const k = e.key.toLowerCase();
+      if (k === "k") {
         e.preventDefault();
         setPaletteOpen((v) => !v);
+        return;
+      }
+      // ⌘1..⌘4 quick navigation (keyboard-first workspace)
+      if (e.altKey || e.shiftKey) return;
+      const target: Record<string, string> = {
+        "1": "/",
+        "2": "/marketplace",
+        "3": "/plugins",
+        "4": "/agents",
+      };
+      if (target[k]) {
+        e.preventDefault();
+        navigate(target[k]);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [navigate]);
 
   return (
-    <div className="app-shell">
-      <Sidebar />
-      <main className="app-main">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/import" element={<Import />} />
-          <Route path="/agents" element={<Agents />} />
-          <Route
-            path="/skills"
-            element={<Placeholder title={t("nav.skills")} />}
+    <ToastProvider>
+      <DialogProvider>
+        <div className="app-shell">
+          <Titlebar onOpenPalette={() => setPaletteOpen(true)} />
+          <Sidebar />
+          <main className="app-main">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/import" element={<Import />} />
+              <Route path="/agents" element={<Agents />} />
+              <Route path="/skills" element={<Skills />} />
+              <Route path="/plugins" element={<Plugins />} />
+              <Route path="/plugins/:id" element={<PackageDetail />} />
+              <Route path="/bundles" element={<Composer />} />
+              <Route path="/sessions" element={<Sessions />} />
+              <Route path="/processes" element={<Processes />} />
+              <Route path="/logs" element={<Logs />} />
+              <Route path="/security" element={<SecurityPage />} />
+              <Route path="/sources" element={<SourcesPage />} />
+              <Route path="/updates" element={<Updates />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <CommandPalette
+            open={paletteOpen}
+            onClose={() => setPaletteOpen(false)}
           />
-          <Route path="/plugins" element={<Plugins />} />
-          <Route path="/plugins/:id" element={<PackageDetail />} />
-          <Route path="/bundles" element={<Composer />} />
-          <Route path="/sessions" element={<Sessions />} />
-          <Route path="/processes" element={<Processes />} />
-          <Route path="/logs" element={<Logs />} />
-          <Route path="/security" element={<SecurityPage />} />
-          <Route path="/sources" element={<SourcesPage />} />
-          <Route path="/updates" element={<Updates />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
-    </div>
+        </div>
+      </DialogProvider>
+    </ToastProvider>
   );
 }

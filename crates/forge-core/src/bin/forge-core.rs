@@ -54,6 +54,7 @@ const VALUE_FLAGS: &[&str] = &[
     "trust",
     "label",
     "key",
+    "key-env",
     "public-key",
     "signature",
     "manifest-json",
@@ -455,12 +456,24 @@ fn run_sign(args: &[String]) -> Result<(), ForgeError> {
             print_json(&out)
         }
         "raw" => {
-            let key = f
-                .get("key")
-                .ok_or_else(|| ForgeError::InvalidManifest("--key <pem> required".to_string()))?;
+            // 私钥优先走 --key-env <VAR>（从环境变量读取，避免私钥经 argv 暴露给 ps）；
+            // 保留 --key <pem> 兼容旧调用（显式传参场景）。
+            let key = if let Some(k) = f.get("key") {
+                k.to_string()
+            } else if let Some(var) = f.get("key-env") {
+                std::env::var(var).map_err(|_| {
+                    ForgeError::InvalidManifest(format!(
+                        "环境变量 {var} 未设置（sign raw --key-env 需要私钥 PEM）"
+                    ))
+                })?
+            } else {
+                return Err(ForgeError::InvalidManifest(
+                    "--key <pem> 或 --key-env <VAR> required".to_string(),
+                ));
+            };
             let payload = String::from_utf8(read_stdin()?)
                 .map_err(|e| ForgeError::InvalidManifest(format!("payload not utf-8: {e}")))?;
-            let sig = sign_payload(key, &payload)?;
+            let sig = sign_payload(&key, &payload)?;
             let out = serde_json::json!({ "signature": sig });
             print_json(&out)
         }
@@ -1905,7 +1918,7 @@ USAGE:
   forge-core sign keygen [--home DIR] [--stdout-only]
   forge-core sign sha256 --stdin
   forge-core sign canonical --manifest-json TEXT --sha256 HEX
-  forge-core sign raw --key PEM --payload-stdin
+  forge-core sign raw --key-env VAR --payload-stdin | --key PEM --payload-stdin
   forge-core sign verify --public-key PEM --signature B64 --payload-stdin
   forge-core scan DIR [--trust LEVEL] | scan --stdin --label NAME [--trust LEVEL]
   forge-core state list --home DIR

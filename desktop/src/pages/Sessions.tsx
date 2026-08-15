@@ -1,14 +1,14 @@
-// Phase 7: Runtime —— 观察 Harness 真实状态（会话来自 DSH 会话库，进程来自 ps）。
-// 不重新实现 Runtime；拿不到的数据显示空态，绝不伪造。
+// Sessions — real DeepSeek Harness runtime state (session store on disk, ps-observed processes).
 import { useEffect, useState } from "react";
-import { CircleCheck, CircleDashed, LoaderCircle, Terminal, TriangleAlert } from "lucide-react";
+import { CircleCheck, CircleDashed, TerminalSquare } from "lucide-react";
 import { runtimeStatus } from "../ipc";
 import { useI18n } from "../i18n";
 import type { RuntimeStatus } from "../ipc";
+import { EmptyState, ErrorCard, RowSkeleton } from "../components/ui";
 
 type State =
   | { status: "loading" }
-  | { status: "error"; message: string }
+  | { status: "error"; message: unknown }
   | { status: "ready"; runtime: RuntimeStatus };
 
 export default function Sessions() {
@@ -22,7 +22,7 @@ export default function Sessions() {
         if (!cancelled) setState({ status: "ready", runtime });
       })
       .catch((err: unknown) => {
-        if (!cancelled) setState({ status: "error", message: err instanceof Error ? err.message : String(err) });
+        if (!cancelled) setState({ status: "error", message: err });
       });
     return () => {
       cancelled = true;
@@ -32,20 +32,14 @@ export default function Sessions() {
   if (state.status === "loading") {
     return (
       <div className="page">
-        <div className="dashboard-loading" role="status">
-          <LoaderCircle size={16} className="spin" />
-          <span>{t("se.loading")}</span>
-        </div>
+        <RowSkeleton rows={4} />
       </div>
     );
   }
   if (state.status === "error") {
     return (
       <div className="page">
-        <div className="error-state">
-          <TriangleAlert size={22} className="err-icon" />
-          <p>{state.message}</p>
-        </div>
+        <ErrorCard error={state.message} title={t("nav.sessions")} />
       </div>
     );
   }
@@ -54,55 +48,78 @@ export default function Sessions() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">{t("nav.sessions")}</h1>
-        <p className="page-sub">{t("se.subtitle")}</p>
+        <div>
+          <h1 className="page-heading">{t("nav.sessions")}</h1>
+          <p className="page-sub">{t("se.subtitle")}</p>
+        </div>
       </header>
 
-      <section className="stat-grid">
-        <div className="card stat-card">
-          <div className="stat-card-head">
-            {runtime.harnessDetected ? <CircleCheck size={15} /> : <CircleDashed size={15} />}
-            <span className="stat-card-label">{t("se.harness")}</span>
+      <section className="stat-grid" style={{ gridTemplateColumns: "repeat(3, minmax(0,1fr))" }}>
+        <div className="stat-card">
+          <div className="stat-head">
+            {runtime.harnessDetected ? (
+              <CircleCheck size={13} style={{ color: "var(--success)" }} />
+            ) : (
+              <CircleDashed size={13} />
+            )}
+            <span className="stat-label">{t("se.harness")}</span>
           </div>
-          <div className="stat-card-value">{runtime.harnessDetected ? t("se.running") : t("se.notFound")}</div>
-          <div className="stat-card-detail mono">
+          <div className={"stat-value" + (runtime.harnessDetected ? " ok" : " warn")}>
+            {runtime.harnessDetected ? t("se.running") : t("se.notFound")}
+          </div>
+          <div className="stat-detail mono">
             {runtime.harnessVersion ?? "—"} · {runtime.harnessBin ?? ""}
           </div>
         </div>
-        <div className="card stat-card">
-          <div className="stat-card-head">
-            <Terminal size={15} />
-            <span className="stat-card-label">{t("se.sessions")}</span>
+        <div className="stat-card">
+          <div className="stat-head">
+            <TerminalSquare size={13} />
+            <span className="stat-label">{t("se.sessions")}</span>
           </div>
-          <div className="stat-card-value">{runtime.sessionCount}</div>
-          <div className="stat-card-detail mono">{runtime.sessionsDir}</div>
+          <div className="stat-value">{runtime.sessionCount}</div>
+          <div className="stat-detail mono">{runtime.sessionsDir}</div>
         </div>
-        <div className="card stat-card">
-          <div className="stat-card-head">
-            <Terminal size={15} />
-            <span className="stat-card-label">{t("se.dshProcesses")}</span>
+        <div className="stat-card">
+          <div className="stat-head">
+            <TerminalSquare size={13} />
+            <span className="stat-label">{t("se.dshProcesses")}</span>
           </div>
-          <div className="stat-card-value">{runtime.processes.length}</div>
-          <div className="stat-card-detail">{t("se.viaPs")}</div>
+          <div className="stat-value">{runtime.processes.length}</div>
+          <div className="stat-detail">{t("se.viaPs")}</div>
         </div>
       </section>
 
-      <section className="dashboard-section">
-        <h2 className="dashboard-section-title">{t("se.recentSessions")}</h2>
+      <section>
+        <div className="sec-head">
+          <h2 className="sec-title">{t("se.recentSessions")}</h2>
+          <span className="sec-count">{runtime.sessions.length}</span>
+        </div>
         {runtime.sessions.length === 0 ? (
-          <div className="card empty-card">
-            <div className="empty-card-head">
-              <Terminal size={15} />
-              <span className="empty-card-title">{t("se.noSessions")}</span>
-            </div>
-            <p className="empty-card-body">{t("se.noSessionsBody")}</p>
-          </div>
+          <EmptyState
+            icon={TerminalSquare}
+            title={t("se.noSessions")}
+            body={t("se.noSessionsBody")}
+          />
         ) : (
-          <div className="card">
+          <div className="list">
+            <div className="list-head" style={{ gridTemplateColumns: "minmax(0,1fr) 120px 160px" }}>
+              <span className="col-label">{t("se.session")}</span>
+              <span className="col-label">{t("se.size")}</span>
+              <span className="col-label">{t("se.modified")}</span>
+            </div>
             {runtime.sessions.map((s) => (
-              <div key={s.id} className="registry-row">
-                <span className="registry-k mono">{s.id}</span>
-                <span className="registry-v mono">{s.sizeBytes} B · {s.modifiedAt}</span>
+              <div
+                key={s.id}
+                className="list-row"
+                style={{ gridTemplateColumns: "minmax(0,1fr) 120px 160px" }}
+              >
+                <span className="cell-title mono">{s.id}</span>
+                <span className="mono" style={{ fontSize: 11.5, color: "var(--foreground-2)" }}>
+                  {s.sizeBytes} B
+                </span>
+                <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+                  {s.modifiedAt}
+                </span>
               </div>
             ))}
           </div>

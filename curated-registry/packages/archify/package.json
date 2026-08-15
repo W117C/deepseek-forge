@@ -1,0 +1,127 @@
+{
+  "schema": "forge.package.v1",
+  "id": "archify",
+  "name": "archify",
+  "type": "skill",
+  "version": "0.1.0",
+  "description": "Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
+  "category": "视觉与图像",
+  "tags": [
+    "agent-skills",
+    "anthropic",
+    "architecture-diagram",
+    "claude-skill",
+    "codex",
+    "dark-mode",
+    "data-flow-diagram",
+    "deepseek-harness",
+    "developer-tools",
+    "diagram-as-code",
+    "dsh-plugin",
+    "html-diagram",
+    "lifecycle-diagram",
+    "mermaid-alternative",
+    "opencode",
+    "sequence-diagram",
+    "svg",
+    "system-design",
+    "workflow-diagram"
+  ],
+  "publisher": {
+    "id": "tt-a1i",
+    "name": "tt-a1i"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/tt-a1i/archify",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/tt-a1i/archify",
+    "author": "tt-a1i",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/tt-a1i/archify",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "archify",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 12408,
+    "language": "HTML",
+    "pushedAt": "2026-08-14T09:31:46Z",
+    "topics": [
+      "agent-skills",
+      "anthropic",
+      "architecture-diagram",
+      "claude-skill",
+      "codex",
+      "dark-mode",
+      "data-flow-diagram",
+      "deepseek-harness",
+      "developer-tools",
+      "diagram-as-code",
+      "dsh-plugin",
+      "html-diagram",
+      "lifecycle-diagram",
+      "mermaid-alternative",
+      "opencode",
+      "sequence-diagram",
+      "svg",
+      "system-design",
+      "workflow-diagram"
+    ],
+    "fullName": "tt-a1i/archify"
+  }
+}

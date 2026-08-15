@@ -36,7 +36,7 @@ const bin = locateDsh();
 if (!bin) { console.error('dsh not found'); process.exit(1); }
 
 // 1. Registry + 密钥 + 发布 0.1.0
-const reg = createRegistry({ dir: join(TEST_HOME, 'registry-data') });
+const reg = createRegistry({ dir: join(TEST_HOME, 'registry-data'), allowInsecure: true });
 const port = await reg.listen(0);
 const REG = 'http://127.0.0.1:' + port;
 await run(['keygen', '--home', TEST_HOME]);

@@ -35,7 +35,7 @@ mkdirSync(TEST_HOME, { recursive: true });
 if (!locateDsh()) { console.error('dsh not found'); process.exit(1); }
 
 const dataDir = join(TEST_HOME, 'registry-data');
-const reg = createRegistry({ dir: dataDir });
+const reg = createRegistry({ dir: dataDir, allowInsecure: true });
 const port = await reg.listen(0);
 const REG = 'http://127.0.0.1:' + port;
 await run(['keygen', '--home', TEST_HOME]);

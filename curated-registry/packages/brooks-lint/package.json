@@ -1,0 +1,129 @@
+{
+  "schema": "forge.package.v1",
+  "id": "brooks-lint",
+  "name": "brooks-lint",
+  "type": "skill",
+  "version": "0.1.0",
+  "description": "AI code reviews grounded in 12 classic engineering books — decay risk diagnostics with book citations, severity labels, and 6 analysis modes including full-sweep auto-fix",
+  "category": "开发与工程",
+  "tags": [
+    "agent-skills",
+    "ai-code-review",
+    "architecture-review",
+    "auto-fix",
+    "claude-code",
+    "claude-code-plugin",
+    "clean-architecture",
+    "code-health",
+    "code-quality",
+    "code-review",
+    "code-smells",
+    "codex-cli-plugin",
+    "deepseek-harness",
+    "developer-tools",
+    "dsh-plugin",
+    "gemini-cli-extension",
+    "refactoring",
+    "static-analysis",
+    "tech-debt",
+    "test-quality"
+  ],
+  "publisher": {
+    "id": "hyhmrright",
+    "name": "hyhmrright"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/hyhmrright/brooks-lint",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/hyhmrright/brooks-lint",
+    "author": "hyhmrright",
+    "license": "MIT",
+    "version": null,
+    "url": "https://github.com/hyhmrright/brooks-lint",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "brooks-lint",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 1301,
+    "language": "JavaScript",
+    "pushedAt": "2026-08-14T14:46:25Z",
+    "topics": [
+      "agent-skills",
+      "ai-code-review",
+      "architecture-review",
+      "auto-fix",
+      "claude-code",
+      "claude-code-plugin",
+      "clean-architecture",
+      "code-health",
+      "code-quality",
+      "code-review",
+      "code-smells",
+      "codex-cli-plugin",
+      "deepseek-harness",
+      "developer-tools",
+      "dsh-plugin",
+      "gemini-cli-extension",
+      "refactoring",
+      "static-analysis",
+      "tech-debt",
+      "test-quality"
+    ],
+    "fullName": "hyhmrright/brooks-lint"
+  }
+}

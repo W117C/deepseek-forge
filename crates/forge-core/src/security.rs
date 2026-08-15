@@ -60,8 +60,11 @@ fn rules() -> Vec<Rule> {
             id: "eval",
             level: "high",
             weight: 25,
-            re: regex::Regex::new(r"\beval\(|new Function").unwrap(),
-            label: "动态代码求值（eval/new Function）",
+            re: regex::Regex::new(
+                r"\beval\(|new Function|Function\(|vm\.(runInNewContext|runInContext|runInThisContext|compileFunction|Script|createScript)\(",
+            )
+            .unwrap(),
+            label: "动态代码求值（eval/Function/vm）",
         },
         Rule {
             id: "network",
@@ -74,7 +77,10 @@ fn rules() -> Vec<Rule> {
             id: "fs-write",
             level: "medium",
             weight: 10,
-            re: regex::Regex::new(r"writeFileSync|createWriteStream|unlinkSync|rmSync").unwrap(),
+            re: regex::Regex::new(
+                r"writeFileSync|createWriteStream|unlinkSync|rmSync|writeFile\(|appendFile|unlink\(|mkdirSync|mkdir\(|promises\.(?:writeFile|appendFile|unlink|mkdir|rm)",
+            )
+            .unwrap(),
             label: "文件写入/删除调用",
         },
         Rule {
@@ -82,7 +88,7 @@ fn rules() -> Vec<Rule> {
             level: "high",
             weight: 25,
             re: regex::Regex::new(
-                r"sk-[A-Za-z0-9]{8,}|Bearer\s+[A-Za-z0-9._-]{12,}|password\s*[:=]",
+                r"sk-[A-Za-z0-9]{8,}|Bearer\s+[A-Za-z0-9._-]{12,}|password\s*[:=]|-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|(?:api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]",
             )
             .unwrap(),
             label: "疑似硬编码密钥/口令",
@@ -154,7 +160,7 @@ pub fn scan_text(text: &str, label: &str) -> Vec<SecurityFinding> {
     findings
 }
 
-fn build_report(findings: Vec<SecurityFinding>, files: usize, trust: &str) -> ScanReport {
+fn build_report(findings: Vec<SecurityFinding>, files: usize, _trust: &str) -> ScanReport {
     let mut score = 100i32;
     for f in &findings {
         score -= f.weight;
@@ -163,13 +169,8 @@ fn build_report(findings: Vec<SecurityFinding>, files: usize, trust: &str) -> Sc
     let high = findings.iter().filter(|f| f.level == "high").count();
     let medium = findings.iter().filter(|f| f.level == "medium").count();
     let low = findings.iter().filter(|f| f.level == "low").count();
-    let verdict = if high > 0 && trust != "official" && trust != "verified" {
-        "block"
-    } else if high > 0 {
-        "warn"
-    } else {
-        "pass"
-    };
+    // 任何高危发现一律 block——official/verified 发布者同样不豁免（密钥被攻破时防线仍有效）
+    let verdict = if high > 0 { "block" } else { "pass" };
     ScanReport {
         score,
         verdict: verdict.to_string(),
@@ -184,6 +185,13 @@ fn build_report(findings: Vec<SecurityFinding>, files: usize, trust: &str) -> Sc
 /// Scan a directory tree (Node `scanAgentDir`). Symlinked dirs are not
 /// recursed (Rust entry metadata does not follow symlinks; bundles contain none).
 pub fn scan_agent_dir(dir: &Path, trust: &str) -> Result<ScanReport, ForgeError> {
+    fn has_extension(name: &str) -> bool {
+        // 只看 basename（父目录可能含点，如 tempdir/.tmpX）
+        let base = name.rsplit('/').next().unwrap_or(name);
+        base.rsplit_once('.')
+            .map(|(_, ext)| !ext.is_empty())
+            .unwrap_or(false)
+    }
     fn walk(d: &Path, out: &mut Vec<PathBuf>) -> Result<(), ForgeError> {
         for entry in fs::read_dir(d).map_err(ForgeError::Io)? {
             let entry = entry.map_err(ForgeError::Io)?;
@@ -198,10 +206,19 @@ pub fn scan_agent_dir(dir: &Path, trust: &str) -> Result<ScanReport, ForgeError>
                 if name.ends_with(".yaml")
                     || name.ends_with(".yml")
                     || name.ends_with(".json")
+                    || name.ends_with(".jsonc")
+                    || name.ends_with(".json5")
                     || name.ends_with(".md")
                     || name.ends_with(".mjs")
+                    || name.ends_with(".cjs")
                     || name.ends_with(".js")
+                    || name.ends_with(".jsx")
                     || name.ends_with(".ts")
+                    || name.ends_with(".mts")
+                    || name.ends_with(".cts")
+                    || name.ends_with(".tsx")
+                    // 无扩展名文本文件（LICENSE/Makefile/…）也纳入扫描，防载荷藏匿
+                    || !has_extension(&name)
                 {
                     out.push(p);
                 }
@@ -220,7 +237,10 @@ pub fn scan_agent_dir(dir: &Path, trust: &str) -> Result<ScanReport, ForgeError>
             .unwrap_or(f)
             .to_string_lossy()
             .to_string();
-        let text = fs::read_to_string(f).map_err(ForgeError::Io)?;
+        // 非 UTF-8（二进制）文件跳过，不中断扫描
+        let Ok(text) = fs::read_to_string(f) else {
+            continue;
+        };
         findings.extend(scan_text(&text, &rel));
     }
     Ok(build_report(findings, files.len(), trust))
@@ -230,4 +250,67 @@ pub fn scan_agent_dir(dir: &Path, trust: &str) -> Result<ScanReport, ForgeError>
 pub fn scan_text_report(text: &str, label: &str, trust: &str) -> ScanReport {
     let findings = scan_text(text, label);
     build_report(findings, 1, trust)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn high_finding_blocks_even_for_official_or_verified_trust() {
+        // P1-1 适应度函数：高危发现一律 block，official/verified 不豁免
+        let official = scan_text_report("eval('x')", "t.js", "official");
+        assert_eq!(official.verdict, "block");
+        assert!(official.high >= 1);
+        let verified = scan_text_report("new Function('return 1')", "t.js", "verified");
+        assert_eq!(verified.verdict, "block");
+    }
+
+    #[test]
+    fn vm_and_bare_function_and_async_fs_are_detected() {
+        // P1-1 适应度函数：补齐的绕过通道都能命中
+        assert!(scan_text("vm.runInNewContext('x')", "a.js")
+            .iter()
+            .any(|f| f.rule == "eval"));
+        assert!(scan_text("vm.Script('x')", "b.js").iter().any(|f| f.rule == "eval"));
+        assert!(scan_text("Function('return 1')()", "c.js")
+            .iter()
+            .any(|f| f.rule == "eval"));
+        assert!(scan_text("fs.promises.writeFile('x','y')", "d.js")
+            .iter()
+            .any(|f| f.rule == "fs-write"));
+        assert!(scan_text("fs.appendFile('x','y')", "e.js")
+            .iter()
+            .any(|f| f.rule == "fs-write"));
+    }
+
+    #[test]
+    fn private_key_and_cloud_credential_patterns_are_secrets() {
+        let pem = scan_text(
+            "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----",
+            "k.pem",
+        );
+        assert!(pem.iter().any(|f| f.rule == "secret"));
+        let aws = scan_text("aws_key=AKIA0123456789ABCDEF", "e.env");
+        assert!(aws.iter().any(|f| f.rule == "secret"));
+    }
+
+    #[test]
+    fn extensionless_and_new_ext_files_are_scanned() {
+        let dir = tempfile::tempdir().unwrap();
+        fs::write(dir.path().join("payload.cjs"), "eval('x')").unwrap();
+        fs::write(dir.path().join("payload"), "Function('return 1')").unwrap();
+        fs::write(dir.path().join("LICENSE"), "MIT text").unwrap();
+        let r = scan_agent_dir(dir.path(), "community").unwrap();
+        assert!(r.high >= 2, "cjs + 无扩展名两个 eval 类命中应被扫到，high={}", r.high);
+        assert_eq!(r.verdict, "block");
+    }
+
+    #[test]
+    fn binary_extensionless_file_does_not_abort_scan() {
+        let dir = tempfile::tempdir().unwrap();
+        fs::write(dir.path().join("blob"), vec![0u8, 159, 146, 150]).unwrap();
+        let r = scan_agent_dir(dir.path(), "community").unwrap();
+        assert_eq!(r.verdict, "pass");
+    }
 }

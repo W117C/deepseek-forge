@@ -312,6 +312,61 @@ fn adapter_generate(source: String) -> Result<serde_json::Value, String> {
     ])
 }
 
+/// 适配闭环：读取 adapter 目录完成度（真实文件检查）。
+/// ① 五个钩子（install/configure/healthcheck/uninstall/runtime）是否已人工填写；
+/// ② 最终 Agent 形态（agenthub.yaml + preset/ + bundle/）是否齐备。
+/// 两者都满足才允许 registry import（Forge 绝不执行未审阅的骨架）。
+#[tauri::command]
+fn adapter_status(dir: String) -> Result<serde_json::Value, String> {
+    let base = std::path::PathBuf::from(&dir);
+    let adapter_dir = base.join("adapter");
+    let manifest: serde_json::Value = std::fs::read_to_string(adapter_dir.join("manifest.json"))
+        .ok()
+        .and_then(|t| serde_json::from_str(&t).ok())
+        .unwrap_or_else(|| serde_json::json!({}));
+    let upstream = manifest
+        .get("upstream")
+        .and_then(|u| u.as_str())
+        .unwrap_or("");
+    let hooks = ["install.md", "configure.md", "healthcheck.md", "uninstall.md", "runtime.md"];
+    let mut files: Vec<serde_json::Value> = Vec::new();
+    let mut filled = 0usize;
+    for h in hooks {
+        let p = adapter_dir.join(h);
+        let text = std::fs::read_to_string(&p).unwrap_or_default();
+        let stub = format!("# {h}（骨架，待人工审阅后补充）\n\n上游：{upstream}\n");
+        let is_filled = !text.trim().is_empty() && text != stub;
+        if is_filled {
+            filled += 1;
+        }
+        files.push(serde_json::json!({ "name": h, "filled": is_filled }));
+    }
+    let agent_form = base.join("agenthub.yaml").is_file()
+        && base.join("preset").is_dir()
+        && base.join("bundle").is_dir();
+    Ok(serde_json::json!({
+        "dir": dir,
+        "exists": base.is_dir(),
+        "hooks": files,
+        "hooksFilled": filled,
+        "hooksTotal": hooks.len(),
+        "agentForm": agent_form,
+    }))
+}
+
+/// 适配闭环：把适配完成的 Agent 目录注册进 Registry（真实：打包制品 + 扫描 + 登记）。
+#[tauri::command]
+fn registry_import_agent(dir: String) -> Result<serde_json::Value, String> {
+    let reg = registry().root().to_string_lossy().to_string();
+    run_forge(&[
+        "registry".to_string(),
+        "import".to_string(),
+        dir,
+        "--registry".to_string(),
+        reg,
+    ])
+}
+
 #[tauri::command]
 fn agent_config_get(id: String) -> Result<serde_json::Value, String> {
     run_forge(&[
@@ -529,6 +584,12 @@ fn state_set_enabled(id: String, enabled: bool) -> Result<serde_json::Value, Str
 
 /// 定位 forge-core（开发 target 优先，其次发布布局，最后 PATH）
 fn published_or_dev_bin() -> Option<String> {
+    // FORGE_CORE_BIN 显式覆盖（与错误提示一致：先构建或设置该环境变量）
+    if let Ok(p) = std::env::var("FORGE_CORE_BIN") {
+        if std::path::Path::new(&p).exists() {
+            return Some(p);
+        }
+    }
     let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
     for profile in ["release", "debug"] {
         let p = here
@@ -607,6 +668,37 @@ fn adapter_propose(source: String) -> Result<forge_core::adapter::AdapterProposa
     propose(&analysis).map_err(to_ipc_error)
 }
 
+/// 在系统默认浏览器中打开外部链接。
+/// Tauri WebView 默认禁止导航到外部站点，所以 http(s) 链接统一经系统
+/// open / xdg-open / start 打开；仅允许 http/https，杜绝命令注入。
+#[tauri::command]
+fn open_external(url: String) -> Result<(), String> {
+    if !(url.starts_with("https://") || url.starts_with("http://")) {
+        return Err("仅支持 http/https 链接".to_string());
+    }
+    #[cfg(target_os = "macos")]
+    let mut cmd = {
+        let mut c = std::process::Command::new("open");
+        c.arg(&url);
+        c
+    };
+    #[cfg(target_os = "linux")]
+    let mut cmd = {
+        let mut c = std::process::Command::new("xdg-open");
+        c.arg(&url);
+        c
+    };
+    #[cfg(target_os = "windows")]
+    let mut cmd = {
+        let mut c = std::process::Command::new("cmd");
+        c.args(["/C", "start", "", &url]);
+        c
+    };
+    cmd.spawn()
+        .map(|_| ())
+        .map_err(|e| format!("打开外部链接失败：{e}"))
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let bus = EventBus::new();
@@ -643,7 +735,10 @@ pub fn run() {
             composer_generate,
             agent_config_get,
             agent_config_set,
-            adapter_generate
+            adapter_generate,
+            adapter_status,
+            registry_import_agent,
+            open_external
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

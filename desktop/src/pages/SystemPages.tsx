@@ -1,18 +1,28 @@
-// Phase 8: System 组诚实最小页 —— 只显示有真实后端支撑的数据，其余为空态。
+// System pages — Security / Sources / Settings.
+// Only data backed by real functionality is shown; everything else is an
+// honest empty state. Trust system: calm, technical, not alarm-red.
 import { useEffect, useState } from "react";
-import { Database, LoaderCircle, Settings, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Database, ShieldCheck } from "lucide-react";
 import { sourcesStats, stateList, systemStatus } from "../ipc";
 import type { SourcesStats } from "../ipc";
 import { useI18n } from "../i18n";
 import type { InstalledAgent, SystemStatus } from "../ipc";
+import {
+  Badge,
+  EmptyState,
+  ErrorCard,
+  RowSkeleton,
+  Segmented,
+} from "../components/ui";
 
 function useSystem() {
   const [system, setSystem] = useState<SystemStatus | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<unknown>(null);
   useEffect(() => {
     systemStatus()
       .then(setSystem)
-      .catch((e: unknown) => setErr(e instanceof Error ? e.message : String(e)));
+      .catch((e: unknown) => setErr(e));
   }, []);
   return { system, err };
 }
@@ -29,54 +39,85 @@ export function SecurityPage() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">{t("nav.security")}</h1>
-        <p className="page-sub">{t("sy.securitySubtitle")}</p>
-      </header>
-      {entries.length === 0 ? (
-        <div className="card empty-card">
-          <div className="empty-card-head"><ShieldCheck size={15} /><span className="empty-card-title">{t("sy.noInstalledPackages")}</span></div>
-          <p className="empty-card-body">{t("sy.noInstalledBody")}</p>
+        <div>
+          <h1 className="page-heading">{t("nav.security")}</h1>
+          <p className="page-sub">{t("sy.securitySubtitle")}</p>
         </div>
-      ) : (
-        <div className="card">
+      </header>
+      {!agents && <RowSkeleton rows={4} />}
+      {agents && entries.length === 0 && (
+        <EmptyState
+          icon={ShieldCheck}
+          title={t("sy.noInstalledPackages")}
+          body={t("sy.noInstalledBody")}
+        />
+      )}
+      {agents && entries.length > 0 && (
+        <div className="list">
+          <div
+            className="list-head"
+            style={{ gridTemplateColumns: "minmax(0,1fr) 120px 90px 110px minmax(0,1fr)" }}
+          >
+            <span className="col-label">{t("plugins.package")}</span>
+            <span className="col-label">{t("sy.trust")}</span>
+            <span className="col-label">{t("sy.score")}</span>
+            <span className="col-label">{t("plugins.statusCol")}</span>
+            <span className="col-label">{t("sy.permissions")}</span>
+          </div>
           {entries.map(([id, a]) => (
-            <div key={id} className="registry-row">
-              <span className="registry-k mono">{id}</span>
-              <span className="registry-v">
-                {t("sy.trust")} <b>{a.trust ?? "?"}</b> · {t("sy.score")} <b>{a.score ?? "—"}</b>/100
-                {a.reviewStatus && (
-                  <span
-                    className={
-                      "badge " +
-                      (a.reviewStatus === "rejected"
-                        ? "badge-blocked"
+            <div
+              key={id}
+              className="list-row"
+              style={{ gridTemplateColumns: "minmax(0,1fr) 120px 90px 110px minmax(0,1fr)" }}
+            >
+              <Link to={"/plugins/" + id} className="cell-title mono">{id}</Link>
+              <span className="mono" style={{ fontSize: 11.5, color: "var(--foreground-2)" }}>
+                {a.trust ?? "?"}
+              </span>
+              <span className="mono" style={{ fontSize: 11.5, color: "var(--foreground-2)" }}>
+                {a.score ?? "—"}/100
+              </span>
+              <span>
+                {a.reviewStatus ? (
+                  <Badge
+                    tone={
+                      a.reviewStatus === "rejected"
+                        ? "blocked"
                         : a.reviewStatus === "approved"
-                          ? "badge-verified"
-                          : "badge-community")
+                          ? "verified"
+                          : "warning"
                     }
-                    style={{ marginLeft: 6 }}
                   >
                     {a.reviewStatus === "rejected"
                       ? t("plugins.rejected")
                       : a.reviewStatus === "approved"
                         ? t("plugins.approved")
                         : t("plugins.pending")}
-                  </span>
+                  </Badge>
+                ) : (
+                  <Badge tone="verified">{t("plugins.approved")}</Badge>
                 )}
-                {a.permissions && (
-                  <span className="field-hint" style={{ display: "block" }}>
-                    {t("sy.permissions")}：{t("pd.network")}{" "}
-                    {(a.permissions.network ?? []).length} · {t("pd.filesystem")}{" "}
-                    {(a.permissions.filesystem ?? []).length} · {t("pd.env")}{" "}
-                    {(a.permissions.env ?? []).length}
-                  </span>
+              </span>
+              <span className="mono" style={{ fontSize: 10.5, color: "var(--muted)" }}>
+                {a.permissions ? (
+                  <>
+                    {t("pd.network")} {(a.permissions.network ?? []).length}
+                    {" · "}
+                    {t("pd.filesystem")} {(a.permissions.filesystem ?? []).length}
+                    {" · "}
+                    {t("pd.env")} {(a.permissions.env ?? []).length}
+                  </>
+                ) : (
+                  "—"
                 )}
               </span>
             </div>
           ))}
-          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.securityNote")}</p>
         </div>
       )}
+      <p className="field-hint" style={{ marginTop: 12 }}>
+        {t("sy.securityNote")}
+      </p>
     </div>
   );
 }
@@ -85,69 +126,72 @@ export function SourcesPage() {
   const { t } = useI18n();
   const { system, err } = useSystem();
   const [stats, setStats] = useState<SourcesStats | null>(null);
-  const [statsErr, setStatsErr] = useState<string | null>(null);
+  const [statsErr, setStatsErr] = useState<unknown>(null);
   useEffect(() => {
     sourcesStats()
       .then(setStats)
-      .catch((e: unknown) => setStatsErr(e instanceof Error ? e.message : String(e)));
+      .catch((e: unknown) => setStatsErr(e));
   }, []);
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">{t("nav.sources")}</h1>
-        <p className="page-sub">{t("sy.sourcesSubtitle")}</p>
+        <div>
+          <h1 className="page-heading">{t("nav.sources")}</h1>
+          <p className="page-sub">{t("sy.sourcesSubtitle")}</p>
+        </div>
       </header>
-      {err && (
-        <div className="card error-state"><TriangleAlert size={18} className="err-icon" /><p>{err}</p></div>
-      )}
-      {!system && !err && (
-        <div className="dashboard-loading"><LoaderCircle size={16} className="spin" /><span>{t("sy.loading")}</span></div>
-      )}
+      {err ? <ErrorCard error={err} /> : null}
+      {!system && !err && <RowSkeleton rows={4} />}
       {system && (
         <div className="card">
-          <div className="registry-row">
-            <span className="registry-k"><Database size={13} /> {t("sy.localRegistry")}</span>
-            <span className={"registry-v " + (system.registryAvailable ? "ok" : "warn")}>
+          <div className="kv">
+            <span className="kv-k">
+              <Database size={12} />
+              {t("sy.localRegistry")}
+            </span>
+            <span className={"kv-v " + (system.registryAvailable ? "ok" : "warn")}>
               {system.registryAvailable ? t("db.available") : t("db.unavailable")}
             </span>
           </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("db.path")}</span>
-            <span className="registry-v mono">{system.registryPath}</span>
+          <div className="kv">
+            <span className="kv-k">{t("db.path")}</span>
+            <span className="kv-v mono">{system.registryPath}</span>
           </div>
-          <div className="registry-row">
-            <span className="registry-k">{t("db.name")}</span>
-            <span className="registry-v">{system.registryName ?? "—"}</span>
+          <div className="kv">
+            <span className="kv-k">{t("db.name")}</span>
+            <span className="kv-v">{system.registryName ?? "—"}</span>
           </div>
-          {statsErr && (
-            <p className="field-error" style={{ marginTop: 10 }}>{statsErr}</p>
-          )}
+          {statsErr ? (
+            <div style={{ marginTop: 10 }}>
+              <ErrorCard error={statsErr} />
+            </div>
+          ) : null}
           {stats && (
             <>
-              <div className="registry-row">
-                <span className="registry-k">{t("sy.packages")}</span>
-                <span className="registry-v">
+              <div className="kv">
+                <span className="kv-k">{t("sy.packages")}</span>
+                <span className="kv-v">
                   {stats.packages} · {t("sy.githubSources")} {stats.githubSources}
                 </span>
               </div>
-              <div className="registry-row">
-                <span className="registry-k">{t("sy.licenses")}</span>
-                <span className="registry-v mono">
+              <div className="kv">
+                <span className="kv-k">{t("sy.licenses")}</span>
+                <span className="kv-v mono">
                   {Object.entries(stats.licenses)
                     .map(([l, n]) => l + " ×" + n)
                     .join("  ") || "—"}
                 </span>
               </div>
-              <div className="registry-row">
-                <span className="registry-k">{t("sy.cacheRepos")}</span>
-                <span className="registry-v mono">
+              <div className="kv">
+                <span className="kv-k">{t("sy.cacheRepos")}</span>
+                <span className="kv-v mono">
                   {stats.cacheRepos} {t("sy.repos")} · {stats.cachePath}
                 </span>
               </div>
             </>
           )}
-          <p className="field-hint" style={{ marginTop: 10 }}>{t("sy.sourcesNote")}</p>
-          <p className="field-hint" style={{ marginTop: 6 }}>{t("sy.gitNote")}</p>
+          <p className="field-hint">{t("sy.sourcesNote")}</p>
+          <p className="field-hint">{t("sy.gitNote")}</p>
         </div>
       )}
     </div>
@@ -159,28 +203,27 @@ export function SettingsPage() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1 className="page-heading">{t("nav.settings")}</h1>
-        <p className="page-sub">{t("sy.settingsSubtitle")}</p>
+        <div>
+          <h1 className="page-heading">{t("nav.settings")}</h1>
+          <p className="page-sub">{t("sy.settingsSubtitle")}</p>
+        </div>
       </header>
       <div className="card">
-        <div className="registry-row">
-          <span className="registry-k"><Settings size={13} /> {t("sy.language")}</span>
-          <span className="registry-v">
-            <button
-              className={"btn " + (locale === "zh" ? "btn-primary" : "btn-ghost")}
-              onClick={() => setLocale("zh")}
-            >
-              中文
-            </button>{" "}
-            <button
-              className={"btn " + (locale === "en" ? "btn-primary" : "btn-ghost")}
-              onClick={() => setLocale("en")}
-            >
-              English
-            </button>
+        <div className="panel-title">{t("sy.language")}</div>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <Segmented<"zh" | "en">
+            value={locale}
+            onChange={setLocale}
+            options={[
+              { value: "zh", label: "中文" },
+              { value: "en", label: "English" },
+            ]}
+          />
+          <span className="field-hint" style={{ marginTop: 0 }}>
+            {t("sy.languageHint")}
           </span>
         </div>
-        <p className="field-hint" style={{ marginTop: 10 }}>
+        <p className="field-hint">
           {t("sy.themeFixed")} {t("sy.moreSettingsLater")}
         </p>
       </div>

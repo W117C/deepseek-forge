@@ -2,11 +2,25 @@
 // Registry 地址：构建时 VITE_REGISTRY_URL 或运行时 ?registry= 查询参数，缺省同源。
 const FALLBACK = import.meta.env.VITE_REGISTRY_URL ?? "";
 
+// P1-6：Registry 地址白名单 —— 仅允许 http/https、拒绝含用户信息的 URL（防凭证注入 / 异常 scheme）
+function sanitizeRegistry(url: string): string {
+  if (!url) return "";
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return "";
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") return "";
+  if (u.username || u.password) return "";
+  return u.toString().replace(/\/$/, "");
+}
+
 export function registryBase(): string {
-  if (typeof window === "undefined") return FALLBACK;
+  if (typeof window === "undefined") return sanitizeRegistry(FALLBACK);
   const q = new URLSearchParams(window.location.search).get("registry");
-  if (q) return q.replace(/\/$/, "");
-  return FALLBACK;
+  if (q) return sanitizeRegistry(q);
+  return sanitizeRegistry(FALLBACK);
 }
 
 export class ApiError extends Error {
