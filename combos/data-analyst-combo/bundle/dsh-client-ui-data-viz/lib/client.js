@@ -92,23 +92,8 @@ window.__ModuleLoader__.load({
       );
     }
 
-    /**
-     * 界面注册：安装后把看板注入 DSH Web 原有界面（侧边栏 workspaces hole）。
-     * 卸载时 bundle 移除，slots 随之注销——插件看板只随安装出现。
-     */
-    function apply(ctx) {
-      ctx.slots.inject("sidebar.workspaces", () =>
-        ctx.slots.register({
-          name: "sidebar.workspaces",
-          store: handle,
-          inject: () => ({ dataset: handle.getSnapshot().dataset || null }),
-        }, DataVizPanel)
-      );
-    }
-
     exports.DataVizPanel = DataVizPanel;
     exports.vizStore = vizStore; // 供会话分析工具写入
-    exports.apply = apply;
     exports.default = DataVizPanel;
     module.exports = exports;
     return module.exports;
