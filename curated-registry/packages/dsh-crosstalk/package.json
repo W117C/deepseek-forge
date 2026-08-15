@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-crosstalk",
+  "name": "Jesse-njx/dsh-crosstalk",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "跨会话消息：本机任意会话都可像 Claude Code 一样列出并互发消息，基于本地心跳注册表与收件箱。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "Jesse-njx",
+    "name": "Jesse-njx"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Jesse-njx/dsh-crosstalk",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Jesse-njx/dsh-crosstalk",
+    "author": "Jesse-njx",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Jesse-njx/dsh-crosstalk",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-crosstalk",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Jesse-njx/dsh-crosstalk"
+  }
+}

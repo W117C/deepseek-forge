@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "superdesign-skill",
+  "name": "superdesigndev/superdesign-skill",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在 Superdesign 画布上做 UI 与营销图的设计技能：先读代码库拿上下文、抽取现有设计系统，再通过 Superdesign CLI 生成并迭代可分支的设计稿、流程页与可复用组件。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "superdesigndev",
+    "name": "superdesigndev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/superdesigndev/superdesign-skill",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/superdesigndev/superdesign-skill",
+    "author": "superdesigndev",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/superdesigndev/superdesign-skill",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "superdesign-skill",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "superdesigndev/superdesign-skill"
+  }
+}

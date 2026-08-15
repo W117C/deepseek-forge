@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-knowledge",
+  "name": "ICCuse/dsh-knowledge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "全局知识库桥：kb_add/kb_search/kb_show/kb_timeline 读写与 Codex 共享的 D:\\knowledge（格式逐字节兼容）。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "ICCuse",
+    "name": "ICCuse"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ICCuse/dsh-knowledge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ICCuse/dsh-knowledge",
+    "author": "ICCuse",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ICCuse/dsh-knowledge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-knowledge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ICCuse/dsh-knowledge"
+  }
+}

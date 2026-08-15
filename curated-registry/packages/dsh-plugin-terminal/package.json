@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-terminal",
+  "name": "siberiah2o/dsh-plugin-terminal",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "底部多标签终端面板（node-pty + xterm.js）：贴底全宽，输入框始终在终端上方。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "siberiah2o",
+    "name": "siberiah2o"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/siberiah2o/dsh-plugin-terminal",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/siberiah2o/dsh-plugin-terminal",
+    "author": "siberiah2o",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/siberiah2o/dsh-plugin-terminal",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-terminal",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "siberiah2o/dsh-plugin-terminal"
+  }
+}

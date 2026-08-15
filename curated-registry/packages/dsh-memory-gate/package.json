@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-memory-gate",
+  "name": "GIT121995/dsh-memory-gate",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "有界本地记忆 + CBDC 权威门控：SQLite + FTS5 claims，作用域召回并给出可解释的采用/核验/忽略决策与完整审计轨迹，/memory 命令，每次注入 ≤3 条/1200 字符，不增加额外模型调用。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "GIT121995",
+    "name": "GIT121995"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/GIT121995/dsh-memory-gate",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/GIT121995/dsh-memory-gate",
+    "author": "GIT121995",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/GIT121995/dsh-memory-gate",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-memory-gate",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "GIT121995/dsh-memory-gate"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-automations",
+  "name": "Sev7een/dsh-plugin-automations",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "设置页定时任务：支持准点或 DeepSeek 谷时段执行、单次/每日重复，并持久化任务状态。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "Sev7een",
+    "name": "Sev7een"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Sev7een/dsh-plugin-automations",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Sev7een/dsh-plugin-automations",
+    "author": "Sev7een",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Sev7een/dsh-plugin-automations",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-automations",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Sev7een/dsh-plugin-automations"
+  }
+}

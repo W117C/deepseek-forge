@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-agent-team-room",
+  "name": "ishuowang/dsh-agent-team-room",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "面向独立 DSH Agent 会话的持久化协作房间，支持显式成员管理、定向与广播消息、任务跟踪和共享 Web 时间线。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "ishuowang",
+    "name": "ishuowang"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ishuowang/dsh-agent-team-room",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ishuowang/dsh-agent-team-room",
+    "author": "ishuowang",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ishuowang/dsh-agent-team-room",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-agent-team-room",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ishuowang/dsh-agent-team-room"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-auto-classifier",
+  "name": "PAKIKNOWLEDGE/dsh-auto-classifier",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "auto（自主模式）权限分类器：工具作用域的放行/拒绝规则、LLM 语义裁判与 git 快照，面向无人值守会话。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "PAKIKNOWLEDGE",
+    "name": "PAKIKNOWLEDGE"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-auto-classifier",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-auto-classifier",
+    "author": "PAKIKNOWLEDGE",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PAKIKNOWLEDGE/dsh-auto-classifier",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-auto-classifier",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PAKIKNOWLEDGE/dsh-auto-classifier"
+  }
+}

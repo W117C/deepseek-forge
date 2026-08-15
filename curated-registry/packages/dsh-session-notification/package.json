@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-session-notification",
+  "name": "dingyi222666/dsh-session-notification",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "会话完成等四种状态的通知响应，支持浏览器提示。",
+  "category": "通知与集成",
+  "tags": [],
+  "publisher": {
+    "id": "dingyi222666",
+    "name": "dingyi222666"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/dingyi222666/dsh-session-notification",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/dingyi222666/dsh-session-notification",
+    "author": "dingyi222666",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/dingyi222666/dsh-session-notification",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-session-notification",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "dingyi222666/dsh-session-notification"
+  }
+}

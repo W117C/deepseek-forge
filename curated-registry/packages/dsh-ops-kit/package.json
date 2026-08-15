@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-ops-kit",
+  "name": "LeslieWylie/dsh-ops-kit",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "证据优先的操作套件：六个只读工具（能力清单、分阶段编排计划、随包技能阅读、有上限的本地记忆检索、仓库发布审计、发布清单）加五个随包技能；只规划与审计，不做远程写入。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "LeslieWylie",
+    "name": "LeslieWylie"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/LeslieWylie/dsh-ops-kit",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/LeslieWylie/dsh-ops-kit",
+    "author": "LeslieWylie",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/LeslieWylie/dsh-ops-kit",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-ops-kit",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "LeslieWylie/dsh-ops-kit"
+  }
+}

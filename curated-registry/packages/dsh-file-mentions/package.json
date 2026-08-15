@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-file-mentions",
+  "name": "a903067276-rgb/dsh-file-mentions",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH 回复中的文件路径可点击：Codex 风格行内打开、文件管理器定位、回合尾部文件 chip 列表。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "a903067276-rgb",
+    "name": "a903067276-rgb"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/a903067276-rgb/dsh-file-mentions",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/a903067276-rgb/dsh-file-mentions",
+    "author": "a903067276-rgb",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/a903067276-rgb/dsh-file-mentions",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-file-mentions",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "a903067276-rgb/dsh-file-mentions"
+  }
+}

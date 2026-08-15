@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-turn-marks",
+  "name": "magicOF2/dsh-turn-marks",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "会话左侧消息标记条：每发一条消息多一根条条，点击跳转到该消息、悬停预览内容，当前消息对应的条条变白。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "magicOF2",
+    "name": "magicOF2"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/magicOF2/dsh-turn-marks",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/magicOF2/dsh-turn-marks",
+    "author": "magicOF2",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/magicOF2/dsh-turn-marks",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-turn-marks",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "magicOF2/dsh-turn-marks"
+  }
+}

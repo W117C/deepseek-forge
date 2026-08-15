@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "noatmark-dsh-plugin",
+  "name": "ylwl1997/noatmark-dsh-plugin",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "文本卫生 dsh 插件：净化不可信文本、扫描隐形字符、清洗 LLM 格式、转义 CSV 公式注入。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "ylwl1997",
+    "name": "ylwl1997"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ylwl1997/noatmark-dsh-plugin",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ylwl1997/noatmark-dsh-plugin",
+    "author": "ylwl1997",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ylwl1997/noatmark-dsh-plugin",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "noatmark-dsh-plugin",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ylwl1997/noatmark-dsh-plugin"
+  }
+}

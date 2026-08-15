@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "whale-girl",
+  "name": "vlln/whale-girl",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "桌面宠物（QQ 宠物形态）：右下角悬浮、可拖拽/投喂/玩耍。",
+  "category": "趣味与娱乐",
+  "tags": [],
+  "publisher": {
+    "id": "vlln",
+    "name": "vlln"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/vlln/whale-girl",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/vlln/whale-girl",
+    "author": "vlln",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/vlln/whale-girl",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "whale-girl",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "vlln/whale-girl"
+  }
+}

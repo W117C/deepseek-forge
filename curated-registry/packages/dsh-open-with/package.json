@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-open-with",
+  "name": "ChuanTianML/dsh-open-with",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "从 Web UI 使用检测到或配置的本机编辑器、终端或文件管理器打开已登记 Workspace，并在浏览器中记住首选项。",
+  "category": "通知与集成",
+  "tags": [],
+  "publisher": {
+    "id": "ChuanTianML",
+    "name": "ChuanTianML"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ChuanTianML/dsh-open-with",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ChuanTianML/dsh-open-with",
+    "author": "ChuanTianML",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ChuanTianML/dsh-open-with",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-open-with",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ChuanTianML/dsh-open-with"
+  }
+}

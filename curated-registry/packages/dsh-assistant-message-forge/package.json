@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-assistant-message-forge",
+  "name": "anweat/dsh-assistant-message-forge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "消息锻造台：创建/修改/注入测试用 assistant 消息，导入识别并安全修复 session.jsonl(.zstd) 会话日志为新会话。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "anweat",
+    "name": "anweat"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/anweat/dsh-assistant-message-forge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/anweat/dsh-assistant-message-forge",
+    "author": "anweat",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/anweat/dsh-assistant-message-forge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-assistant-message-forge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "anweat/dsh-assistant-message-forge"
+  }
+}

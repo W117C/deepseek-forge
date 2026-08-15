@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-sideband",
+  "name": "ishuowang/dsh-sideband",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在 DSH Session 与已授权 Agent Team Room 之间异步传递 LLM 总结的上下文，支持即时快照与定时摘要。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "ishuowang",
+    "name": "ishuowang"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ishuowang/dsh-sideband",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ishuowang/dsh-sideband",
+    "author": "ishuowang",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ishuowang/dsh-sideband",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-sideband",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ishuowang/dsh-sideband"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-handoff",
+  "name": "FleetingEcho/dsh-handoff",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "每个工作目录与 git 分支自动维护 handoff.md：记录回合、折叠为简洁 Markdown 并注入后续会话，存储于 ~/.agent/agent-handoff，与 pi-handoff 字节级兼容。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "FleetingEcho",
+    "name": "FleetingEcho"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/FleetingEcho/dsh-handoff",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/FleetingEcho/dsh-handoff",
+    "author": "FleetingEcho",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/FleetingEcho/dsh-handoff",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-handoff",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "FleetingEcho/dsh-handoff"
+  }
+}

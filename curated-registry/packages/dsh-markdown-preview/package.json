@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-markdown-preview",
+  "name": "GitHubJiKe/dsh-markdown-preview",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "产物文件聊天内预览：点击产物 chip 直接在对话中渲染 Markdown（宿主侧 markdown-it + highlight.js 代码高亮）、图片或纯文本，系统应用打开与在文件夹中显示仍一键可达。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "GitHubJiKe",
+    "name": "GitHubJiKe"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/GitHubJiKe/dsh-markdown-preview",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/GitHubJiKe/dsh-markdown-preview",
+    "author": "GitHubJiKe",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/GitHubJiKe/dsh-markdown-preview",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-markdown-preview",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "GitHubJiKe/dsh-markdown-preview"
+  }
+}

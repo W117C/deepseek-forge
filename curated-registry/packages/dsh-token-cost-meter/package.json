@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-token-cost-meter",
+  "name": "YZz-S/dsh-token-cost-meter",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在输入框下方统计行实时显示当前会话累计 token 消耗与估算费用（人民币），价格从 DeepSeek 官方价格页动态获取。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "YZz-S",
+    "name": "YZz-S"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/YZz-S/dsh-token-cost-meter",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/YZz-S/dsh-token-cost-meter",
+    "author": "YZz-S",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/YZz-S/dsh-token-cost-meter",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-token-cost-meter",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "YZz-S/dsh-token-cost-meter"
+  }
+}

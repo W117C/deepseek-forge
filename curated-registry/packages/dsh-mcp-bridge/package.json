@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-mcp-bridge",
+  "name": "Edge-Echo/dsh-mcp-bridge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "精选 MCP 服务器全家桶：一键接入演示、记忆、文件系统、GitHub、Playwright、远程 HTTP 等服务器，自带连通性验证工具与 CI 检查。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "Edge-Echo",
+    "name": "Edge-Echo"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Edge-Echo/dsh-mcp-bridge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Edge-Echo/dsh-mcp-bridge",
+    "author": "Edge-Echo",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Edge-Echo/dsh-mcp-bridge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-mcp-bridge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Edge-Echo/dsh-mcp-bridge"
+  }
+}

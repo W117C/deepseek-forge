@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "deepseek-harness-pet",
+  "name": "minybear/DeepSeek-Harness-Pet",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Codex 风格桌面宠物：右下角悬浮动画精灵，随 agent 运行状态实时变化（工作、等待、报错、完成）。",
+  "category": "趣味与娱乐",
+  "tags": [],
+  "publisher": {
+    "id": "minybear",
+    "name": "minybear"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/minybear/DeepSeek-Harness-Pet",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/minybear/DeepSeek-Harness-Pet",
+    "author": "minybear",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/minybear/DeepSeek-Harness-Pet",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "deepseek-harness-pet",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "minybear/DeepSeek-Harness-Pet"
+  }
+}

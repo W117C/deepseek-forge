@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-composer-expand",
+  "name": "13071301808/dsh-composer-expand",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Web UI 输入框展开/收起：composer 工具行新增 ⬆/⬇ 按钮，一键把输入框扩大到 70vh 高度，方便写长 prompt。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "13071301808",
+    "name": "13071301808"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/13071301808/dsh-composer-expand",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/13071301808/dsh-composer-expand",
+    "author": "13071301808",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/13071301808/dsh-composer-expand",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-composer-expand",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "13071301808/dsh-composer-expand"
+  }
+}

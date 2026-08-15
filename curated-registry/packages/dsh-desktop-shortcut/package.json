@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-desktop-shortcut",
+  "name": "fuyue521/dsh-desktop-shortcut",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Windows 桌面快捷方式：一键启动 dsh web，就绪后自动打开浏览器，关闭 Harness 窗口即停服务。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "fuyue521",
+    "name": "fuyue521"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/fuyue521/dsh-desktop-shortcut",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/fuyue521/dsh-desktop-shortcut",
+    "author": "fuyue521",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/fuyue521/dsh-desktop-shortcut",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-desktop-shortcut",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "fuyue521/dsh-desktop-shortcut"
+  }
+}

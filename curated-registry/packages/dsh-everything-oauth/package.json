@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-everything-oauth",
+  "name": "kam74515-boop/dsh-everything-oauth",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "把本机 Codex / Grok / Claude / OpenCode / CC Switch 登录态导入 DSH，在设置里自选来源并启用模型。",
+  "category": "模型与接入",
+  "tags": [],
+  "publisher": {
+    "id": "kam74515-boop",
+    "name": "kam74515-boop"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/kam74515-boop/dsh-everything-oauth",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/kam74515-boop/dsh-everything-oauth",
+    "author": "kam74515-boop",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/kam74515-boop/dsh-everything-oauth",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-everything-oauth",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "kam74515-boop/dsh-everything-oauth"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-mneme",
+  "name": "modusensus/dsh-mneme#dsh-mneme",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "跨会话记忆：SQLite + 可人工编辑的 Markdown 镜像，autoDream 后台自动巩固（去重/合并/冲突裁决），6 个记忆工具，完全离线语义检索（本地向量 / 精排 / 聚类）。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "modusensus",
+    "name": "modusensus"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/modusensus/dsh-mneme/tree/main/dsh-mneme",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/modusensus/dsh-mneme/tree/main/dsh-mneme",
+    "author": "modusensus",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/modusensus/dsh-mneme/tree/main/dsh-mneme",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-mneme",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "modusensus/dsh-mneme/tree/main/dsh-mneme"
+  }
+}

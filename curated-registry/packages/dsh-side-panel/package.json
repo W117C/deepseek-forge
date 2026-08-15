@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-side-panel",
+  "name": "ccq1/dsh-side-panel",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "侧边栏集成文件浏览器、终端和 Git 审查，方便预览文件。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "ccq1",
+    "name": "ccq1"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ccq1/dsh-side-panel",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ccq1/dsh-side-panel",
+    "author": "ccq1",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ccq1/dsh-side-panel",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-side-panel",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ccq1/dsh-side-panel"
+  }
+}

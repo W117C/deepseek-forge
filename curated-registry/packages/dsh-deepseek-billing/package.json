@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-deepseek-billing",
+  "name": "Jolly-J/dsh-deepseek-billing",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "侧边栏底部 DeepSeek 账户余额显示与会话费用估算卡片。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "Jolly-J",
+    "name": "Jolly-J"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Jolly-J/dsh-deepseek-billing",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Jolly-J/dsh-deepseek-billing",
+    "author": "Jolly-J",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Jolly-J/dsh-deepseek-billing",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-deepseek-billing",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Jolly-J/dsh-deepseek-billing"
+  }
+}

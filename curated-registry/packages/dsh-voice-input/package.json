@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-voice-input",
+  "name": "NewDaNew/dsh-voice-input",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Web UI 语音输入：输入框一键麦克风按钮，基于 Web Speech API 语音转文字填入草稿，可选识别后自动发送。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "NewDaNew",
+    "name": "NewDaNew"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/NewDaNew/dsh-voice-input",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/NewDaNew/dsh-voice-input",
+    "author": "NewDaNew",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/NewDaNew/dsh-voice-input",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-voice-input",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "NewDaNew/dsh-voice-input"
+  }
+}

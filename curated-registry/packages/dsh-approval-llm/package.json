@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-approval-llm",
+  "name": "Letter2025/dsh-approval-llm",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "基于模型的权限审批：由独立审查模型自动应答 approval 权限请求。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "Letter2025",
+    "name": "Letter2025"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Letter2025/dsh-approval-llm",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Letter2025/dsh-approval-llm",
+    "author": "Letter2025",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Letter2025/dsh-approval-llm",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-approval-llm",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Letter2025/dsh-approval-llm"
+  }
+}

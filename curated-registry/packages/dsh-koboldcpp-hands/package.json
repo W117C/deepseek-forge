@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-koboldcpp-hands",
+  "name": "MicroHEROX/dsh-koboldcpp-hands",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "给在线模型装上本地双手：koboldcpp_run 与 koboldcpp_vision 工具把重复的文本与视觉（OCR、图像分析、对比）劳动交给本地 KoboldCpp（llama.cpp）服务器，并按需拉起与管理服务器生命周期。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "MicroHEROX",
+    "name": "MicroHEROX"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/MicroHEROX/dsh-koboldcpp-hands",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/MicroHEROX/dsh-koboldcpp-hands",
+    "author": "MicroHEROX",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/MicroHEROX/dsh-koboldcpp-hands",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-koboldcpp-hands",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "MicroHEROX/dsh-koboldcpp-hands"
+  }
+}

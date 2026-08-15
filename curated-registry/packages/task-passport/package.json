@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "task-passport",
+  "name": "dongsheng123132/task-passport",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "通过机器可读检查点与乐观锁，在 DeepSeek Harness、WorkBuddy、Claude Code 和 Codex 之间交接持久任务状态。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "dongsheng123132",
+    "name": "dongsheng123132"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/dongsheng123132/task-passport",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/dongsheng123132/task-passport",
+    "author": "dongsheng123132",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/dongsheng123132/task-passport",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "task-passport",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "dongsheng123132/task-passport"
+  }
+}

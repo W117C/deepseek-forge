@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-chat-outline",
+  "name": "liliuCourier/dsh-chat-outline",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "对话栏左侧常驻大纲：按轮次列出提问与最后回复，支持关键词过滤与一键跳转。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "liliuCourier",
+    "name": "liliuCourier"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/liliuCourier/dsh-chat-outline",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/liliuCourier/dsh-chat-outline",
+    "author": "liliuCourier",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/liliuCourier/dsh-chat-outline",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-chat-outline",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "liliuCourier/dsh-chat-outline"
+  }
+}

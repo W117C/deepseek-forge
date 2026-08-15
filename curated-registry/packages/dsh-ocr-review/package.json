@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-ocr-review",
+  "name": "jiayan-xu/dsh-ocr-review",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "本地 AI 代码评审门禁：对工作区/分支/commit diff 跑评审（托管 ocr.js），返回结构化 findings 与 token 统计；门禁模式发现问题即失败。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "jiayan-xu",
+    "name": "jiayan-xu"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/jiayan-xu/dsh-ocr-review",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/jiayan-xu/dsh-ocr-review",
+    "author": "jiayan-xu",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/jiayan-xu/dsh-ocr-review",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-ocr-review",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "jiayan-xu/dsh-ocr-review"
+  }
+}

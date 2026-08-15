@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-ask-guard",
+  "name": "Q1hangL/dsh-ask-guard",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "为 ask_user_question 提供协作式超时守卫：提问卡片丢失或用户未答复时以结构化 ASK_TIMEOUT 结束调用，避免回合无限挂起。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "Q1hangL",
+    "name": "Q1hangL"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Q1hangL/dsh-ask-guard",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Q1hangL/dsh-ask-guard",
+    "author": "Q1hangL",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Q1hangL/dsh-ask-guard",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-ask-guard",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Q1hangL/dsh-ask-guard"
+  }
+}

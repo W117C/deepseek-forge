@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "math-research-dsh",
+  "name": "xsoc1/math-research-dsh",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "严谨开放数学研究套件：4 个 agent skill（rigorous-open-math-research、manage-math-research-program、math-research-workflow、lean-verify），覆盖对抗性审计的定理求解、研究项目管理、流水线编排与 Lean 4 形式化审计；CI 测试与机械式上游同步。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "xsoc1",
+    "name": "xsoc1"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/xsoc1/math-research-dsh",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/xsoc1/math-research-dsh",
+    "author": "xsoc1",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/xsoc1/math-research-dsh",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "math-research-dsh",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "xsoc1/math-research-dsh"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-notify-skill",
+  "name": "PAKIKNOWLEDGE/dsh-notify-skill",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "你不在电脑前时由 agent 邮件提醒你：goal 完成、阻塞、向你提问决策前、长任务节点时触发，自带零依赖 Node SMTP 发送器。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "PAKIKNOWLEDGE",
+    "name": "PAKIKNOWLEDGE"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-notify-skill",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-notify-skill",
+    "author": "PAKIKNOWLEDGE",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PAKIKNOWLEDGE/dsh-notify-skill",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-notify-skill",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PAKIKNOWLEDGE/dsh-notify-skill"
+  }
+}

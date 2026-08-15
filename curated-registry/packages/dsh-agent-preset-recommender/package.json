@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-agent-preset-recommender",
+  "name": "LeemanCheung/dsh-agent-preset-recommender",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "隐私安全的本地扫描器：汇总 Codex、Claude Code、WorkBuddy、CodeBuddy 的会话/workflow 元数据，持久化聚合证据并推荐 DSH 内置 Agent preset；不保留正文、不联网、不修改 preset。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "LeemanCheung",
+    "name": "LeemanCheung"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/LeemanCheung/dsh-agent-preset-recommender",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/LeemanCheung/dsh-agent-preset-recommender",
+    "author": "LeemanCheung",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/LeemanCheung/dsh-agent-preset-recommender",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-agent-preset-recommender",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "LeemanCheung/dsh-agent-preset-recommender"
+  }
+}

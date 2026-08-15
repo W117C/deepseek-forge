@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-weekly-digest",
+  "name": "lucky8197/dsh-weekly-digest",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "周报生成器：聚合最近 N 天的 git 提交、会话活动与每日记忆，自动生成 Markdown 周报，全程只读。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "lucky8197",
+    "name": "lucky8197"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/lucky8197/dsh-weekly-digest",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/lucky8197/dsh-weekly-digest",
+    "author": "lucky8197",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/lucky8197/dsh-weekly-digest",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-weekly-digest",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "lucky8197/dsh-weekly-digest"
+  }
+}

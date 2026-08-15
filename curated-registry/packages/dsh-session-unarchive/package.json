@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-session-unarchive",
+  "name": "dylan121322/dsh-session-unarchive",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "从 Web GUI 侧栏查看已归档会话，并一键恢复到原工作区。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "dylan121322",
+    "name": "dylan121322"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/dylan121322/dsh-session-unarchive",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/dylan121322/dsh-session-unarchive",
+    "author": "dylan121322",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/dylan121322/dsh-session-unarchive",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-session-unarchive",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "dylan121322/dsh-session-unarchive"
+  }
+}

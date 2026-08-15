@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-boot-guard",
+  "name": "SaiSenBox/dsh-boot-guard",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "独立于常规客户端插件加载链的 DSH Web 启动救援工具，可定位疑似故障插件、临时跳过，并且只恢复 Boot Guard 写入的配置。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "SaiSenBox",
+    "name": "SaiSenBox"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/SaiSenBox/dsh-boot-guard",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/SaiSenBox/dsh-boot-guard",
+    "author": "SaiSenBox",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/SaiSenBox/dsh-boot-guard",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-boot-guard",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "SaiSenBox/dsh-boot-guard"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-model-sync",
+  "name": "jiay98528-dev/dsh-model-sync",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "把各提供方线上模型列表同步进 DSH 设置，并在输入框旁显示当前会话模型的 5 小时/7 天额度圆环。",
+  "category": "模型与接入",
+  "tags": [],
+  "publisher": {
+    "id": "jiay98528-dev",
+    "name": "jiay98528-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/jiay98528-dev/dsh-model-sync",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/jiay98528-dev/dsh-model-sync",
+    "author": "jiay98528-dev",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/jiay98528-dev/dsh-model-sync",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-model-sync",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "jiay98528-dev/dsh-model-sync"
+  }
+}

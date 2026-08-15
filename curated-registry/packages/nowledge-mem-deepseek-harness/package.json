@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "nowledge-mem-deepseek-harness",
+  "name": "nowledge-co/nowledge-mem-deepseek-harness",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "给所有 AI 工具和 Agent 共用的一层记忆：注入 Context Bundle、提示时检索、MCP 工具与回合结束 DSH 线程捕获。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "nowledge-co",
+    "name": "nowledge-co"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/nowledge-co/nowledge-mem-deepseek-harness",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/nowledge-co/nowledge-mem-deepseek-harness",
+    "author": "nowledge-co",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/nowledge-co/nowledge-mem-deepseek-harness",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "nowledge-mem-deepseek-harness",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "nowledge-co/nowledge-mem-deepseek-harness"
+  }
+}

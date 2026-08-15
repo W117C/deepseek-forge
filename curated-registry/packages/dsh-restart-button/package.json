@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-restart-button",
+  "name": "keyiadiannao/dsh-restart-button",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "一个小而自洽的 DSH 电源控制插件：侧边栏电源按钮 + 上拉「重启/关机」菜单 + Windows 关机风格过渡遮罩。自带重启/关机引擎（不依赖其它插件），动态端口适配。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "keyiadiannao",
+    "name": "keyiadiannao"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/keyiadiannao/dsh-restart-button",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/keyiadiannao/dsh-restart-button",
+    "author": "keyiadiannao",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/keyiadiannao/dsh-restart-button",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-restart-button",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "keyiadiannao/dsh-restart-button"
+  }
+}

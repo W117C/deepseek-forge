@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-subagent-cwd",
+  "name": "lynx-gt/dsh-subagent-cwd",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在 dsh-subagent-tools 基础上增加子代理按调用 cwd，附带所需的两个 in-process provider 补丁。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "lynx-gt",
+    "name": "lynx-gt"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/lynx-gt/dsh-subagent-cwd",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/lynx-gt/dsh-subagent-cwd",
+    "author": "lynx-gt",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/lynx-gt/dsh-subagent-cwd",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-subagent-cwd",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "lynx-gt/dsh-subagent-cwd"
+  }
+}

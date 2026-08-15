@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-web-preview",
+  "name": "zoumutou/dsh-web-preview",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "侧边网页预览面板：本地静态托管、Markdown/代码/图片预览、非静态项目一键运行（Cargo/npm/Go/Python）实时日志、网页元素标记批注、链接点击接管到侧边预览。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "zoumutou",
+    "name": "zoumutou"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/zoumutou/dsh-web-preview",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/zoumutou/dsh-web-preview",
+    "author": "zoumutou",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/zoumutou/dsh-web-preview",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-web-preview",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "zoumutou/dsh-web-preview"
+  }
+}

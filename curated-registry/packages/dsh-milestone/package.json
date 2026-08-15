@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-milestone",
+  "name": "SnowCrescenter-tech/dsh-milestone",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "右侧圆点时间轴导航条，点击跳转到任意用户消息。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "SnowCrescenter-tech",
+    "name": "SnowCrescenter-tech"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/SnowCrescenter-tech/dsh-milestone",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/SnowCrescenter-tech/dsh-milestone",
+    "author": "SnowCrescenter-tech",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/SnowCrescenter-tech/dsh-milestone",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-milestone",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "SnowCrescenter-tech/dsh-milestone"
+  }
+}

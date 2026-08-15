@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-local-share",
+  "name": "ChuanTianML/dsh-local-share",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "把完整 Web Session 导出为本地 Markdown 或自包含 HTML 文件，提供导出前预览、默认脱敏和可选的有界工具调用详情。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "ChuanTianML",
+    "name": "ChuanTianML"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ChuanTianML/dsh-local-share",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ChuanTianML/dsh-local-share",
+    "author": "ChuanTianML",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ChuanTianML/dsh-local-share",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-local-share",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ChuanTianML/dsh-local-share"
+  }
+}

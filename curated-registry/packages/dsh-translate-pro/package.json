@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-translate-pro",
+  "name": "ShiXiangYu2/dsh-translate-pro",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "专业翻译：18 种目标语言、4 种风格（正式/口语/技术/直译）、术语表控制译名、整文件翻译（README/文档/字幕）并保留 Markdown 与代码块格式；经 SiliconFlow 调用 DeepSeek。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "ShiXiangYu2",
+    "name": "ShiXiangYu2"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ShiXiangYu2/dsh-translate-pro",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ShiXiangYu2/dsh-translate-pro",
+    "author": "ShiXiangYu2",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ShiXiangYu2/dsh-translate-pro",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-translate-pro",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ShiXiangYu2/dsh-translate-pro"
+  }
+}

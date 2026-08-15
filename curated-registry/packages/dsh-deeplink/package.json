@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-deeplink",
+  "name": "qyw233/dsh-deeplink",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "`?session=` / `?workspace=` 深链直达指定项目对话。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "qyw233",
+    "name": "qyw233"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/qyw233/dsh-deeplink",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/qyw233/dsh-deeplink",
+    "author": "qyw233",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/qyw233/dsh-deeplink",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-deeplink",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "qyw233/dsh-deeplink"
+  }
+}

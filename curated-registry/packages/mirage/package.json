@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "mirage",
+  "name": "strukto-ai/mirage#dsh",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "把文件系统与 bash 提供者换成 mirage 虚拟工作区：文件工具与 shell 命令作用于挂载的资源（RAM、S3、Redis、Slack、Gmail、Notion、Postgres）而非宿主磁盘，支持按挂载点设置读/写/执行模式、按命令选择沙箱（进程内 monty、pyodide、quickjs；远程 docker、e2b、daytona），并可在虚拟终端中安装 CLI（git、gh、slack、linear、ntn、gws，或自行注册的程序树）作为命令头词。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "strukto-ai",
+    "name": "strukto-ai"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/strukto-ai/mirage/tree/main/typescript/packages/dsh",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/strukto-ai/mirage/tree/main/typescript/packages/dsh",
+    "author": "strukto-ai",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/strukto-ai/mirage/tree/main/typescript/packages/dsh",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "mirage",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "strukto-ai/mirage/tree/main/typescript/packages/dsh"
+  }
+}

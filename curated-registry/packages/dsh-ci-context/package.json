@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-ci-context",
+  "name": "lucas-ward/dsh-ci-context",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "将白名单内的 GitHub Actions 与 GitLab CI 运行元数据注入 Agent 上下文，不读取日志、凭据或服务商 API。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "lucas-ward",
+    "name": "lucas-ward"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/lucas-ward/dsh-ci-context",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/lucas-ward/dsh-ci-context",
+    "author": "lucas-ward",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/lucas-ward/dsh-ci-context",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-ci-context",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "lucas-ward/dsh-ci-context"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-auto-collapse",
+  "name": "a179-sanae/dsh-auto-collapse",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Codex 风格工作流自动折叠：回合完成收成一行「已处理 X秒」只留最终正文，工具/思考块折叠成实时摘要 chip（运行中跟随流式滚动），逐级点击展开；卸载完整还原。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "a179-sanae",
+    "name": "a179-sanae"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/a179-sanae/dsh-auto-collapse",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/a179-sanae/dsh-auto-collapse",
+    "author": "a179-sanae",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/a179-sanae/dsh-auto-collapse",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-auto-collapse",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "a179-sanae/dsh-auto-collapse"
+  }
+}

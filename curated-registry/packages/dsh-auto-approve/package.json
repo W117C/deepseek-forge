@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-auto-approve",
+  "name": "Jiao-XXX/dsh-auto-approve",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在 workspace-write 与 danger-full-access 之间增加 `auto` 权限档：分类器一次性放行例行沙箱升级，危险或不确定的操作仍转人工审批。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "Jiao-XXX",
+    "name": "Jiao-XXX"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Jiao-XXX/dsh-auto-approve",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Jiao-XXX/dsh-auto-approve",
+    "author": "Jiao-XXX",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Jiao-XXX/dsh-auto-approve",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-auto-approve",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Jiao-XXX/dsh-auto-approve"
+  }
+}

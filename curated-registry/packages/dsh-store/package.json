@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-store",
+  "name": "huguangyu666/dsh-store",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "dsh 插件商店：npm 权威目录 + awesome 精选（550+ 插件、11 分类）、dsh 字段质量验证、官方 `dsh plugin add/remove` 一键安装，侧边栏与设置页入口。",
+  "category": "插件市场与管理",
+  "tags": [],
+  "publisher": {
+    "id": "huguangyu666",
+    "name": "huguangyu666"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/huguangyu666/dsh-store",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/huguangyu666/dsh-store",
+    "author": "huguangyu666",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/huguangyu666/dsh-store",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-store",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "huguangyu666/dsh-store"
+  }
+}

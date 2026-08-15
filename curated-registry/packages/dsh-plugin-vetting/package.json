@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-vetting",
+  "name": "truelove-dreamer/dsh-plugin-vetting",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "装插件前体检：静态扫描恶意模式（外传/凭据/混淆/持久化）与高权限误用，覆盖传递依赖与官方包哈希基线（防供应链篡改），可选插件工具调用闸。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "truelove-dreamer",
+    "name": "truelove-dreamer"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/truelove-dreamer/dsh-plugin-vetting",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/truelove-dreamer/dsh-plugin-vetting",
+    "author": "truelove-dreamer",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/truelove-dreamer/dsh-plugin-vetting",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-vetting",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "truelove-dreamer/dsh-plugin-vetting"
+  }
+}

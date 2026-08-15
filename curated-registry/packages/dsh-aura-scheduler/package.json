@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-aura-scheduler",
+  "name": "ljsysfurryACE/dsh-aura-scheduler",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "主动调度：自适应心跳 + 价值网络（紧迫度、相关性、打断代价）决定 Agent 何时主动开口。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "ljsysfurryACE",
+    "name": "ljsysfurryACE"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ljsysfurryACE/dsh-aura-scheduler",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ljsysfurryACE/dsh-aura-scheduler",
+    "author": "ljsysfurryACE",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ljsysfurryACE/dsh-aura-scheduler",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-aura-scheduler",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ljsysfurryACE/dsh-aura-scheduler"
+  }
+}

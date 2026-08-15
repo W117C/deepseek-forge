@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-lan-pass",
+  "name": "x2802490130-prog/dsh-lan-pass",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Web UI 局域网密码门禁：同网手机/平板输共享密钥登录，会话与电脑实时同步，内置 randomUUID polyfill。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "x2802490130-prog",
+    "name": "x2802490130-prog"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/x2802490130-prog/dsh-lan-pass",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/x2802490130-prog/dsh-lan-pass",
+    "author": "x2802490130-prog",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/x2802490130-prog/dsh-lan-pass",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-lan-pass",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "x2802490130-prog/dsh-lan-pass"
+  }
+}

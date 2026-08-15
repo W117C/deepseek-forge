@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-guide",
+  "name": "PerryLink/dsh-plugin-guide",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH 插件开发知识库，作为按需加载的 agent 技能随 bundle 安装：官方约束、任务工作流、API 参考与社区踩坑，写插件时让 DSH 自己查。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "PerryLink",
+    "name": "PerryLink"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PerryLink/dsh-plugin-guide",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PerryLink/dsh-plugin-guide",
+    "author": "PerryLink",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PerryLink/dsh-plugin-guide",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-guide",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PerryLink/dsh-plugin-guide"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "deepseek-harness-tui",
+  "name": "openma-ai/deepseek-harness-tui",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Rust/ratatui 终端客户端，直接使用 DSH SDK JSON-RPC 协议，支持独立运行或作为 profile bundle 加载。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "openma-ai",
+    "name": "openma-ai"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/openma-ai/deepseek-harness-tui",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/openma-ai/deepseek-harness-tui",
+    "author": "openma-ai",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/openma-ai/deepseek-harness-tui",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "deepseek-harness-tui",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "openma-ai/deepseek-harness-tui"
+  }
+}

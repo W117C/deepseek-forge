@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-agent-team-gui",
+  "name": "toolclub/dsh-agent-team-gui",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "全局持久 Agent 小队：每个成员独立配置模型与工具策略；在 Settings 中管理、按对话选择并开关协作，普通发送按固定顺序或由模型规划执行。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "toolclub",
+    "name": "toolclub"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/toolclub/dsh-agent-team-gui",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/toolclub/dsh-agent-team-gui",
+    "author": "toolclub",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/toolclub/dsh-agent-team-gui",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-agent-team-gui",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "toolclub/dsh-agent-team-gui"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-prompt-profile",
+  "name": "BrambleXu/dsh-prompt-profile",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 可复用 Markdown Prompt Profile，支持单轮模型选择、参数替换和状态恢复。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "BrambleXu",
+    "name": "BrambleXu"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/BrambleXu/dsh-prompt-profile",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/BrambleXu/dsh-prompt-profile",
+    "author": "BrambleXu",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/BrambleXu/dsh-prompt-profile",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-prompt-profile",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "BrambleXu/dsh-prompt-profile"
+  }
+}

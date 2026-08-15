@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-spotlight",
+  "name": "0xsline/dsh-spotlight",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "键盘优先的命令面板（command palette）。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "0xsline",
+    "name": "0xsline"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/0xsline/dsh-spotlight",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/0xsline/dsh-spotlight",
+    "author": "0xsline",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/0xsline/dsh-spotlight",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-spotlight",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "0xsline/dsh-spotlight"
+  }
+}

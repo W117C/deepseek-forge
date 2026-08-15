@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-catppuccin",
+  "name": "NoNameLeGo/dsh-catppuccin",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH Web GUI 的 Catppuccin 主题插件：Latte、Frappé、Macchiato、Mocha 四套主题接入原生主题系统，一键切换并记住选择。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "NoNameLeGo",
+    "name": "NoNameLeGo"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/NoNameLeGo/dsh-catppuccin",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/NoNameLeGo/dsh-catppuccin",
+    "author": "NoNameLeGo",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/NoNameLeGo/dsh-catppuccin",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-catppuccin",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "NoNameLeGo/dsh-catppuccin"
+  }
+}

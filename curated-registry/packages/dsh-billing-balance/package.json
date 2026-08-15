@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-billing-balance",
+  "name": "YZz-S/dsh-billing-balance",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在设置页、输入框下方读数条与可拖动悬浮按钮三处显示 DeepSeek 官方 API 余额与火山方舟 Coding/Agent Plan 套餐额度（5小时/周/月窗口及重置倒计时）。",
+  "category": "模型与接入",
+  "tags": [],
+  "publisher": {
+    "id": "YZz-S",
+    "name": "YZz-S"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/YZz-S/dsh-billing-balance",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/YZz-S/dsh-billing-balance",
+    "author": "YZz-S",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/YZz-S/dsh-billing-balance",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-billing-balance",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "YZz-S/dsh-billing-balance"
+  }
+}

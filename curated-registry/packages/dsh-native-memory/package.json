@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-native-memory",
+  "name": "highland0971/dsh-native-memory",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "基于 DSH 原生接缝的按工作区记忆：事实与有界常驻档案落在 storage-domain 的 JSON 单元上，写入经人工审批并带 `(sessionId, seq)` 引证，确定性召回 + session-query 全文检索历史会话——无外部服务器、无自建 SQLite。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "highland0971",
+    "name": "highland0971"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/highland0971/dsh-native-memory",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/highland0971/dsh-native-memory",
+    "author": "highland0971",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/highland0971/dsh-native-memory",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-native-memory",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "highland0971/dsh-native-memory"
+  }
+}

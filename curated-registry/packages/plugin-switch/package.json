@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "plugin-switch",
+  "name": "cynch18/plugin-switch",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "插件清单页滑块开关：在设置 → 插件 → 插件清单实时启用/停用任意插件，无需重启；支持分组/筛选、批量开关、撤销与自动备份。",
+  "category": "插件市场与管理",
+  "tags": [],
+  "publisher": {
+    "id": "cynch18",
+    "name": "cynch18"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/cynch18/plugin-switch",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/cynch18/plugin-switch",
+    "author": "cynch18",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/cynch18/plugin-switch",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "plugin-switch",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "cynch18/plugin-switch"
+  }
+}

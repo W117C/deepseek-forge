@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-multi-folder",
+  "name": "AngelosZou/dsh-multi-folder",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "为 DSH 项目提供副工作目录：agent 保持主工作区为 cwd，同时对已配置的副目录获得同等读写/执行权限，可在会话头部与新会话页配置。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "AngelosZou",
+    "name": "AngelosZou"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/AngelosZou/dsh-multi-folder",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/AngelosZou/dsh-multi-folder",
+    "author": "AngelosZou",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/AngelosZou/dsh-multi-folder",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-multi-folder",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "AngelosZou/dsh-multi-folder"
+  }
+}

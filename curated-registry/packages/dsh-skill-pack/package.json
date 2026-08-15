@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-skill-pack",
+  "name": "jeremy9682/dsh-skill-pack",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "11 个可分享的工作流 skills（handoff、triage、to-spec、to-tickets、wayfinder、teach、wait-what、dsh-mode-routing、ask-matt、overnight-execution、full-throttle），打包为可安装 bundle。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "jeremy9682",
+    "name": "jeremy9682"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/jeremy9682/dsh-skill-pack",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/jeremy9682/dsh-skill-pack",
+    "author": "jeremy9682",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/jeremy9682/dsh-skill-pack",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-skill-pack",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "jeremy9682/dsh-skill-pack"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-session-move",
+  "name": "reinocheong/dsh-session-move",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "在 Web 侧边栏把会话移动到别的文件夹（拖拽或菜单选择），带风险确认地永久删除会话，以及 AI 重命名会话（总结整个对话并自动纠正错别字）；每个操作都提供 agent 工具。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "reinocheong",
+    "name": "reinocheong"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/reinocheong/dsh-session-move",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/reinocheong/dsh-session-move",
+    "author": "reinocheong",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/reinocheong/dsh-session-move",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-session-move",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "reinocheong/dsh-session-move"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-task-planner",
+  "name": "ztl34245881-commits/dsh-task-planner",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "带经验肌肉记忆的任务规划：条件反射检索历史方案 + LLM 能力匹配 + 经验自动沉淀。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "ztl34245881-commits",
+    "name": "ztl34245881-commits"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ztl34245881-commits/dsh-task-planner",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ztl34245881-commits/dsh-task-planner",
+    "author": "ztl34245881-commits",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ztl34245881-commits/dsh-task-planner",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-task-planner",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ztl34245881-commits/dsh-task-planner"
+  }
+}

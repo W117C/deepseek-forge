@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-session-export",
+  "name": "yangyongzhen/dsh-session-export",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "会话导出为 Markdown/JSON，便于复盘、重放与单会话成本汇总。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "yangyongzhen",
+    "name": "yangyongzhen"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/yangyongzhen/dsh-session-export",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/yangyongzhen/dsh-session-export",
+    "author": "yangyongzhen",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/yangyongzhen/dsh-session-export",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-session-export",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "yangyongzhen/dsh-session-export"
+  }
+}

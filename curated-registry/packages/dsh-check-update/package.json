@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-check-update",
+  "name": "HuiHuitie-zhu/dsh-check-update",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "更新检查器（npm 版）：设置页对比 @deepseek-ai/dsh 与已装插件的本地/最新版本，有更新时导航红点提醒，并直接给出更新命令。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "HuiHuitie-zhu",
+    "name": "HuiHuitie-zhu"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/HuiHuitie-zhu/dsh-check-update",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/HuiHuitie-zhu/dsh-check-update",
+    "author": "HuiHuitie-zhu",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/HuiHuitie-zhu/dsh-check-update",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-check-update",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "HuiHuitie-zhu/dsh-check-update"
+  }
+}

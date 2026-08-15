@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-prompt-stash",
+  "name": "Wine-Red/dsh-prompt-stash",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "本地、按会话隔离的 LIFO 输入暂存：临时收起未完成的输入，之后安全恢复并继续编辑。",
+  "category": "会话与消息",
+  "tags": [],
+  "publisher": {
+    "id": "Wine-Red",
+    "name": "Wine-Red"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Wine-Red/dsh-prompt-stash",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Wine-Red/dsh-prompt-stash",
+    "author": "Wine-Red",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Wine-Red/dsh-prompt-stash",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-prompt-stash",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Wine-Red/dsh-prompt-stash"
+  }
+}

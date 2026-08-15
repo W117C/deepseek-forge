@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-fleet-audit",
+  "name": "LeslieWylie/dsh-fleet-audit",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "只读的 agent 机群凭据卫生审计：检查凭据文件权限、git remote 内嵌凭据（输出脱敏）与 provider token 字面量计数；零依赖、确定性。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "LeslieWylie",
+    "name": "LeslieWylie"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/LeslieWylie/dsh-fleet-audit",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/LeslieWylie/dsh-fleet-audit",
+    "author": "LeslieWylie",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/LeslieWylie/dsh-fleet-audit",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-fleet-audit",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "LeslieWylie/dsh-fleet-audit"
+  }
+}

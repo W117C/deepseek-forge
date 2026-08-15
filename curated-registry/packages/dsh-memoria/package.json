@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-memoria",
+  "name": "jiayan-xu/dsh-memoria",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "向量+图记忆后端：observe/remember/search/recall 四个工具对接本地 memoria 服务，HNSW 语义召回 + FTS5 关键词 + 知识图谱信号经 RRF 融合排序，回合结束自动写入，按 Agent 命名空间隔离。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "jiayan-xu",
+    "name": "jiayan-xu"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/jiayan-xu/dsh-memoria",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/jiayan-xu/dsh-memoria",
+    "author": "jiayan-xu",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/jiayan-xu/dsh-memoria",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-memoria",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "jiayan-xu/dsh-memoria"
+  }
+}

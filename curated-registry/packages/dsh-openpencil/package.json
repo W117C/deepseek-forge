@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-openpencil",
+  "name": "ZSeven-W/dsh-openpencil",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "OpenPencil 设计预览与编辑插件。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "ZSeven-W",
+    "name": "ZSeven-W"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ZSeven-W/dsh-openpencil",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ZSeven-W/dsh-openpencil",
+    "author": "ZSeven-W",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ZSeven-W/dsh-openpencil",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-openpencil",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ZSeven-W/dsh-openpencil"
+  }
+}

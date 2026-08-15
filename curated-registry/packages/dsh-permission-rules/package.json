@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-permission-rules",
+  "name": "PerryLink/dsh-permission-rules",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Claude Code 风格的声明式权限规则：按序 allow/deny/ask 的 YAML 规则，在 tools/pre-execute 瀑布上匹配工具名、参数、工作区路径与 agent 身份，带完整会话日志审计、干跑模式与热重载。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "PerryLink",
+    "name": "PerryLink"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PerryLink/dsh-permission-rules",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PerryLink/dsh-permission-rules",
+    "author": "PerryLink",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PerryLink/dsh-permission-rules",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-permission-rules",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PerryLink/dsh-permission-rules"
+  }
+}

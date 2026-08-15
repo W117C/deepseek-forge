@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-zotero",
+  "name": "Vncntvx/dsh-zotero",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "让 Agent 搜索、阅读并引用本地 Zotero 文献库：找文献、查看笔记与批注、按问题取证、打开原文、生成引用。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "Vncntvx",
+    "name": "Vncntvx"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Vncntvx/dsh-zotero",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Vncntvx/dsh-zotero",
+    "author": "Vncntvx",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Vncntvx/dsh-zotero",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-zotero",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Vncntvx/dsh-zotero"
+  }
+}

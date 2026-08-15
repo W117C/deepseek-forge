@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-chameleon",
+  "name": "lsz-asd/dsh-chameleon#bundle",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "可自修改的 DeepSeek Harness 桌面工作台：完整 dsh web 副本 + 编辑模式，agent 在对话中实时修改工作台（补丁层、插件、UI）并热更新生效。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "lsz-asd",
+    "name": "lsz-asd"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/lsz-asd/dsh-chameleon/tree/main/bundle",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/lsz-asd/dsh-chameleon/tree/main/bundle",
+    "author": "lsz-asd",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/lsz-asd/dsh-chameleon/tree/main/bundle",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-chameleon",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "lsz-asd/dsh-chameleon/tree/main/bundle"
+  }
+}

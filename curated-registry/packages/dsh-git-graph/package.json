@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-git-graph",
+  "name": "WhitePlusMS/dsh-git-graph",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Chat 和 Trajectory 旁的独立 Git Graph 视图：提交拓扑、本地/远程/tag 引用、HEAD 与工作区状态、搜索、筛选、首父模式、刷新和加载更多。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "WhitePlusMS",
+    "name": "WhitePlusMS"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/WhitePlusMS/dsh-git-graph",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/WhitePlusMS/dsh-git-graph",
+    "author": "WhitePlusMS",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/WhitePlusMS/dsh-git-graph",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-git-graph",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "WhitePlusMS/dsh-git-graph"
+  }
+}

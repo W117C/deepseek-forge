@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-feishu-bridge",
+  "name": "wz-heng/dsh-feishu-bridge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Fail-closed 的飞书（Lark）channel 桥：和机器人聊天即驱动 dsh agent turn。仅经官方 Python SDK 集成（精确锁版）；白名单默认全拒、webhook 验签/时间窗/防重放、按 chat 粘性会话；中英双语文档。",
+  "category": "通知与集成",
+  "tags": [],
+  "publisher": {
+    "id": "wz-heng",
+    "name": "wz-heng"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/wz-heng/dsh-feishu-bridge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/wz-heng/dsh-feishu-bridge",
+    "author": "wz-heng",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/wz-heng/dsh-feishu-bridge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-feishu-bridge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "wz-heng/dsh-feishu-bridge"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-deepseek-quota-bar",
+  "name": "jiangli07/dsh-deepseek-quota-bar",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "可拖动透明余额卡片：余额/月初额度血条、今日/本月用量（配置平台 token 后为官方精确数据）、当前对话费用。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "jiangli07",
+    "name": "jiangli07"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/jiangli07/dsh-deepseek-quota-bar",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/jiangli07/dsh-deepseek-quota-bar",
+    "author": "jiangli07",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/jiangli07/dsh-deepseek-quota-bar",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-deepseek-quota-bar",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "jiangli07/dsh-deepseek-quota-bar"
+  }
+}

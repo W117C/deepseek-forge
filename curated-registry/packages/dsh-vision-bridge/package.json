@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-vision-bridge",
+  "name": "ximengxiaolan/dsh-vision-bridge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "输入框贴图自动识别：由 OpenAI 兼容视觉模型转成文字描述后，再交给纯文本 DeepSeek 模型处理。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "ximengxiaolan",
+    "name": "ximengxiaolan"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ximengxiaolan/dsh-vision-bridge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ximengxiaolan/dsh-vision-bridge",
+    "author": "ximengxiaolan",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ximengxiaolan/dsh-vision-bridge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-vision-bridge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ximengxiaolan/dsh-vision-bridge"
+  }
+}

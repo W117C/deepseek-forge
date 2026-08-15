@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-client-ui-theme-xp",
+  "name": "SamizuHM/dsh-client-ui-theme-xp",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Windows XP Luna 桌面化主题：浮动窗口管理器（任务栏、桌面图标）加上还原度很高的 Luna 皮肤。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "SamizuHM",
+    "name": "SamizuHM"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+    "author": "SamizuHM",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-client-ui-theme-xp",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "SamizuHM/dsh-client-ui-theme-xp"
+  }
+}

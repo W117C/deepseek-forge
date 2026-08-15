@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "hermes-dsh-collab",
+  "name": "Cavan-Ou/hermes-dsh-collab",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "把 DeepSeek Harness 接进 Hermes 管线：派单 spec 模板、模型档位路由、质量门、git 唯一写者约定，SKILL.md 技能包（bundle 可安装）。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "Cavan-Ou",
+    "name": "Cavan-Ou"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Cavan-Ou/hermes-dsh-collab",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Cavan-Ou/hermes-dsh-collab",
+    "author": "Cavan-Ou",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Cavan-Ou/hermes-dsh-collab",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "hermes-dsh-collab",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Cavan-Ou/hermes-dsh-collab"
+  }
+}

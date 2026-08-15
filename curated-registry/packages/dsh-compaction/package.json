@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-compaction",
+  "name": "ljsysfurryACE/dsh-compaction",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "压缩后端：用确定性语义提取器替换 LLM 摘要（保留代码/路径/命令，剔除闲聊），附带 28.4x KV 压缩记账。",
+  "category": "记忆与知识",
+  "tags": [],
+  "publisher": {
+    "id": "ljsysfurryACE",
+    "name": "ljsysfurryACE"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ljsysfurryACE/dsh-compaction",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ljsysfurryACE/dsh-compaction",
+    "author": "ljsysfurryACE",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ljsysfurryACE/dsh-compaction",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-compaction",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ljsysfurryACE/dsh-compaction"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "argo",
+  "name": "taxueseek/argo",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "专为 agent 打造的搜索工具：多语言，覆盖中文/英文/学术/代码/购物/金融/新闻/百科。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "taxueseek",
+    "name": "taxueseek"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/taxueseek/argo",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/taxueseek/argo",
+    "author": "taxueseek",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/taxueseek/argo",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "argo",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "taxueseek/argo"
+  }
+}

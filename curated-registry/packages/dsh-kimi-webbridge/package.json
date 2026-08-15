@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-kimi-webbridge",
+  "name": "MicroHEROX/dsh-Kimi-WebBridge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "通过本地 Kimi WebBridge 守护进程驱动用户的真实浏览器：navigate、find-tab、snapshot、click、fill、evaluate、CDP、screenshot、network、upload、PDF 导出与标签管理工具，复用浏览器已登录会话。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "MicroHEROX",
+    "name": "MicroHEROX"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/MicroHEROX/dsh-Kimi-WebBridge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/MicroHEROX/dsh-Kimi-WebBridge",
+    "author": "MicroHEROX",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/MicroHEROX/dsh-Kimi-WebBridge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-kimi-webbridge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "MicroHEROX/dsh-Kimi-WebBridge"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-evolve",
+  "name": "william-jin-cmu/dsh-evolve",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "自进化：agent 在会话内给自己热挂载/卸载持久化插件。",
+  "category": "开发与运行时",
+  "tags": [],
+  "publisher": {
+    "id": "william-jin-cmu",
+    "name": "william-jin-cmu"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/william-jin-cmu/dsh-evolve",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/william-jin-cmu/dsh-evolve",
+    "author": "william-jin-cmu",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/william-jin-cmu/dsh-evolve",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-evolve",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "william-jin-cmu/dsh-evolve"
+  }
+}

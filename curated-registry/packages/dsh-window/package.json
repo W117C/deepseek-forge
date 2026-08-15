@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-window",
+  "name": "ZichengGurrr/dsh-window#kit",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH 三件套全家桶：Windows 原生窗口（WebView2）+ DeepEye 视觉（GLM-4V-Flash）+ 语音输入（麦克风按钮），一条命令装齐。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "ZichengGurrr",
+    "name": "ZichengGurrr"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ZichengGurrr/dsh-window/tree/main/kit",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ZichengGurrr/dsh-window/tree/main/kit",
+    "author": "ZichengGurrr",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ZichengGurrr/dsh-window/tree/main/kit",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-window",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ZichengGurrr/dsh-window/tree/main/kit"
+  }
+}

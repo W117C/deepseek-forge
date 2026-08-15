@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-im-hub",
+  "name": "ThreeBody6666/dsh-im-hub",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "多平台 IM 网关：飞书（Lark）WebSocket 长连接（无需公网）、企业微信 AES 加密回调、Telegram 长轮询；每会话独立 agent、白名单访问、Web GUI 可视化设置卡片。",
+  "category": "通知与集成",
+  "tags": [],
+  "publisher": {
+    "id": "ThreeBody6666",
+    "name": "ThreeBody6666"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/ThreeBody6666/dsh-im-hub",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/ThreeBody6666/dsh-im-hub",
+    "author": "ThreeBody6666",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/ThreeBody6666/dsh-im-hub",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-im-hub",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "ThreeBody6666/dsh-im-hub"
+  }
+}

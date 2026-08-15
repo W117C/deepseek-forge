@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-evoresearch",
+  "name": "Karbo123/DSH-EvoResearch#evoresearch-plugin",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "科研 agent 套件：长程目标控制（可审计证据链）、定时任务、多智能体专家团队、自进化科研记忆（FTS5 + RRF 召回）、科研项目工作区与自定义工作台界面。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "Karbo123",
+    "name": "Karbo123"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Karbo123/DSH-EvoResearch/tree/main/packages/evoresearch-plugin",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Karbo123/DSH-EvoResearch/tree/main/packages/evoresearch-plugin",
+    "author": "Karbo123",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Karbo123/DSH-EvoResearch/tree/main/packages/evoresearch-plugin",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-evoresearch",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Karbo123/DSH-EvoResearch/tree/main/packages/evoresearch-plugin"
+  }
+}

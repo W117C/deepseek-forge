@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-rigorquant",
+  "name": "linxichen/dsh-rigorquant",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "RigorQuant 预设与技能包：面向实证与计算数学（经济学、金融、组合）的无人值守隔离多智能体研究，内置四重实现前校验与 jacobian/Lean 升级通道。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "linxichen",
+    "name": "linxichen"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/linxichen/dsh-rigorquant",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/linxichen/dsh-rigorquant",
+    "author": "linxichen",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/linxichen/dsh-rigorquant",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-rigorquant",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "linxichen/dsh-rigorquant"
+  }
+}

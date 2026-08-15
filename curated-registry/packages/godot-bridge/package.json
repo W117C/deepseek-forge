@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "godot-bridge",
+  "name": "Smalldy/godot-bridge",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH↔Godot 引擎运行时控制桥：通过游戏内置 TCP 交互服务器启动并操控运行中的 Godot 4.x——8 个工具（场景/UI 检查、GDScript eval、输入模拟、截图、headless 静态操作、脚本编译检查），替代 godot-mcp。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "Smalldy",
+    "name": "Smalldy"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Smalldy/godot-bridge",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Smalldy/godot-bridge",
+    "author": "Smalldy",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Smalldy/godot-bridge",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "godot-bridge",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Smalldy/godot-bridge"
+  }
+}

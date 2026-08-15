@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-client-ui-skin-claude",
+  "name": "PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Claude 风格皮肤：暖黑画布、陶橙点缀、衬线 UI，跟随原生亮/暗主题。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "PAKIKNOWLEDGE",
+    "name": "PAKIKNOWLEDGE"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+    "author": "PAKIKNOWLEDGE",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-client-ui-skin-claude",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PAKIKNOWLEDGE/dsh-client-ui-skin-claude"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "qwen-mm-plugins",
+  "name": "omdsh-dev/Qwen-MM-Plugins",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Qwen 多模态插件支持。",
+  "category": "模型与接入",
+  "tags": [],
+  "publisher": {
+    "id": "omdsh-dev",
+    "name": "omdsh-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/omdsh-dev/Qwen-MM-Plugins",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/omdsh-dev/Qwen-MM-Plugins",
+    "author": "omdsh-dev",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/omdsh-dev/Qwen-MM-Plugins",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "qwen-mm-plugins",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "omdsh-dev/Qwen-MM-Plugins"
+  }
+}

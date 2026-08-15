@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-scout",
+  "name": "icefall7/dsh-plugin-scout",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "侦察 deepseek-harness 官方仓库与所有 dsh-plugin topic 仓库，发现与目标相关的 harness，并判断每个值得试用、观望还是跳过。",
+  "category": "插件市场与管理",
+  "tags": [],
+  "publisher": {
+    "id": "icefall7",
+    "name": "icefall7"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/icefall7/dsh-plugin-scout",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/icefall7/dsh-plugin-scout",
+    "author": "icefall7",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/icefall7/dsh-plugin-scout",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-scout",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "icefall7/dsh-plugin-scout"
+  }
+}

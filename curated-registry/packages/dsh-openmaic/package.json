@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-openmaic",
+  "name": "THU-MAIC/dsh-openmaic",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "OpenMAIC 教学：课堂、幻灯片、交互组件与苏格拉底式教学。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "THU-MAIC",
+    "name": "THU-MAIC"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/THU-MAIC/dsh-openmaic",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/THU-MAIC/dsh-openmaic",
+    "author": "THU-MAIC",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/THU-MAIC/dsh-openmaic",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-openmaic",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "THU-MAIC/dsh-openmaic"
+  }
+}

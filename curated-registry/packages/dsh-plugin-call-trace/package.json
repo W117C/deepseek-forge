@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-plugin-call-trace",
+  "name": "Huang-zhishi/dsh-plugin-call-trace",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "持久化模型工具调用轨迹记录器：每次工具调用落盘为 JSONL（重启不丢），提供结构化 call_trace 查询工具与 callTraceHistory 服务，支持文件大小轮转，附可选浮层画布 UI。",
+  "category": "工具与能力",
+  "tags": [],
+  "publisher": {
+    "id": "Huang-zhishi",
+    "name": "Huang-zhishi"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Huang-zhishi/dsh-plugin-call-trace",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Huang-zhishi/dsh-plugin-call-trace",
+    "author": "Huang-zhishi",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Huang-zhishi/dsh-plugin-call-trace",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-plugin-call-trace",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Huang-zhishi/dsh-plugin-call-trace"
+  }
+}

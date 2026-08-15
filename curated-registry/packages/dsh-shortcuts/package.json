@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-shortcuts",
+  "name": "Ricketts-Guo/dsh-shortcuts",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Web UI 可自定义键盘快捷键：34 个预置功能（会话、视图、剪贴板、模型、静默权限切换、设置），一键录制自定义组合键，内置快捷键速查表与诊断面板。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "Ricketts-Guo",
+    "name": "Ricketts-Guo"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Ricketts-Guo/dsh-shortcuts",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Ricketts-Guo/dsh-shortcuts",
+    "author": "Ricketts-Guo",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Ricketts-Guo/dsh-shortcuts",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-shortcuts",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Ricketts-Guo/dsh-shortcuts"
+  }
+}

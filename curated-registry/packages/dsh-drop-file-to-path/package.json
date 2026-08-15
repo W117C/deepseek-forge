@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-drop-file-to-path",
+  "name": "GLFzr/dsh-drop-file-to-path",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Codex 式拖拽：把任意文件拖入 DSH Web 界面，文件存入 ~/.dsh-dropbox，路径以整块蓝色 chip 插入输入框。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "GLFzr",
+    "name": "GLFzr"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/GLFzr/dsh-drop-file-to-path",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/GLFzr/dsh-drop-file-to-path",
+    "author": "GLFzr",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/GLFzr/dsh-drop-file-to-path",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-drop-file-to-path",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "GLFzr/dsh-drop-file-to-path"
+  }
+}

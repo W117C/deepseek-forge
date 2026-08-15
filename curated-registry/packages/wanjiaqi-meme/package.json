@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "wanjiaqi-meme",
+  "name": "Chu-Xin-r/wanjiaqi-meme",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "玩机器（6657 直播间）烂梗技能包：22771 条真实弹幕蒸馏而成，涵盖玩机器式弹幕烂梗、CS×DOTA 双料梗、选手锐评与解说吐槽。",
+  "category": "技能包",
+  "tags": [],
+  "publisher": {
+    "id": "Chu-Xin-r",
+    "name": "Chu-Xin-r"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Chu-Xin-r/wanjiaqi-meme",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Chu-Xin-r/wanjiaqi-meme",
+    "author": "Chu-Xin-r",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Chu-Xin-r/wanjiaqi-meme",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "wanjiaqi-meme",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Chu-Xin-r/wanjiaqi-meme"
+  }
+}

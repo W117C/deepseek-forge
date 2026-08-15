@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-anchored-standard",
+  "name": "Jungod1121/dsh-anchored-standard",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "V4 Pro 两阶段 agent 预设：首轮仅 bash+read 完成极简开局，首个工具调用或回复后恢复 Standard 完整工具目录；以安装器 bundle 与手动预设目录双形态发布。",
+  "category": "工作流与自动化",
+  "tags": [],
+  "publisher": {
+    "id": "Jungod1121",
+    "name": "Jungod1121"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Jungod1121/dsh-anchored-standard",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Jungod1121/dsh-anchored-standard",
+    "author": "Jungod1121",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Jungod1121/dsh-anchored-standard",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-anchored-standard",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Jungod1121/dsh-anchored-standard"
+  }
+}

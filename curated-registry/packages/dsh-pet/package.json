@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-pet",
+  "name": "PC2005-cloud/dsh-pet#dsh-pet",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "DSH Web UI 桌面宠物：25 个透明动画、屏幕漫游、点击反应与拖拽，附可复现的素材生成链。",
+  "category": "趣味与娱乐",
+  "tags": [],
+  "publisher": {
+    "id": "PC2005-cloud",
+    "name": "PC2005-cloud"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/PC2005-cloud/dsh-pet/tree/main/dsh-pet",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/PC2005-cloud/dsh-pet/tree/main/dsh-pet",
+    "author": "PC2005-cloud",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/PC2005-cloud/dsh-pet/tree/main/dsh-pet",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-pet",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "PC2005-cloud/dsh-pet/tree/main/dsh-pet"
+  }
+}

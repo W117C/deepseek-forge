@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-acp-for-bitfun",
+  "name": "bobleer/dsh-acp-for-bitfun",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "BitFun 与 DSH 的 ACP 交互对接。",
+  "category": "通知与集成",
+  "tags": [],
+  "publisher": {
+    "id": "bobleer",
+    "name": "bobleer"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/bobleer/dsh-acp-for-bitfun",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/bobleer/dsh-acp-for-bitfun",
+    "author": "bobleer",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/bobleer/dsh-acp-for-bitfun",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-acp-for-bitfun",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "bobleer/dsh-acp-for-bitfun"
+  }
+}

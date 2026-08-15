@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-at-file",
+  "name": "omdsh-dev/dsh-at-file",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "Codex 风格的 `@file` 文件引用，输入框里直接搜索并引用工作区文件。",
+  "category": "界面与体验",
+  "tags": [],
+  "publisher": {
+    "id": "omdsh-dev",
+    "name": "omdsh-dev"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/omdsh-dev/dsh-at-file",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/omdsh-dev/dsh-at-file",
+    "author": "omdsh-dev",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/omdsh-dev/dsh-at-file",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-at-file",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "omdsh-dev/dsh-at-file"
+  }
+}

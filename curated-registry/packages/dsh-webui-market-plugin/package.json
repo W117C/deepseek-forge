@@ -1,0 +1,87 @@
+{
+  "schema": "forge.package.v1",
+  "id": "dsh-webui-market-plugin",
+  "name": "Sanqi-normal/dsh-webui-market-plugin",
+  "type": "plugin",
+  "version": "0.1.0",
+  "description": "dsh Web GUI 内的社区插件市场：浏览 awesome-dsh-plugin.com 目录，从 设置 → 插件 → 插件市场 安装/卸载插件到 profile。",
+  "category": "插件市场与管理",
+  "tags": [],
+  "publisher": {
+    "id": "Sanqi-normal",
+    "name": "Sanqi-normal"
+  },
+  "source": {
+    "type": "github",
+    "repository": "https://github.com/Sanqi-normal/dsh-webui-market-plugin",
+    "ref": null,
+    "commit": null
+  },
+  "upstream": {
+    "repository": "https://github.com/Sanqi-normal/dsh-webui-market-plugin",
+    "author": "Sanqi-normal",
+    "license": "NOASSERTION",
+    "version": null,
+    "url": "https://github.com/Sanqi-normal/dsh-webui-market-plugin",
+    "adapterVersion": "0.1.0"
+  },
+  "license": {
+    "spdx": "NOASSERTION",
+    "file": null
+  },
+  "compatibility": {
+    "forge": ">=0.4.0",
+    "dsh": {
+      "min": null,
+      "tested": []
+    },
+    "node": null,
+    "platform": []
+  },
+  "capabilities": [],
+  "permissions": {
+    "network": [],
+    "env": []
+  },
+  "security": {
+    "scan": "required",
+    "status": "UNKNOWN",
+    "scannedAt": null,
+    "findings": []
+  },
+  "artifact": {
+    "filename": "",
+    "sha256": null,
+    "signature": null,
+    "signatureAlgorithm": "ed25519",
+    "publisherKeyId": null
+  },
+  "entrypoint": {
+    "type": "process",
+    "profile": null,
+    "command": null,
+    "config": {}
+  },
+  "dependencies": [],
+  "runtime": {
+    "engine": "deepseek-harness",
+    "profile": {
+      "name": "dsh-webui-market-plugin",
+      "bundles": [],
+      "patch": null
+    },
+    "components": {
+      "bundles": [],
+      "presets": [],
+      "skills": []
+    },
+    "health": []
+  },
+  "extra": {
+    "stars": 0,
+    "language": null,
+    "pushedAt": null,
+    "topics": [],
+    "fullName": "Sanqi-normal/dsh-webui-market-plugin"
+  }
+}
